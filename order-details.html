@@ -46,19 +46,17 @@
       margin-right: 5px;
     }
 
-    /* Agar header tabel muncul di setiap halaman cetak */
+    /* Agar tombol print tidak tercetak */
     @media print {
       #print-pdf-btn {
-      thead { 
-        display: table-header-group; 
-      }
-      tfoot { 
-        display: table-footer-group; 
-      }
-      button {
         display: none; /* sembunyikan tombol saat print */
       }
-      }   
+      thead {
+        display: table-header-group; /* agar header tabel muncul di setiap halaman */
+      }
+      tfoot {
+        display: table-footer-group;
+      }
     }
   </style>
 </head>
@@ -70,7 +68,7 @@
   <!-- Tombol Print PDF -->
   <button id="print-pdf-btn">
     <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="download icon"/>
-    Download PDF
+    Print PDF
   </button>
 
   <!-- Tabel Order Details -->
@@ -94,6 +92,8 @@
   <script>
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
+
+    // Fungsi untuk decode parameter
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
@@ -102,14 +102,15 @@
     const customerName = decodeParam("customer_name");
     document.getElementById("customer-headline").textContent = "Customer: " + customerName;
 
-    // 2) Ambil data orders (misalnya gabungan delimiter ';' & '|')
+    // 2) Ambil data orders (contoh: gabungan delimiter ';' & '|')
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      const rows = ordersString.split(";"); 
+      // Misal format: "001|1/15/2025|Gold|20|Jakarta|Papua|4628571 IDR;002|1/16/2025|Silver|10|Bandung|Surabaya|2000000 IDR"
+      const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
         const orderId   = cols[0] || "N/A";
