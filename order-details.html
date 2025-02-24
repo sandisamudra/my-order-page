@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Order Details</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
     }
-    h2 {
-      text-align: center;
+    #customer-headline {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 10px;
     }
     th, td {
       border: 1px solid #000;
@@ -29,7 +31,10 @@
 </head>
 <body>
 
-  <h2>Order Details</h2>
+  <!-- Headline nama customer -->
+  <div id="customer-headline">Customer: N/A</div>
+
+  <!-- Tabel Order Details -->
   <table>
     <thead>
       <tr>
@@ -42,16 +47,8 @@
         <th>Total Cost</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td id="order-id">N/A</td>
-        <td id="date">N/A</td>
-        <td id="item">N/A</td>
-        <td id="quantity">N/A</td>
-        <td id="from">N/A</td>
-        <td id="to">N/A</td>
-        <td id="total-cost">N/A</td>
-      </tr>
+    <tbody id="orders-table-body">
+      <!-- Baris order akan ditambahkan secara dinamis -->
     </tbody>
   </table>
 
@@ -59,39 +56,63 @@
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
 
-    // Fungsi bantu untuk ambil & decode parameter
+    // Decode parameter
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
 
-    // Isi kolom selain date
-    document.getElementById("order-id").textContent = decodeParam("order_id");
-    document.getElementById("item").textContent     = decodeParam("item");
-    document.getElementById("quantity").textContent = decodeParam("quantity");
-    document.getElementById("from").textContent     = decodeParam("from");
-    document.getElementById("to").textContent       = decodeParam("to");
-    document.getElementById("total-cost").textContent = decodeParam("total_cost");
+    // 1) Tampilkan nama customer
+    const customerName = decodeParam("customer_name");
+    document.getElementById("customer-headline").textContent = "Customer: " + customerName;
 
-    // Ambil tanggal mentah dari URL
-    let rawDate = decodeParam("date");
+    // 2) Ambil string gabungan order
+    const ordersString = decodeParam("orders");
+    const tableBody = document.getElementById("orders-table-body");
 
-    if (rawDate !== "N/A") {
-      // Coba parse ke objek Date
-      let dateObj = new Date(rawDate);
-
-      if (!isNaN(dateObj)) {
-        // Jika valid, format jadi "January 15, 2025"
-        let options = { year: 'numeric', month: 'long', day: 'numeric' };
-        let formattedDate = dateObj.toLocaleDateString('en-US', options);
-        document.getElementById("date").textContent = formattedDate;
-      } else {
-        // Jika parse gagal, tampilkan apa adanya
-        document.getElementById("date").textContent = rawDate;
-      }
+    // Jika tidak ada data orders
+    if (ordersString === "N/A" || ordersString.trim() === "") {
+      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      document.getElementById("date").textContent = "N/A";
+      // Pisahkan baris (pakai ';')
+      const rows = ordersString.split(";");
+      if (rows.length === 0) {
+        tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
+      } else {
+        rows.forEach((rowStr) => {
+          // Pisahkan kolom (pakai '|')
+          const cols = rowStr.split("|");
+          const orderId   = cols[0] || "N/A";
+          let   rawDate   = cols[1] || "N/A";
+          const item      = cols[2] || "N/A";
+          const quantity  = cols[3] || "N/A";
+          const fromLoc   = cols[4] || "N/A";
+          const toLoc     = cols[5] || "N/A";
+          const totalCost = cols[6] || "N/A";
+
+          // Format tanggal (opsional)
+          let formattedDate = rawDate;
+          const dateObj = new Date(rawDate);
+          if (!isNaN(dateObj)) {
+            let options = { year: 'numeric', month: 'long', day: 'numeric' };
+            formattedDate = dateObj.toLocaleDateString('en-US', options);
+          }
+
+          // Buat baris HTML
+          const rowHTML = `
+            <tr>
+              <td>${orderId}</td>
+              <td>${formattedDate}</td>
+              <td>${item}</td>
+              <td>${quantity}</td>
+              <td>${fromLoc}</td>
+              <td>${toLoc}</td>
+              <td>${totalCost}</td>
+            </tr>
+          `;
+          tableBody.innerHTML += rowHTML;
+        });
+      }
     }
   </script>
-
 </body>
 </html>
