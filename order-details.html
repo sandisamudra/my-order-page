@@ -4,11 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Order Details</title>
-
-  <!-- 1) Tambahkan library html2canvas & jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa6H+DtJZgJsTmxGte1XrCpsP3RYC1l3JsGztgr2IR6pcuxmpVFTtEOP/fyZh3aK4bBD3TqkKRu0LGpfZF5mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-8BGB+JqXdNyt4tVcP6GWIj5TU/nOBzgjts+SSux8n5POCLnH/sF9Z52QWB6xUTwAvFqhm9+L07Y2srnRnJ3VxQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,7 +27,6 @@
     th {
       background-color: #f4f4f4;
     }
-
     /* Tombol Print PDF */
     #print-pdf-btn {
       cursor: pointer;
@@ -50,6 +44,19 @@
     #print-pdf-btn img {
       height: 16px;
       margin-right: 5px;
+    }
+
+    /* Agar header tabel muncul di setiap halaman cetak */
+    @media print {
+      thead { 
+        display: table-header-group; 
+      }
+      tfoot { 
+        display: table-footer-group; 
+      }
+      button {
+        display: none; /* sembunyikan tombol saat print */
+      }
     }
   </style>
 </head>
@@ -83,26 +90,24 @@
   </table>
 
   <script>
-    // -------------------------------------
-    // 1) Ambil data dari URL & tampilkan
-    // -------------------------------------
+    // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
 
-    // Nama customer
+    // 1) Tampilkan nama customer
     const customerName = decodeParam("customer_name");
     document.getElementById("customer-headline").textContent = "Customer: " + customerName;
 
-    // Data orders (contoh: pakai delimiter)
+    // 2) Ambil data orders (misalnya gabungan delimiter ';' & '|')
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      const rows = ordersString.split(";"); // misal '001|Jan 15,2025|Gold|20|Jakarta|Papua|5000;...'
+      const rows = ordersString.split(";"); 
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
         const orderId   = cols[0] || "N/A";
@@ -113,7 +118,7 @@
         const toLoc     = cols[5] || "N/A";
         const totalCost = cols[6] || "N/A";
 
-        // (Opsional) format date
+        // (Opsional) Format tanggal
         let formattedDate = rawDate;
         const dateObj = new Date(rawDate);
         if (!isNaN(dateObj)) {
@@ -121,6 +126,7 @@
           formattedDate = dateObj.toLocaleDateString('en-US', options);
         }
 
+        // Tambahkan baris ke tabel
         const rowHTML = `
           <tr>
             <td>${orderId}</td>
@@ -136,59 +142,10 @@
       });
     }
 
-    // -------------------------------------
-    // 2) Fungsi Membuat PDF & Share/Download
-    // -------------------------------------
-    async function shareAsPDF() {
-      // Ambil jsPDF dari UMD
-      const { jsPDF } = window.jspdf;
-
-      // 2a) Tangkap halaman jadi canvas (html2canvas)
-      const element = document.body; // tangkap seluruh body, atau bisa div tertentu
-      const canvas = await html2canvas(element);
-
-      // 2b) Konversi canvas -> gambar -> masukkan ke PDF
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "pt", "a4");
-
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      // Ukuran asli canvas
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-
-      // Cari rasio scale supaya muat di A4
-      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth * ratio, imgHeight * ratio);
-
-      // 2c) Konversi PDF ke Blob
-      const pdfBlob = pdf.output("blob");
-
-      // 2d) Coba pakai Web Share API (jika didukung)
-      if (navigator.canShare && navigator.canShare({ files: [new File([pdfBlob], "order_details.pdf", { type: "application/pdf" })] })) {
-        try {
-          await navigator.share({
-            files: [new File([pdfBlob], "order_details.pdf", { type: "application/pdf" })],
-            title: "Order Details",
-            text: "Here are the order details in PDF."
-          });
-        } catch (err) {
-          console.error("Share failed or cancelled:", err);
-          // fallback ke download
-          pdf.save("order_details.pdf");
-        }
-      } else {
-        // Jika device/browser tidak dukung share file PDF, fallback ke download
-        pdf.save("order_details.pdf");
-      }
-    }
-
-    // -------------------------------------
-    // 3) Pasang event ke tombol Print PDF
-    // -------------------------------------
-    document.getElementById("print-pdf-btn").addEventListener("click", shareAsPDF);
+    // 3) Fungsi memanggil dialog print
+    document.getElementById("print-pdf-btn").addEventListener("click", () => {
+      window.print();
+    });
   </script>
 
 </body>
