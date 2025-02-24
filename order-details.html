@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Order Details</title>
+
+  <!-- 1) Tambahkan library html2canvas & jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa6H+DtJZgJsTmxGte1XrCpsP3RYC1l3JsGztgr2IR6pcuxmpVFTtEOP/fyZh3aK4bBD3TqkKRu0LGpfZF5mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-8BGB+JqXdNyt4tVcP6GWIj5TU/nOBzgjts+SSux8n5POCLnH/sF9Z52QWB6xUTwAvFqhm9+L07Y2srnRnJ3VxQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -27,12 +32,37 @@
     th {
       background-color: #f4f4f4;
     }
+
+    /* Tombol Print PDF */
+    #print-pdf-btn {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      background: #007BFF; /* warna biru */
+      color: #fff;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    #print-pdf-btn img {
+      height: 16px;
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
 
   <!-- Headline nama customer -->
   <div id="customer-headline">Customer: N/A</div>
+
+  <!-- Tombol Print PDF -->
+  <button id="print-pdf-btn">
+    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="download icon"/>
+    Print PDF
+  </button>
 
   <!-- Tabel Order Details -->
   <table>
@@ -53,66 +83,113 @@
   </table>
 
   <script>
-    // Ambil parameter dari URL
+    // -------------------------------------
+    // 1) Ambil data dari URL & tampilkan
+    // -------------------------------------
     const params = new URLSearchParams(window.location.search);
-
-    // Decode parameter
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
 
-    // 1) Tampilkan nama customer
+    // Nama customer
     const customerName = decodeParam("customer_name");
     document.getElementById("customer-headline").textContent = "Customer: " + customerName;
 
-    // 2) Ambil string gabungan order
+    // Data orders (contoh: pakai delimiter)
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
-    // Jika tidak ada data orders
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      // Pisahkan baris (pakai ';')
-      const rows = ordersString.split(";");
-      if (rows.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
+      const rows = ordersString.split(";"); // misal '001|Jan 15,2025|Gold|20|Jakarta|Papua|5000;...'
+      rows.forEach(rowStr => {
+        const cols = rowStr.split("|");
+        const orderId   = cols[0] || "N/A";
+        let   rawDate   = cols[1] || "N/A";
+        const item      = cols[2] || "N/A";
+        const quantity  = cols[3] || "N/A";
+        const fromLoc   = cols[4] || "N/A";
+        const toLoc     = cols[5] || "N/A";
+        const totalCost = cols[6] || "N/A";
+
+        // (Opsional) format date
+        let formattedDate = rawDate;
+        const dateObj = new Date(rawDate);
+        if (!isNaN(dateObj)) {
+          const options = { year: 'numeric', month: 'long', day: 'numeric' };
+          formattedDate = dateObj.toLocaleDateString('en-US', options);
+        }
+
+        const rowHTML = `
+          <tr>
+            <td>${orderId}</td>
+            <td>${formattedDate}</td>
+            <td>${item}</td>
+            <td>${quantity}</td>
+            <td>${fromLoc}</td>
+            <td>${toLoc}</td>
+            <td>${totalCost}</td>
+          </tr>
+        `;
+        tableBody.innerHTML += rowHTML;
+      });
+    }
+
+    // -------------------------------------
+    // 2) Fungsi Membuat PDF & Share/Download
+    // -------------------------------------
+    async function shareAsPDF() {
+      // Ambil jsPDF dari UMD
+      const { jsPDF } = window.jspdf;
+
+      // 2a) Tangkap halaman jadi canvas (html2canvas)
+      const element = document.body; // tangkap seluruh body, atau bisa div tertentu
+      const canvas = await html2canvas(element);
+
+      // 2b) Konversi canvas -> gambar -> masukkan ke PDF
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "pt", "a4");
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+
+      // Ukuran asli canvas
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+
+      // Cari rasio scale supaya muat di A4
+      const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth * ratio, imgHeight * ratio);
+
+      // 2c) Konversi PDF ke Blob
+      const pdfBlob = pdf.output("blob");
+
+      // 2d) Coba pakai Web Share API (jika didukung)
+      if (navigator.canShare && navigator.canShare({ files: [new File([pdfBlob], "order_details.pdf", { type: "application/pdf" })] })) {
+        try {
+          await navigator.share({
+            files: [new File([pdfBlob], "order_details.pdf", { type: "application/pdf" })],
+            title: "Order Details",
+            text: "Here are the order details in PDF."
+          });
+        } catch (err) {
+          console.error("Share failed or cancelled:", err);
+          // fallback ke download
+          pdf.save("order_details.pdf");
+        }
       } else {
-        rows.forEach((rowStr) => {
-          // Pisahkan kolom (pakai '|')
-          const cols = rowStr.split("|");
-          const orderId   = cols[0] || "N/A";
-          let   rawDate   = cols[1] || "N/A";
-          const item      = cols[2] || "N/A";
-          const quantity  = cols[3] || "N/A";
-          const fromLoc   = cols[4] || "N/A";
-          const toLoc     = cols[5] || "N/A";
-          const totalCost = cols[6] || "N/A";
-
-          // Format tanggal (opsional)
-          let formattedDate = rawDate;
-          const dateObj = new Date(rawDate);
-          if (!isNaN(dateObj)) {
-            let options = { year: 'numeric', month: 'long', day: 'numeric' };
-            formattedDate = dateObj.toLocaleDateString('en-US', options);
-          }
-
-          // Buat baris HTML
-          const rowHTML = `
-            <tr>
-              <td>${orderId}</td>
-              <td>${formattedDate}</td>
-              <td>${item}</td>
-              <td>${quantity}</td>
-              <td>${fromLoc}</td>
-              <td>${toLoc}</td>
-              <td>${totalCost}</td>
-            </tr>
-          `;
-          tableBody.innerHTML += rowHTML;
-        });
+        // Jika device/browser tidak dukung share file PDF, fallback ke download
+        pdf.save("order_details.pdf");
       }
     }
+
+    // -------------------------------------
+    // 3) Pasang event ke tombol Print PDF
+    // -------------------------------------
+    document.getElementById("print-pdf-btn").addEventListener("click", shareAsPDF);
   </script>
+
 </body>
 </html>
