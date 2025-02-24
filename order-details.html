@@ -9,16 +9,13 @@
       font-family: Arial, sans-serif;
       margin: 20px;
     }
-    /* Headline di pojok kiri atas */
-    #customer-headline {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
+    h2 {
+      text-align: center;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 20px;
     }
     th, td {
       border: 1px solid #000;
@@ -32,10 +29,7 @@
 </head>
 <body>
 
-  <!-- Headline untuk nama customer -->
-  <div id="customer-headline">Customer: N/A</div>
-
-  <!-- Tabel Order Details -->
+  <h2>Order Details</h2>
   <table>
     <thead>
       <tr>
@@ -48,8 +42,16 @@
         <th>Total Cost</th>
       </tr>
     </thead>
-    <tbody id="orders-table-body">
-      <!-- Baris order akan ditambahkan secara dinamis -->
+    <tbody>
+      <tr>
+        <td id="order-id">N/A</td>
+        <td id="date">N/A</td>
+        <td id="item">N/A</td>
+        <td id="quantity">N/A</td>
+        <td id="from">N/A</td>
+        <td id="to">N/A</td>
+        <td id="total-cost">N/A</td>
+      </tr>
     </tbody>
   </table>
 
@@ -57,57 +59,37 @@
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
 
-    // Fungsi untuk decode parameter
+    // Fungsi bantu untuk ambil & decode parameter
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
 
-    // Ambil nama customer dan atur headline
-    const customerName = decodeParam("customer_name");
-    document.getElementById("customer-headline").textContent = "Customer: " + customerName;
+    // Isi kolom selain date
+    document.getElementById("order-id").textContent = decodeParam("order_id");
+    document.getElementById("item").textContent     = decodeParam("item");
+    document.getElementById("quantity").textContent = decodeParam("quantity");
+    document.getElementById("from").textContent     = decodeParam("from");
+    document.getElementById("to").textContent       = decodeParam("to");
+    document.getElementById("total-cost").textContent = decodeParam("total_cost");
 
-    // Ambil parameter 'orders' yang berupa string JSON
-    let ordersJSON = decodeParam("orders");
-    let orders;
-    try {
-      orders = JSON.parse(ordersJSON);
-      if (!Array.isArray(orders)) {
-        orders = [];
+    // Ambil tanggal mentah dari URL
+    let rawDate = decodeParam("date");
+
+    if (rawDate !== "N/A") {
+      // Coba parse ke objek Date
+      let dateObj = new Date(rawDate);
+
+      if (!isNaN(dateObj)) {
+        // Jika valid, format jadi "January 15, 2025"
+        let options = { year: 'numeric', month: 'long', day: 'numeric' };
+        let formattedDate = dateObj.toLocaleDateString('en-US', options);
+        document.getElementById("date").textContent = formattedDate;
+      } else {
+        // Jika parse gagal, tampilkan apa adanya
+        document.getElementById("date").textContent = rawDate;
       }
-    } catch (e) {
-      orders = [];
-    }
-
-    // Ambil elemen tbody untuk menampilkan order
-    const tableBody = document.getElementById("orders-table-body");
-
-    if (orders.length === 0) {
-      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      orders.forEach(order => {
-        // Parsing dan format tanggal
-        let rawDate = order.date || "N/A";
-        let formattedDate = rawDate;
-        const dateObj = new Date(rawDate);
-        if (!isNaN(dateObj)) {
-          let options = { year: 'numeric', month: 'long', day: 'numeric' };
-          formattedDate = dateObj.toLocaleDateString('en-US', options);
-        }
-
-        // Buat baris HTML untuk order
-        const rowHTML = `
-          <tr>
-            <td>${order.order_id || "N/A"}</td>
-            <td>${formattedDate}</td>
-            <td>${order.item || "N/A"}</td>
-            <td>${order.quantity || "N/A"}</td>
-            <td>${order.from || "N/A"}</td>
-            <td>${order.to || "N/A"}</td>
-            <td>${order.total_cost || "N/A"}</td>
-          </tr>
-        `;
-        tableBody.innerHTML += rowHTML;
-      });
+      document.getElementById("date").textContent = "N/A";
     }
   </script>
 
