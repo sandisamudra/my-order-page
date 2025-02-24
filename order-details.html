@@ -56,16 +56,41 @@
   </table>
 
   <script>
-    // Fungsi untuk mengambil parameter dari URL dan mengisi tabel
+    // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
 
-    document.getElementById("order-id").textContent = decodeURIComponent(params.get("order_id") || "N/A");
-    document.getElementById("date").textContent = decodeURIComponent(params.get("date") || "N/A");
-    document.getElementById("item").textContent = decodeURIComponent(params.get("item") || "N/A");
-    document.getElementById("quantity").textContent = decodeURIComponent(params.get("quantity") || "N/A");
-    document.getElementById("from").textContent = decodeURIComponent(params.get("from") || "N/A");
-    document.getElementById("to").textContent = decodeURIComponent(params.get("to") || "N/A");
-    document.getElementById("total-cost").textContent = decodeURIComponent(params.get("total_cost") || "N/A");
+    // Fungsi bantu untuk ambil & decode parameter
+    function decodeParam(key) {
+      return decodeURIComponent(params.get(key) || "N/A");
+    }
+
+    // Isi kolom selain date
+    document.getElementById("order-id").textContent = decodeParam("order_id");
+    document.getElementById("item").textContent     = decodeParam("item");
+    document.getElementById("quantity").textContent = decodeParam("quantity");
+    document.getElementById("from").textContent     = decodeParam("from");
+    document.getElementById("to").textContent       = decodeParam("to");
+    document.getElementById("total-cost").textContent = decodeParam("total_cost");
+
+    // Ambil tanggal mentah dari URL
+    let rawDate = decodeParam("date");
+
+    if (rawDate !== "N/A") {
+      // Coba parse ke objek Date
+      let dateObj = new Date(rawDate);
+
+      if (!isNaN(dateObj)) {
+        // Jika valid, format jadi "January 15, 2025"
+        let options = { year: 'numeric', month: 'long', day: 'numeric' };
+        let formattedDate = dateObj.toLocaleDateString('en-US', options);
+        document.getElementById("date").textContent = formattedDate;
+      } else {
+        // Jika parse gagal, tampilkan apa adanya
+        document.getElementById("date").textContent = rawDate;
+      }
+    } else {
+      document.getElementById("date").textContent = "N/A";
+    }
   </script>
 
 </body>
