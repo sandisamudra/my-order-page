@@ -27,6 +27,12 @@
     th {
       background-color: #f4f4f4;
     }
+
+    /* Biar kolom "Total Cost" (kolom ke-7) rata kanan */
+    table tr td:nth-child(7) {
+      text-align: right;
+    }
+
     /* Tombol Print PDF */
     #print-pdf-btn {
       cursor: pointer;
@@ -45,6 +51,7 @@
       height: 16px;
       margin-right: 5px;
     }
+
     /* Sembunyikan tombol print pada saat cetak */
     @media print {
       #print-pdf-btn {
@@ -56,6 +63,16 @@
       tfoot {
         display: table-footer-group;
       }
+    }
+
+    /* Tabel Quotation */
+    #quotation-table {
+      margin-top: 20px;
+    }
+    /* Sel grand total rata kanan dan tebal */
+    #grand-total {
+      text-align: right;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -89,7 +106,7 @@
   </table>
 
   <!-- Tabel Quotation (Grand Total) -->
-  <table id="quotation-table" style="margin-top:20px;">
+  <table id="quotation-table">
     <thead>
       <tr>
         <th>Grand Total</th>
@@ -106,7 +123,7 @@
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
 
-    // Fungsi untuk decode parameter
+    // Fungsi bantu decode parameter
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
@@ -115,27 +132,27 @@
     const customerName = decodeParam("customer_name");
     document.getElementById("customer-headline").textContent = "Customer Name : " + customerName;
 
-    // Ambil data orders dengan asumsi format:
-    // "001|1/15/2025, 12:00:00 AM|Gold|20|Jakarta|Papua|300 USD;002|1/16/2025, 1:00:00 PM|Silver|10|Bandung|Surabaya|200 USD"
+    // Data orders, misalnya: 
+    // "ORD3|February 17, 2025|Gold|20|Jakarta|Papua|12720000 IDR;ORD4|February 17, 2025|Silver|30|Jakarta|Bandung|4651431 IDR"
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
     let grandTotal = 0;
-    let currency = ""; // asumsi semua order menggunakan mata uang yang sama
+    let currency = ""; // Asumsi semua order sama mata uang
 
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      const rows = ordersString.split(";");
+      const rows = ordersString.split(";"); 
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const orderId   = cols[0] || "N/A";
-        let   rawDate   = cols[1] || "N/A";
-        const item      = cols[2] || "N/A";
-        const quantity  = cols[3] || "N/A";
-        const fromLoc   = cols[4] || "N/A";
-        const toLoc     = cols[5] || "N/A";
-        const totalCostStr = cols[6] || "N/A";
+        const orderId     = cols[0] || "N/A";
+        let   rawDate     = cols[1] || "N/A";
+        const item        = cols[2] || "N/A";
+        const quantity    = cols[3] || "N/A";
+        const fromLoc     = cols[4] || "N/A";
+        const toLoc       = cols[5] || "N/A";
+        const totalCostStr= cols[6] || "N/A";
 
         // Format tanggal
         let formattedDate = rawDate;
@@ -145,7 +162,7 @@
           formattedDate = dateObj.toLocaleDateString('en-US', options);
         }
 
-        // Tambahkan baris ke tabel order
+        // Buat baris HTML
         const rowHTML = `
           <tr>
             <td>${orderId}</td>
@@ -159,30 +176,42 @@
         `;
         tableBody.innerHTML += rowHTML;
 
-        // Proses total cost: asumsikan format "300 USD"
-        if(totalCostStr !== "N/A"){
-          // Hapus koma jika ada, dan pisahkan nilai dan currency
+        // Parsing cost, misal "12720000 IDR"
+        if (totalCostStr !== "N/A") {
+          // Hapus koma
           const cleaned = totalCostStr.replace(/,/g, "");
+          // Pisahkan angka & mata uang (asumsi dipisah spasi)
           const parts = cleaned.split(" ");
-          const value = parseFloat(parts[0]);
+          const value = parseFloat(parts[0]); 
           if (!isNaN(value)) {
             grandTotal += value;
           }
           if (!currency && parts.length > 1) {
-            currency = parts.slice(1).join(" ");
+            currency = parts.slice(1).join(" "); // sisanya = "IDR" dsb.
           }
         }
       });
     }
 
-    // Tampilkan grand total di tabel quotation
-    if(grandTotal === 0){
-      document.getElementById("grand-total").textContent = "N/A";
-    } else {
-      document.getElementById("grand-total").textContent = grandTotal + " " + (currency || "");
+    // Fungsi format angka dengan koma
+    // 12720000 -> "12,720,000"
+    function formatNumberWithCommas(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // Tombol Print PDF: panggil window.print()
+    // Tampilkan grand total
+    const grandTotalCell = document.getElementById("grand-total");
+    if (grandTotal === 0) {
+      grandTotalCell.textContent = "N/A";
+    } else {
+      // Gabungkan format angka + currency
+      const formattedNumber = formatNumberWithCommas(grandTotal);
+      grandTotalCell.textContent = currency 
+        ? ${formattedNumber} ${currency} 
+        : formattedNumber;
+    }
+
+    // Tombol Print PDF -> panggil window.print()
     document.getElementById("print-pdf-btn").addEventListener("click", () => {
       window.print();
     });
