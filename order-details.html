@@ -22,13 +22,13 @@
     th, td {
       border: 1px solid #000;
       padding: 10px;
-      text-align: left;
+      text-align: left; /* default */
     }
     th {
       background-color: #f4f4f4;
     }
 
-    /* Biar kolom "Total Cost" (kolom ke-7) rata kanan */
+    /* Kolom "Total Cost" (kolom ke-7) rata kanan */
     table tr td:nth-child(7) {
       text-align: right;
     }
@@ -38,7 +38,7 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      background: #007BFF; /* warna biru */
+      background: #007BFF;
       color: #fff;
       padding: 8px 12px;
       border: none;
@@ -52,7 +52,7 @@
       margin-right: 5px;
     }
 
-    /* Sembunyikan tombol print pada saat cetak */
+    /* Sembunyikan tombol print saat mencetak */
     @media print {
       #print-pdf-btn {
         display: none;
@@ -65,13 +65,23 @@
       }
     }
 
-    /* Tabel Quotation */
+    /* Tabel Quotation (2 kolom: label & nilai) */
     #quotation-table {
       margin-top: 20px;
+      border: 1px solid #000;
+      border-collapse: collapse;
+      width: 100%;
     }
-    /* Sel grand total rata kanan dan tebal */
+    #quotation-table th, #quotation-table td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: right; /* label dan nilai rata kanan */
+    }
+    #quotation-table th {
+      background-color: #f4f4f4;
+      width: 50%;
+    }
     #grand-total {
-      text-align: right;
       font-weight: bold;
     }
   </style>
@@ -79,7 +89,7 @@
 <body>
 
   <!-- Headline nama customer -->
-  <div id="customer-headline">Customer Name : N/A</div>
+  <div id="customer-headline">Customer: N/A</div>
 
   <!-- Tombol Print PDF -->
   <button id="print-pdf-btn">
@@ -107,54 +117,52 @@
 
   <!-- Tabel Quotation (Grand Total) -->
   <table id="quotation-table">
-    <thead>
-      <tr>
-        <th>Grand Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td id="grand-total">N/A</td>
-      </tr>
-    </tbody>
+    <tr>
+      <th>Grand Total</th>
+      <td id="grand-total">N/A</td>
+    </tr>
   </table>
 
   <script>
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
 
-    // Fungsi bantu decode parameter
+    // Fungsi bantu decode
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
 
-    // Tampilkan nama customer
+    // Dapatkan nama customer & currency
     const customerName = decodeParam("customer_name");
-    document.getElementById("customer-headline").textContent = "Customer Name : " + customerName;
+    const currency = decodeParam("currency"); // mis. "IDR", "USD", dsb.
 
-    // Data orders, misalnya: 
-    // "ORD3|February 17, 2025|Gold|20|Jakarta|Papua|12720000 IDR;ORD4|February 17, 2025|Silver|30|Jakarta|Bandung|4651431 IDR"
+    // Tampilkan nama customer
+    document.getElementById("customer-headline").textContent = "Customer: " + customerName;
+
+    // Ambil data orders, format:
+    // "ORD3|Feb 17,2025|Gold|20|Jakarta|Papua|4000000;ORD4|Feb 17,2025|Silver|30|Jakarta|Bandung|8720000"
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
     let grandTotal = 0;
-    let currency = ""; // Asumsi semua order sama mata uang
 
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
     } else {
-      const rows = ordersString.split(";"); 
+      // Pisahkan baris orders
+      const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const orderId     = cols[0] || "N/A";
-        let   rawDate     = cols[1] || "N/A";
-        const item        = cols[2] || "N/A";
-        const quantity    = cols[3] || "N/A";
-        const fromLoc     = cols[4] || "N/A";
-        const toLoc       = cols[5] || "N/A";
-        const totalCostStr= cols[6] || "N/A";
+        const orderId   = cols[0] || "N/A";
+        let   rawDate   = cols[1] || "N/A";
+        const item      = cols[2] || "N/A";
+        const quantity  = cols[3] || "N/A";
+        const fromLoc   = cols[4] || "N/A";
+        const toLoc     = cols[5] || "N/A";
+        // kolom ke-7 berisi angka total cost, mis. "4000000"
+        const totalCostNum = parseFloat(cols[6]) || 0; // ubah ke number
 
-        // Format tanggal
+        // (Opsional) Format tanggal
         let formattedDate = rawDate;
         const dateObj = new Date(rawDate);
         if (!isNaN(dateObj)) {
@@ -162,7 +170,10 @@
           formattedDate = dateObj.toLocaleDateString('en-US', options);
         }
 
-        // Buat baris HTML
+        // Tambahkan baris ke tabel order
+        // Format cost dengan koma + currency
+        const costWithCommas = formatNumberWithCommas(totalCostNum) + (currency !== "N/A" ? (" " + currency) : "");
+
         const rowHTML = `
           <tr>
             <td>${orderId}</td>
@@ -171,30 +182,17 @@
             <td>${quantity}</td>
             <td>${fromLoc}</td>
             <td>${toLoc}</td>
-            <td>${totalCostStr}</td>
+            <td>${costWithCommas}</td>
           </tr>
         `;
         tableBody.innerHTML += rowHTML;
 
-        // Parsing cost, misal "12720000 IDR"
-        if (totalCostStr !== "N/A") {
-          // Hapus koma
-          const cleaned = totalCostStr.replace(/,/g, "");
-          // Pisahkan angka & mata uang (asumsi dipisah spasi)
-          const parts = cleaned.split(" ");
-          const value = parseFloat(parts[0]); 
-          if (!isNaN(value)) {
-            grandTotal += value;
-          }
-          if (!currency && parts.length > 1) {
-            currency = parts.slice(1).join(" "); // sisanya = "IDR" dsb.
-          }
-        }
+        // Tambahkan ke grand total
+        grandTotal += totalCostNum;
       });
     }
 
-    // Fungsi format angka dengan koma
-    // 12720000 -> "12,720,000"
+    // Fungsi format angka ke "12,720,000"
     function formatNumberWithCommas(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
@@ -204,18 +202,17 @@
     if (grandTotal === 0) {
       grandTotalCell.textContent = "N/A";
     } else {
-      // Gabungkan format angka + currency
       const formattedNumber = formatNumberWithCommas(grandTotal);
-      grandTotalCell.textContent = currency 
-        ? '${formattedNumber} ${currency}' 
+      // mis. "12,720,000 IDR"
+      grandTotalCell.textContent = currency !== "N/A"
+        ? ${formattedNumber} ${currency}
         : formattedNumber;
     }
 
-    // Tombol Print PDF -> panggil window.print()
+    // Tombol Print PDF
     document.getElementById("print-pdf-btn").addEventListener("click", () => {
       window.print();
     });
   </script>
-
 </body>
 </html>
