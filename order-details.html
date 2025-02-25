@@ -62,7 +62,7 @@
 <body>
 
   <!-- Headline nama customer -->
-  <div id="customer-headline">Customer: N/A</div>
+  <div id="customer-headline">Customer Name : N/A</div>
 
   <!-- Tombol Print PDF -->
   <button id="print-pdf-btn">
@@ -113,7 +113,7 @@
 
     // Tampilkan nama customer
     const customerName = decodeParam("customer_name");
-    document.getElementById("customer-headline").textContent = "Customer: " + customerName;
+    document.getElementById("customer-headline").textContent = "Customer Name : " + customerName;
 
     // Ambil data orders dengan asumsi format:
     // "001|1/15/2025, 12:00:00 AM|Gold|20|Jakarta|Papua|300 USD;002|1/16/2025, 1:00:00 PM|Silver|10|Bandung|Surabaya|200 USD"
