@@ -10,27 +10,24 @@
       margin: 20px;
     }
 
-    /* Logo container dengan shape biru di balik logo */
+    /* Logo dan Header */
     #logo-container {
       position: relative;
       width: 100%;
-      height: 100px; /* Tinggi area logo + shape */
+      height: 100px;
       margin-bottom: 20px;
-      /* Untuk memudahkan scaling di print */
-      transform-origin: top left; 
+      transform-origin: top left;
     }
 
     .blue-shape {
       position: absolute;
       top: 0;
       left: 0;
-      width: 50%; /* Membentang dari kiri hingga setengah halaman */
+      width: 50%;
       height: 100%;
       background-color: #000080;
-      /* Bentuk setengah trapesium terbalik */
       clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
       z-index: 0;
-      /* Pastikan warna dicetak */
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -38,42 +35,29 @@
     #brinks-logo {
       position: relative;
       z-index: 1;
-      height: 80px; /* Tinggi logo */
-      margin: 10px 0 0 20px; /* Penyesuaian margin agar tidak terlalu mepet */
-    }
-    /* Headline company */
-    #company-headline {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    /* Headline customer */
-    #customer-headline {
-      font-size: 24px;
-      font-weight: normal;
-      margin-bottom: 20px;
+      height: 80px;
+      margin: 10px 0 0 20px;
     }
 
-    /* Tombol Print PDF */
+    #company-headline, #customer-headline {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* Tombol Print */
     #print-pdf-btn {
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
       background: #007BFF;
       color: #fff;
       padding: 8px 12px;
       border: none;
       border-radius: 4px;
-      text-decoration: none;
       font-size: 14px;
       margin-bottom: 20px;
     }
-    #print-pdf-btn img {
-      height: 16px;
-      margin-right: 5px;
-    }
 
-    /* Tabel utama (Orders) */
+    /* Tabel */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -87,12 +71,11 @@
     th {
       background-color: #f4f4f4;
     }
-    /* Kolom "Total Cost" (kolom ke-7) rata kanan */
     table tr td:nth-child(7) {
       text-align: right;
     }
 
-    /* Tabel Quotation (Grand Total) dengan 2 baris */
+    /* Grand Total */
     #quotation-table {
       margin-top: 20px;
       border: 1px solid #000;
@@ -102,7 +85,7 @@
     #quotation-table td {
       border: 1px solid #000;
       padding: 10px;
-      text-align: right; /* Rata kanan */
+      text-align: right;
     }
     #quotation-table #grand-total-label {
       background-color: #f4f4f4;
@@ -112,54 +95,50 @@
       font-weight: bold;
     }
 
-    /* Cetak */
+    /* Signature Area */
+    .signature-container {
+      margin-top: 20px;
+      border: 1px solid #000;
+      padding: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #000;
+      width: 100%;
+      height: 100px;
+      cursor: crosshair;
+    }
+    .signature-buttons {
+      margin-top: 10px;
+    }
+    .signature-buttons button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+    
+    /* Print */
     @media print {
-      .blue-shape {
-        width: 100%;
-      }
-      #print-pdf-btn {
-        display: none; /* Tombol tidak tercetak */
-      }
-      thead {
-        display: table-header-group;
-      }
-      tfoot {
-        display: table-footer-group;
-      }
-      /* Kecilkan logo-container & headline saat print */
-      #logo-container {
-        transform: scale(0.5);
-        height: auto; /* Supaya menyesuaikan konten */
-      }
-      #customer-headline {
-        font-size: 16px; /* Perkecil font headline */
-      }
-      #company-headline {
-        font-size: 16px; /* Perkecil font headline */
-      }
+      .blue-shape { width: 100%; }
+      #print-pdf-btn, .signature-buttons { display: none; }
+      thead { display: table-header-group; }
+      tfoot { display: table-footer-group; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Container untuk logo & shape -->
   <div id="logo-container">
     <div class="blue-shape"></div>
-    <!-- Ganti URL src dengan link logo Brinks di Glide -->
     <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
   </div>
-  <!-- Headline nama company -->
-  <div id="company-headline"> PT. Brinks Solutions Indonesia </div>
-  <!-- Headline nama customer -->
+
+  <div id="company-headline">PT. Brinks Solutions Indonesia</div>
   <div id="customer-headline">Customer Name : N/A</div>
 
-  <!-- Tombol Print PDF -->
-  <button id="print-pdf-btn">
-    <img src="https://cdn-icons-png.flaticon.com/512/2099/2099058.png" alt="download icon"/>
-    Print PDF
-  </button>
+  <button id="print-pdf-btn">Print PDF</button>
 
-  <!-- Tabel Order Details -->
   <table>
     <thead>
       <tr>
@@ -172,41 +151,37 @@
         <th>Total Cost</th>
       </tr>
     </thead>
-    <tbody id="orders-table-body">
-      <!-- Baris order akan ditambahkan secara dinamis -->
-    </tbody>
+    <tbody id="orders-table-body"></tbody>
   </table>
 
-  <!-- Tabel Quotation (2 Baris) -->
   <table id="quotation-table">
-    <tr>
-      <td id="grand-total-label">Grand Total</td>
-    </tr>
-    <tr>
-      <td id="grand-total">N/A</td>
-    </tr>
+    <tr><td id="grand-total-label">Grand Total</td></tr>
+    <tr><td id="grand-total">N/A</td></tr>
   </table>
+
+  <!-- Signature Section -->
+  <div class="signature-container">
+    <p>Customer Signature:</p>
+    <canvas id="signature-pad"></canvas>
+    <div class="signature-buttons">
+      <button id="clear-signature">Clear</button>
+      <button id="save-signature">Save</button>
+    </div>
+    <img id="signature-image" style="display: none; width: 100%;">
+  </div>
 
   <script>
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
+    function decodeParam(key) { return decodeURIComponent(params.get(key) || "N/A"); }
 
-    // Fungsi bantu decode
-    function decodeParam(key) {
-      return decodeURIComponent(params.get(key) || "N/A");
-    }
+    document.getElementById("customer-headline").textContent = "Customer Name : " + decodeParam("customer_name");
 
-    // Tampilkan nama customer
-    const customerName = decodeParam("customer_name");
-    document.getElementById("customer-headline").textContent = "Customer Name : " + customerName;
-
-    // Ambil data orders
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
     let grandTotal = 0;
-    // Asumsi currency dikirim terpisah, atau masukkan di totalCostStr jika perlu
-    let foundCurrency = decodeParam("currency"); // misal "IDR"
+    let foundCurrency = decodeParam("currency");
 
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
@@ -214,63 +189,49 @@
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const orderId      = cols[0] || "N/A";
-        let   rawDate      = cols[1] || "N/A";
-        const item         = cols[2] || "N/A";
-        const quantity     = cols[3] || "N/A";
-        const fromLoc      = cols[4] || "N/A";
-        const toLoc        = cols[5] || "N/A";
-        const totalCostStr = cols[6] || "0"; // "4000000"
+        const formattedDate = new Date(cols[1]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const costValue = parseFloat(cols[6]) || 0;
+        const costFormatted = costValue.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
+        grandTotal += costValue;
 
-        // Format tanggal
-        let formattedDate = rawDate;
-        const dateObj = new Date(rawDate);
-        if (!isNaN(dateObj)) {
-          const options = { year: 'numeric', month: 'long', day: 'numeric' };
-          formattedDate = dateObj.toLocaleDateString('en-US', options);
-        }
-
-        // Konversi ke angka
-        const costValue = parseFloat(totalCostStr) || 0;
-        // Format dengan koma + currency (jika ada)
-        const costFormatted = formatNumberWithCommas(costValue) + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
-
-        // Tambahkan baris
-        const rowHTML = `
+        tableBody.innerHTML += `
           <tr>
-            <td>${orderId}</td>
+            <td>${cols[0]}</td>
             <td>${formattedDate}</td>
-            <td>${item}</td>
-            <td>${quantity}</td>
-            <td>${fromLoc}</td>
-            <td>${toLoc}</td>
+            <td>${cols[2]}</td>
+            <td>${cols[3]}</td>
+            <td>${cols[4]}</td>
+            <td>${cols[5]}</td>
             <td>${costFormatted}</td>
           </tr>
         `;
-        tableBody.innerHTML += rowHTML;
-
-        grandTotal += costValue;
       });
     }
 
-    // Fungsi format angka ke "4,000,000"
-    function formatNumberWithCommas(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
 
-    // Tampilkan grand total
-    const grandTotalCell = document.getElementById("grand-total");
-    if (grandTotal === 0) {
-      grandTotalCell.textContent = "N/A";
-    } else {
-      const formattedGT = formatNumberWithCommas(grandTotal) + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
-      grandTotalCell.textContent = formattedGT;
-    }
+    document.getElementById("print-pdf-btn").addEventListener("click", () => window.print());
 
-    // Tombol Print
-    document.getElementById("print-pdf-btn").addEventListener("click", () => {
-      window.print();
+    // Signature Pad
+    const canvas = document.getElementById("signature-pad");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mousemove", e => {
+      if (!drawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+    });
+
+    document.getElementById("clear-signature").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+
+    document.getElementById("save-signature").addEventListener("click", () => {
+      document.getElementById("signature-image").src = canvas.toDataURL();
+      document.getElementById("signature-image").style.display = "block";
     });
   </script>
+
 </body>
 </html>
