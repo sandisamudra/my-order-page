@@ -9,54 +9,46 @@
       font-family: Arial, sans-serif;
       margin: 20px;
     }
+
     /* Logo container dengan shape biru di balik logo */
     #logo-container {
       position: relative;
       width: 100%;
-      height: 100px; /* Sesuaikan tinggi sesuai kebutuhan */
+      height: 100px; /* Tinggi area logo + shape */
       margin-bottom: 20px;
+      /* Untuk memudahkan scaling di print */
+      transform-origin: top left; 
     }
+
     .blue-shape {
       position: absolute;
       top: 0;
       left: 0;
-      width: 50%; /* Membentang dari kiri sampai tengah halaman */
+      width: 50%; /* Membentang dari kiri hingga setengah halaman */
       height: 100%;
-      background-color: #007BFF; /* Warna biru */
+      background-color: #007BFF;
       /* Bentuk setengah trapesium terbalik */
       clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
       z-index: 0;
+      /* Pastikan warna dicetak */
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
     }
+
     #brinks-logo {
       position: relative;
       z-index: 1;
-      height: 80px; /* Sesuaikan tinggi logo */
-      margin: 10px 0 0 20px; /* Penyesuaian margin agar logo tidak terlalu mepet */
+      height: 80px; /* Tinggi logo */
+      margin: 10px 0 0 20px; /* Penyesuaian margin agar tidak terlalu mepet */
     }
+
     /* Headline customer */
     #customer-headline {
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 20px;
     }
-    /* Tabel utama (Order Details) */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #000;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #f4f4f4;
-    }
-    /* Kolom "Total Cost" (kolom ke-7) rata kanan */
-    table tr td:nth-child(7) {
-      text-align: right;
-    }
+
     /* Tombol Print PDF */
     #print-pdf-btn {
       cursor: pointer;
@@ -75,18 +67,27 @@
       height: 16px;
       margin-right: 5px;
     }
-    @media print {
-      #print-pdf-btn {
-        display: none;
-      }
-      thead {
-        display: table-header-group;
-      }
-      tfoot {
-        display: table-footer-group;
-      }
+
+    /* Tabel utama (Orders) */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
     }
-    /* Tabel Quotation (Grand Total) dengan dua baris */
+    th, td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    /* Kolom "Total Cost" (kolom ke-7) rata kanan */
+    table tr td:nth-child(7) {
+      text-align: right;
+    }
+
+    /* Tabel Quotation (Grand Total) dengan 2 baris */
     #quotation-table {
       margin-top: 20px;
       border: 1px solid #000;
@@ -104,15 +105,36 @@
     #quotation-table #grand-total {
       font-weight: bold;
     }
+
+    /* Cetak */
+    @media print {
+      #print-pdf-btn {
+        display: none; /* Tombol tidak tercetak */
+      }
+      thead {
+        display: table-header-group;
+      }
+      tfoot {
+        display: table-footer-group;
+      }
+      /* Kecilkan logo-container & headline saat print */
+      #logo-container {
+        transform: scale(0.7);
+        height: auto; /* Supaya menyesuaikan konten */
+      }
+      #customer-headline {
+        font-size: 16px; /* Perkecil font headline */
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Logo container: shape biru dan logo Brinks -->
+  <!-- Container untuk logo & shape -->
   <div id="logo-container">
     <div class="blue-shape"></div>
-    <!-- Ganti src dengan URL logo Brinks yang diupload di Glide -->
-    <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
+    <!-- Ganti URL src dengan link logo Brinks di Glide -->
+    <img id="brinks-logo" src="https://example.com/brinks-logo.png" alt="Brinks Logo">
   </div>
 
   <!-- Headline nama customer -->
@@ -142,7 +164,7 @@
     </tbody>
   </table>
 
-  <!-- Tabel Quotation (Grand Total) dengan 2 baris -->
+  <!-- Tabel Quotation (2 Baris) -->
   <table id="quotation-table">
     <tr>
       <td id="grand-total-label">Grand Total</td>
@@ -156,7 +178,7 @@
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
 
-    // Fungsi bantu untuk decode parameter
+    // Fungsi bantu decode
     function decodeParam(key) {
       return decodeURIComponent(params.get(key) || "N/A");
     }
@@ -165,14 +187,13 @@
     const customerName = decodeParam("customer_name");
     document.getElementById("customer-headline").textContent = "Customer Name : " + customerName;
 
-    // Ambil data orders, misal format:
-    // "ORD3|Feb 17,2025|Gold|20|Jakarta|Papua|4000000;ORD4|Feb 17,2025|Silver|30|Jakarta|Bandung|8720000"
-    // Pastikan total cost hanya angka, karena mata uang dikirim terpisah
+    // Ambil data orders
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
     let grandTotal = 0;
-    let foundCurrency = decodeParam("currency"); // Dikirim sebagai parameter, misal "IDR"
+    // Asumsi currency dikirim terpisah, atau masukkan di totalCostStr jika perlu
+    let foundCurrency = decodeParam("currency"); // misal "IDR"
 
     if (ordersString === "N/A" || ordersString.trim() === "") {
       tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
@@ -180,13 +201,13 @@
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const orderId   = cols[0] || "N/A";
-        let rawDate     = cols[1] || "N/A";
-        const item      = cols[2] || "N/A";
-        const quantity  = cols[3] || "N/A";
-        const fromLoc   = cols[4] || "N/A";
-        const toLoc     = cols[5] || "N/A";
-        const totalCostStr = cols[6] || "0"; // misal "4000000" (tanpa mata uang)
+        const orderId      = cols[0] || "N/A";
+        let   rawDate      = cols[1] || "N/A";
+        const item         = cols[2] || "N/A";
+        const quantity     = cols[3] || "N/A";
+        const fromLoc      = cols[4] || "N/A";
+        const toLoc        = cols[5] || "N/A";
+        const totalCostStr = cols[6] || "0"; // "4000000"
 
         // Format tanggal
         let formattedDate = rawDate;
@@ -196,11 +217,12 @@
           formattedDate = dateObj.toLocaleDateString('en-US', options);
         }
 
-        // Parse total cost
+        // Konversi ke angka
         const costValue = parseFloat(totalCostStr) || 0;
+        // Format dengan koma + currency (jika ada)
         const costFormatted = formatNumberWithCommas(costValue) + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
 
-        // Tambahkan baris ke tabel order
+        // Tambahkan baris
         const rowHTML = `
           <tr>
             <td>${orderId}</td>
@@ -218,12 +240,12 @@
       });
     }
 
-    // Fungsi untuk format angka dengan koma
+    // Fungsi format angka ke "4,000,000"
     function formatNumberWithCommas(num) {
       return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
-    // Tampilkan grand total di tabel quotation
+    // Tampilkan grand total
     const grandTotalCell = document.getElementById("grand-total");
     if (grandTotal === 0) {
       grandTotalCell.textContent = "N/A";
@@ -232,7 +254,7 @@
       grandTotalCell.textContent = formattedGT;
     }
 
-    // Tombol Print PDF: panggil window.print()
+    // Tombol Print
     document.getElementById("print-pdf-btn").addEventListener("click", () => {
       window.print();
     });
