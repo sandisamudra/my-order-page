@@ -205,7 +205,7 @@
       const formattedNumber = formatNumberWithCommas(grandTotal);
       // mis. "12,720,000 IDR"
       grandTotalCell.textContent = currency !== "N/A"
-        ? ${formattedNumber} ${currency}
+        ? '${formattedNumber} ${currency}'
         : formattedNumber;
     }
 
