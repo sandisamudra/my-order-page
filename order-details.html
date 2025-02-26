@@ -26,6 +26,8 @@
       height: 80px;
       background-color: #000080;
       z-index: 0;
+      clip-path: polygon(0% 0%, 100% 0%, 75% 100%, 0% 100%);
+
     }
 
     #brinks-logo {
@@ -144,9 +146,14 @@
 
     /* Print */
     @media print {
-      .blue-shape { width: 55%; height: 80px; }
-      #print-pdf-btn, .signature-buttons, canvas { display: none; }
-      #signature-image, #signature-name { display: block; }
+      .blue-shape { 
+        clip-path: polygon(0% 0%, 100% 0%, 75% 100%, 0% 100%);
+        width: 55%;
+        height: 80px;
+ }
+      #print-pdf-btn { display: none; } /* Tombol hanya hilang saat print */
+      .signature-buttons { display: none; }
+
     }
   </style>
 </head>
