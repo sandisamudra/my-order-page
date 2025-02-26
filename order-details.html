@@ -155,9 +155,18 @@
         print-color-adjust: exact;
  
  }
-      #print-pdf-btn { display: none; } /* Tombol hanya hilang saat print */
-      .signature-buttons { display: none; }
-
+      #print-pdf-btn { 
+        display: none; 
+      } /* Tombol hanya hilang saat print */
+      .signature-buttons { 
+        display: none; 
+      }
+      #signature-pad, #save-signature, #clear-signature {
+        display: none !important;
+      }
+      #signature-image {
+        display: block !important;
+      }
     }
   </style>
 </head>
@@ -279,6 +288,19 @@
       localStorage.removeItem("savedSignatureName");
       document.getElementById("signature-image").style.display = "none";
       document.getElementById("signature-name").style.display = "none";
+});
+    document.getElementById("print-pdf").addEventListener("click", () => {
+    document.getElementById("signature-pad").style.display = "none";
+    document.getElementById("save-signature").style.display = "none";
+    document.getElementById("clear-signature").style.display = "none";
+    document.getElementById("signature-image").style.display = "block";
+  
+    window.print();
+
+  // Setelah cetak, tampilkan kembali signature pad
+    document.getElementById("signature-pad").style.display = "block";
+    document.getElementById("save-signature").style.display = "inline-block";
+    document.getElementById("clear-signature").style.display = "inline-block";
 });
 
 // Cek apakah ada tanda tangan yang sudah disimpan
