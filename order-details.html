@@ -150,34 +150,30 @@
     const customerName = params.get("customer");
     const orderId = params.get("order_id");
 
-    // Dummy Data (gantilah dengan data dari Glide)
-    const orders = [
-      { orderId: "1001", date: "2025-02-25", item: "Gold", quantity: "2 Kg", from: "Jakarta", to: "Singapore", totalCost: "1000000 IDR", customer: "John Doe" },
-      { orderId: "1002", date: "2025-02-26", item: "Silver", quantity: "3 Kg", from: "Bali", to: "Bangkok", totalCost: "2000000 IDR", customer: "John Doe" }
-    ];
+    // Ambil data dari Glide Apps
+    fetch("https://api.glideapps.com/api/orders") // Gantilah dengan URL API Glide Apps
+      .then(response => response.json())
+      .then(data => {
+        const filteredOrders = data.filter(order => order.customer === customerName);
+        const tableBody = document.querySelector("#order-table tbody");
+        let grandTotal = 0;
 
-    // Filter order berdasarkan Customer Name & Order ID
-    const filteredOrders = orders.filter(order => order.customer === customerName);
+        filteredOrders.forEach(order => {
+          const row = `<tr>
+            <td>${order.orderId}</td>
+            <td>${order.date}</td>
+            <td>${order.item}</td>
+            <td>${order.quantity}</td>
+            <td>${order.from}</td>
+            <td>${order.to}</td>
+            <td>${order.totalCost}</td>
+          </tr>`;
+          tableBody.innerHTML += row;
+          grandTotal += parseInt(order.totalCost.replace(/\D/g, ""));
+        });
 
-    // Render tabel order
-    const tableBody = document.querySelector("#order-table tbody");
-    let grandTotal = 0;
-
-    filteredOrders.forEach(order => {
-      const row = `<tr>
-        <td>${order.orderId}</td>
-        <td>${order.date}</td>
-        <td>${order.item}</td>
-        <td>${order.quantity}</td>
-        <td>${order.from}</td>
-        <td>${order.to}</td>
-        <td>${order.totalCost}</td>
-      </tr>`;
-      tableBody.innerHTML += row;
-      grandTotal += parseInt(order.totalCost.replace(/\D/g, ""));
-    });
-
-    document.getElementById("grand-total").textContent = Grand Total: ${grandTotal.toLocaleString()} IDR;
+        document.getElementById("grand-total").textContent = Grand Total: ${grandTotal.toLocaleString()} IDR;
+      });
 
     // Signature Pad Variables
     const canvas = document.getElementById("signature-pad");
