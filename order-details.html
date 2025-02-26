@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quotation</title>
   <style>
     body {
@@ -14,29 +14,25 @@
     #logo-container {
       position: relative;
       width: 100%;
-      height: 100px;
-      margin-bottom: 0px;
-      margin-top: 50px;
+      height: 80px;
+      margin-bottom: 10px;
     }
 
     .blue-shape {
       position: absolute;
       top: 0;
       left: 0;
-      width: 50%;
-      height: 60px;
+      width: 55%;
+      height: 80px;
       background-color: #000080;
-      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
       z-index: 0;
     }
 
     #brinks-logo {
-      position: absolute;
-      left: 20px;
-      top: 15px;
-      height: 40px;
-      width: auto;
+      position: relative;
       z-index: 1;
+      height: 50px;
+      margin-top: 15px;
     }
 
     #company-headline {
@@ -44,11 +40,23 @@
       font-weight: bold;
       margin-bottom: 10px;
     }
-
+    
     #customer-headline {
       font-size: 16px;
       font-weight: normal;
       margin-bottom: 10px;
+    }
+
+    /* Tombol Print */
+    #print-pdf-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #000080;
+      color: white;
+      border: none;
+      border-radius: 5px;
     }
 
     /* Tabel */
@@ -57,14 +65,17 @@
       border-collapse: collapse;
       margin-top: 10px;
     }
+    
     th, td {
       border: 1px solid #000;
       padding: 10px;
       text-align: left;
     }
+    
     th {
       background-color: #f4f4f4;
     }
+
     table tr td:nth-child(7) {
       text-align: right;
     }
@@ -76,15 +87,18 @@
       border-collapse: collapse;
       width: 100%;
     }
+
     #quotation-table td {
       border: 1px solid #000;
       padding: 10px;
       text-align: right;
     }
+
     #quotation-table #grand-total-label {
       background-color: #f4f4f4;
       font-weight: bold;
     }
+
     #quotation-table #grand-total {
       font-weight: bold;
     }
@@ -97,26 +111,29 @@
       width: 300px;
       text-align: center;
     }
+
     canvas {
       border: 1px solid #000;
       width: 100%;
       height: 100px;
       cursor: crosshair;
-      touch-action: none;
     }
+
     .signature-buttons {
       margin-top: 10px;
     }
+
     .signature-buttons button {
       padding: 5px 10px;
       margin-right: 5px;
       cursor: pointer;
     }
-    
+
     /* Print */
     @media print {
       .blue-shape { width: 55%; height: 80px; }
-      #print-pdf-btn, .signature-buttons { display: none; }
+      #print-pdf-btn { display: none; } /* Tombol hanya hilang saat print */
+      .signature-buttons { display: none; }
     }
   </style>
 </head>
@@ -129,6 +146,8 @@
 
   <div id="company-headline">PT. Brinks Solutions Indonesia</div>
   <div id="customer-headline">Customer Name : N/A</div>
+
+  <button id="print-pdf-btn" onclick="window.print()">Print PDF</button>
 
   <table>
     <thead>
@@ -180,56 +199,52 @@
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
+        const formattedDate = new Date(cols[1]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         const costValue = parseFloat(cols[6]) || 0;
+        const costFormatted = costValue.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
         grandTotal += costValue;
 
         tableBody.innerHTML += `
           <tr>
             <td>${cols[0]}</td>
-            <td>${cols[1]}</td>
+            <td>${formattedDate}</td>
             <td>${cols[2]}</td>
             <td>${cols[3]}</td>
             <td>${cols[4]}</td>
             <td>${cols[5]}</td>
-            <td>${costValue.toLocaleString()} ${foundCurrency}</td>
+            <td>${costFormatted}</td>
           </tr>
         `;
       });
     }
 
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + " " + foundCurrency;
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
 
-    // Signature Pad
+    // Signature Pad Fix
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
     function startDrawing(event) {
-      event.preventDefault();
       drawing = true;
       ctx.beginPath();
-      ctx.moveTo(event.offsetX, event.offsetY);
+      ctx.moveTo(event.offsetX || event.touches[0].clientX, event.offsetY || event.touches[0].clientY);
     }
 
     function draw(event) {
       if (!drawing) return;
-      ctx.lineTo(event.offsetX, event.offsetY);
+      ctx.lineTo(event.offsetX || event.touches[0].clientX, event.offsetY || event.touches[0].clientY);
       ctx.stroke();
     }
 
     function stopDrawing() { drawing = false; }
 
-    canvas.addEventListener("pointerdown", startDrawing);
-    canvas.addEventListener("pointermove", draw);
-    canvas.addEventListener("pointerup", stopDrawing);
-    canvas.addEventListener("pointerleave", stopDrawing);
-
-    document.getElementById("clear-signature").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-
-    document.getElementById("save-signature").addEventListener("click", () => {
-      document.getElementById("signature-image").src = canvas.toDataURL();
-      document.getElementById("signature-image").style.display = "block";
-    });
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("touchstart", startDrawing);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", stopDrawing);
   </script>
 
 </body>
