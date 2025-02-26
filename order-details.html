@@ -98,17 +98,41 @@
 </div>
 
 <script>
-    function getQueryParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        let data = urlParams.get("orders");
+   function getQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let rawData = urlParams.get("orders");
 
-        try {
-            return JSON.parse(decodeURIComponent(data));
-        } catch (error) {
-            console.error("Error parsing orders:", error);
-            return [];
-        }
+    if (!rawData) {
+        console.error("No order data found in URL.");
+        return [];
     }
+
+    // Decode URL string
+    rawData = decodeURIComponent(rawData);
+
+    // Cek apakah data sudah dalam format JSON
+    try {
+        return JSON.parse(rawData);
+    } catch (error) {
+        console.warn("Data is not JSON, trying custom parsing...");
+
+        // Format manual jika data dikirim dalam bentuk string biasa (dipisah dengan |)
+        let orders = rawData.split(";").map(order => {
+            let parts = order.split("|"); // Pisahkan berdasarkan "|"
+            return {
+                order_id: parts[0] || "N/A",
+                date: parts[1] || "N/A",
+                item: parts[2] || "N/A",
+                quantity: parts[3] || "0",
+                from: parts[4] || "N/A",
+                to: parts[5] || "N/A",
+                total_cost: parts[6] || "0 IDR"
+            };
+        });
+
+        return orders;
+    }
+}
 
     function loadOrderData() {
         const queryParams = getQueryParams();
