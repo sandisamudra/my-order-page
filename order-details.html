@@ -147,24 +147,31 @@
 
     /* Responsif untuk tampilan mobile */
     @media screen and (max-width: 768px) {
-    table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
-      white-space: nowrap;
+     table {
+    width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
+    table-layout: fixed; /* Memastikan tabel tetap proporsional */
   }
 
-    #quotation-table {
-      display: block;
-      width: 100%;
-      overflow-x: auto;
+  th, td {
+    font-size: 12px; /* Mengurangi ukuran font agar lebih muat */
+    padding: 5px; /* Mengurangi padding agar tidak terlalu besar */
+    word-wrap: break-word; /* Memastikan teks tetap rapi dalam sel */
   }
 
-    th, td {
-      font-size: 14px; /* Mengurangi ukuran font agar lebih pas di layar kecil */
-      padding: 8px; /* Mengurangi padding untuk menghemat ruang */
+  th {
+    font-size: 13px; /* Sedikit lebih besar dari td agar tetap terbaca */
   }
+
+  /* Menyesuaikan header dan sel agar tidak terlalu lebar */
+  th:nth-child(1), td:nth-child(1) { width: 15%; } /* Order ID */
+  th:nth-child(2), td:nth-child(2) { width: 20%; } /* Date */
+  th:nth-child(3), td:nth-child(3) { width: 15%; } /* Item */
+  th:nth-child(4), td:nth-child(4) { width: 15%; } /* Quantity */
+  th:nth-child(5), td:nth-child(5) { width: 15%; } /* From */
+  th:nth-child(6), td:nth-child(6) { width: 15%; } /* To */
+  th:nth-child(7), td:nth-child(7) { width: 20%; } /* Total Cost */
 }
+
     /* Print */
     @media print {
       .blue-shape { 
