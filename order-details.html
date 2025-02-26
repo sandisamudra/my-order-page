@@ -36,75 +36,7 @@
       margin-top: 15px;
     }
 
-    #company-headline {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    #customer-headline {
-      font-size: 16px;
-      font-weight: normal;
-      margin-bottom: 10px;
-    }
-
-    /* Tombol Print */
-    #print-pdf-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #000080;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-
-    /* Tabel */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    
-    th, td {
-      border: 1px solid #000;
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f4f4f4;
-    }
-
-    table tr td:nth-child(7) {
-      text-align: right;
-    }
-
-    /* Grand Total */
-    #quotation-table {
-      margin-top: 20px;
-      border: 1px solid #000;
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    #quotation-table td {
-      border: 1px solid #000;
-      padding: 10px;
-      text-align: right;
-    }
-
-    #quotation-table #grand-total-label {
-      background-color: #f4f4f4;
-      font-weight: bold;
-    }
-
-    #quotation-table #grand-total {
-      font-weight: bold;
-    }
-
-    /* Signature Area */
+    /* Signature Section */
     .signature-section {
       display: flex;
       justify-content: space-between;
@@ -126,16 +58,6 @@
       cursor: crosshair;
     }
 
-    .signature-buttons {
-      margin-top: 10px;
-    }
-
-    .signature-buttons button {
-      padding: 5px 10px;
-      margin-right: 5px;
-      cursor: pointer;
-    }
-
     /* Signature Image (Saved) */
     .saved-signature {
       width: 300px;
@@ -154,6 +76,7 @@
     @media print {
       .blue-shape { width: 50%; height: 80px; }
       #print-pdf-btn, .signature-container { display: none; } /* Signature Pad hilang */
+      #saved-signature-container { display: block !important; } /* Tanda tangan tetap muncul */
     }
   </style>
 </head>
@@ -164,40 +87,15 @@
     <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
   </div>
 
-  <div id="company-headline">PT. Brinks Solutions Indonesia</div>
-  <div id="customer-headline">Customer Name : N/A</div>
-
   <button id="print-pdf-btn" onclick="window.print()">Print PDF</button>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Order ID</th>
-        <th>Date</th>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>From</th>
-        <th>To</th>
-        <th>Total Cost</th>
-      </tr>
-    </thead>
-    <tbody id="orders-table-body"></tbody>
-  </table>
-
-  <table id="quotation-table">
-    <tr><td id="grand-total-label">Grand Total</td></tr>
-    <tr><td id="grand-total">N/A</td></tr>
-  </table>
 
   <!-- Signature Section -->
   <div class="signature-section">
     <div class="signature-container">
       <p>Customer Signature:</p>
       <canvas id="signature-pad"></canvas>
-      <div class="signature-buttons">
-        <button id="clear-signature">Clear</button>
-        <button id="save-signature">Save</button>
-      </div>
+      <button id="clear-signature">Clear</button>
+      <button id="save-signature">Save</button>
     </div>
 
     <div class="saved-signature" id="saved-signature-container" style="display: none;">
@@ -208,52 +106,59 @@
   </div>
 
   <script>
-    // Ambil parameter dari URL
-    const params = new URLSearchParams(window.location.search);
-    function decodeParam(key) { return decodeURIComponent(params.get(key) || "N/A"); }
-
-    document.getElementById("customer-headline").textContent = "Customer Name : " + decodeParam("customer_name");
-
-    const ordersString = decodeParam("orders");
-    const tableBody = document.getElementById("orders-table-body");
-
-    let grandTotal = 0;
-    let foundCurrency = decodeParam("currency");
-
-    if (ordersString === "N/A" || ordersString.trim() === "") {
-      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
-    } else {
-      const rows = ordersString.split(";");
-      rows.forEach(rowStr => {
-        const cols = rowStr.split("|");
-        const costValue = parseFloat(cols[6]) || 0;
-        const costFormatted = costValue.toLocaleString() + " " + foundCurrency;
-        grandTotal += costValue;
-
-        tableBody.innerHTML += `
-          <tr>
-            <td>${cols[0]}</td>
-            <td>${cols[1]}</td>
-            <td>${cols[2]}</td>
-            <td>${cols[3]}</td>
-            <td>${cols[4]}</td>
-            <td>${cols[5]}</td>
-            <td>${costFormatted}</td>
-          </tr>
-        `;
-      });
-    }
-
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + " " + foundCurrency;
-
-    // Signature Pad Fix
+    // Signature Pad Variables
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
+    let drawing = false;
+    
+    function startDraw(event) {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(getX(event), getY(event));
+      event.preventDefault();
+    }
+
+    function draw(event) {
+      if (!drawing) return;
+      ctx.lineTo(getX(event), getY(event));
+      ctx.stroke();
+      event.preventDefault();
+    }
+
+    function stopDraw() {
+      drawing = false;
+    }
+
+    function getX(event) {
+      return event.clientX || event.touches[0].clientX - canvas.getBoundingClientRect().left;
+    }
+
+    function getY(event) {
+      return event.clientY || event.touches[0].clientY - canvas.getBoundingClientRect().top;
+    }
+
+    // Mouse Events
+    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDraw);
+    canvas.addEventListener("mouseleave", stopDraw);
+
+    // Touch Events
+    canvas.addEventListener("touchstart", startDraw);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", stopDraw);
+
+    // Clear Signature
+    document.getElementById("clear-signature").addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+
+    // Save Signature
     document.getElementById("save-signature").addEventListener("click", () => {
       document.getElementById("signature-image").src = canvas.toDataURL();
-      document.getElementById("customer-name-display").textContent = decodeParam("customer_name");
       document.getElementById("saved-signature-container").style.display = "block";
     });
+
   </script>
 
 </body>
