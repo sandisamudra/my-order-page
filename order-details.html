@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quotation</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    
-    /* Header dan Logo */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    /* Logo dan Header */
     #logo-container {
       position: relative;
       width: 100%;
@@ -19,10 +22,9 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 50%;
+      width: 55%;
       height: 80px;
       background-color: #000080;
-      clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 0% 100%);
       z-index: 0;
     }
 
@@ -33,37 +35,77 @@
       margin-top: 15px;
     }
 
+    #company-headline {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    #customer-headline {
+      font-size: 16px;
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    /* Tombol Print */
+    #print-pdf-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #000080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
     /* Tabel */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 10px;
     }
-
+    
     th, td {
-      border: 1px solid black;
-      padding: 8px;
-      text-align: center;
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: left;
+    }
+    
+    th {
+      background-color: #f4f4f4;
     }
 
-    th { background-color: #f2f2f2; }
+    table tr td:nth-child(7) {
+      text-align: right;
+    }
 
     /* Grand Total */
-    #grand-total {
+    #quotation-table {
       margin-top: 20px;
+      border: 1px solid #000;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #quotation-table td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: right;
+    }
+
+    #quotation-table #grand-total-label {
+      background-color: #f4f4f4;
       font-weight: bold;
-      font-size: 18px;
     }
 
-    /* Signature Section */
-    .signature-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 20px;
+    #quotation-table #grand-total {
+      font-weight: bold;
     }
 
+    /* Signature Area */
     .signature-container {
+      margin-top: 20px;
       border: 1px solid #000;
       padding: 10px;
       width: 300px;
@@ -77,40 +119,37 @@
       cursor: crosshair;
     }
 
-    /* Signature Image (Saved) */
-    .saved-signature {
-      width: 300px;
-      text-align: center;
-      border: 1px solid #000;
-      padding: 10px;
+    .signature-buttons {
+      margin-top: 10px;
     }
 
-    .saved-signature img {
-      width: 100%;
-      height: 100px;
-      border: 1px solid #000;
+    .signature-buttons button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
     }
 
     /* Print */
     @media print {
-      #print-pdf-btn, .signature-container { display: none; }
-      #saved-signature-container { display: block !important; }
+      .blue-shape { width: 55%; height: 80px; }
+      #print-pdf-btn { display: none; } /* Tombol hanya hilang saat print */
+      .signature-buttons { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <div id="logo-container">
     <div class="blue-shape"></div>
     <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
   </div>
 
+  <div id="company-headline">PT. Brinks Solutions Indonesia</div>
+  <div id="customer-headline">Customer Name : N/A</div>
+
   <button id="print-pdf-btn" onclick="window.print()">Print PDF</button>
 
-  <!-- Tabel Order -->
-  <h2>Order Details</h2>
-  <table id="order-table">
+  <table>
     <thead>
       <tr>
         <th>Order ID</th>
@@ -122,101 +161,90 @@
         <th>Total Cost</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="orders-table-body"></tbody>
   </table>
 
-  <!-- Grand Total -->
-  <p id="grand-total">Grand Total: 0 IDR</p>
+  <table id="quotation-table">
+    <tr><td id="grand-total-label">Grand Total</td></tr>
+    <tr><td id="grand-total">N/A</td></tr>
+  </table>
 
   <!-- Signature Section -->
-  <div class="signature-section">
-    <div class="signature-container">
-      <p>Customer Signature:</p>
-      <canvas id="signature-pad"></canvas>
+  <div class="signature-container">
+    <p>Customer Signature:</p>
+    <canvas id="signature-pad"></canvas>
+    <div class="signature-buttons">
       <button id="clear-signature">Clear</button>
       <button id="save-signature">Save</button>
     </div>
-
-    <div class="saved-signature" id="saved-signature-container" style="display: none;">
-      <p>Customer Signature</p>
-      <img id="signature-image">
-      <p id="customer-name-display"></p>
-    </div>
+    <img id="signature-image" style="display: none; width: 100%;">
   </div>
 
   <script>
     // Ambil parameter dari URL
     const params = new URLSearchParams(window.location.search);
-    const customerName = params.get("customer");
-    const orderId = params.get("order_id");
+    function decodeParam(key) { return decodeURIComponent(params.get(key) || "N/A"); }
 
-    // Ambil data dari Glide Apps
-    fetch("https://api.glideapps.com/api/orders") // Gantilah dengan URL API Glide Apps
-      .then(response => response.json())
-      .then(data => {
-        const filteredOrders = data.filter(order => order.customer === customerName);
-        const tableBody = document.querySelector("#order-table tbody");
-        let grandTotal = 0;
+    document.getElementById("customer-headline").textContent = "Customer Name : " + decodeParam("customer_name");
 
-        filteredOrders.forEach(order => {
-          const row = `<tr>
-            <td>${order.orderId}</td>
-            <td>${order.date}</td>
-            <td>${order.item}</td>
-            <td>${order.quantity}</td>
-            <td>${order.from}</td>
-            <td>${order.to}</td>
-            <td>${order.totalCost}</td>
-          </tr>`;
-          tableBody.innerHTML += row;
-          grandTotal += parseInt(order.totalCost.replace(/\D/g, ""));
-        });
+    const ordersString = decodeParam("orders");
+    const tableBody = document.getElementById("orders-table-body");
 
-        document.getElementById("grand-total").textContent = Grand Total: ${grandTotal.toLocaleString()} IDR;
+    let grandTotal = 0;
+    let foundCurrency = decodeParam("currency");
+
+    if (ordersString === "N/A" || ordersString.trim() === "") {
+      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
+    } else {
+      const rows = ordersString.split(";");
+      rows.forEach(rowStr => {
+        const cols = rowStr.split("|");
+        const formattedDate = new Date(cols[1]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const costValue = parseFloat(cols[6]) || 0;
+        const costFormatted = costValue.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
+        grandTotal += costValue;
+
+        tableBody.innerHTML += `
+          <tr>
+            <td>${cols[0]}</td>
+            <td>${formattedDate}</td>
+            <td>${cols[2]}</td>
+            <td>${cols[3]}</td>
+            <td>${cols[4]}</td>
+            <td>${cols[5]}</td>
+            <td>${costFormatted}</td>
+          </tr>
+        `;
       });
+    }
 
-    // Signature Pad Variables
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
+
+    // Signature Pad Fix
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
-    
-    function startDraw(event) {
+
+    function startDrawing(event) {
       drawing = true;
       ctx.beginPath();
-      ctx.moveTo(getX(event), getY(event));
-      event.preventDefault();
+      ctx.moveTo(event.offsetX || event.touches[0].clientX, event.offsetY || event.touches[0].clientY);
     }
 
     function draw(event) {
       if (!drawing) return;
-      ctx.lineTo(getX(event), getY(event));
+      ctx.lineTo(event.offsetX || event.touches[0].clientX, event.offsetY || event.touches[0].clientY);
       ctx.stroke();
-      event.preventDefault();
     }
 
-    function stopDraw() { drawing = false; }
+    function stopDrawing() { drawing = false; }
 
-    function getX(event) { return event.clientX || event.touches[0].clientX - canvas.getBoundingClientRect().left; }
-    function getY(event) { return event.clientY || event.touches[0].clientY - canvas.getBoundingClientRect().top; }
-
-    // Mouse & Touch Events
-    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousedown", startDrawing);
     canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", stopDraw);
-    canvas.addEventListener("mouseleave", stopDraw);
-    canvas.addEventListener("touchstart", startDraw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("touchstart", startDrawing);
     canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", stopDraw);
-
-    // Clear Signature
-    document.getElementById("clear-signature").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
-
-    // Save Signature
-    document.getElementById("save-signature").addEventListener("click", () => {
-      document.getElementById("signature-image").src = canvas.toDataURL();
-      document.getElementById("saved-signature-container").style.display = "block";
-    });
-
+    canvas.addEventListener("touchend", stopDrawing);
   </script>
 
 </body>
