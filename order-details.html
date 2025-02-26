@@ -77,7 +77,6 @@
     
     th {
       background-color: #f4f4f4;
-      th:nth-child(7), td:nth-child(7) { text-align: right; }
     }
 
     table tr td:nth-child(7) {
@@ -191,8 +190,19 @@
         background-color: #000080 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
- 
  }
+      table {
+        width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
+        table-layout: fixed; /* Memastikan tabel tetap proporsional */
+  }
+       /* Menyesuaikan header dan sel agar tidak terlalu lebar */
+        th:nth-child(1), td:nth-child(1) { width: 15%; } /* Order ID */
+        th:nth-child(2), td:nth-child(2) { width: 25%; } /* Date */
+        th:nth-child(3), td:nth-child(3) { width: 10%; } /* Item */
+        th:nth-child(4), td:nth-child(4) { width: 15%; } /* Quantity */
+        th:nth-child(5), td:nth-child(5) { width: 15%; } /* From */
+        th:nth-child(6), td:nth-child(6) { width: 15%; } /* To */
+        th:nth-child(7), td:nth-child(7) { width: 20%; text-align: right; } /* Total Cost */
       #print-pdf-btn { 
         display: none; 
       } /* Tombol hanya hilang saat print */
