@@ -148,18 +148,27 @@
     /* Responsif untuk tampilan mobile */
     @media screen and (max-width: 768px) {
      table {
-    width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
-    table-layout: fixed; /* Memastikan tabel tetap proporsional */
+        width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
+        table-layout: fixed; /* Memastikan tabel tetap proporsional */
   }
-     #quotation-table #grand-total-label {
-    width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
-    table-layout: fixed; /* Memastikan tabel tetap proporsional */
+     #quotation-table {
+        width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
+        table-layout: fixed; /* Memastikan tabel tetap proporsional */
   }
       #quotation-table td {
-    width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
-    table-layout: fixed; /* Memastikan tabel tetap proporsional */
+        width: 100%; /* Agar tabel menyesuaikan dengan lebar layar */
+        table-layout: fixed; /* Memastikan tabel tetap proporsional */
   }
-
+      #quotation-table #grand-total-label {
+        font-size: 9px; /* Mengurangi ukuran font agar lebih muat */
+        padding: 1px; /* Mengurangi padding agar tidak terlalu besar */
+        word-wrap: break-word; /* Memastikan teks tetap rapi dalam sel */
+  }
+       #quotation-table #grand-total {
+        font-size: 9px; /* Mengurangi ukuran font agar lebih muat */
+        padding: 1px; /* Mengurangi padding agar tidak terlalu besar */
+        word-wrap: break-word; /* Memastikan teks tetap rapi dalam sel */
+  }
 
   th, td {
     font-size: 9px; /* Mengurangi ukuran font agar lebih muat */
@@ -203,6 +212,16 @@
 
       th {
         font-size: 15px; /* Sedikit lebih besar dari td agar tetap terbaca */
+  }
+       #quotation-table #grand-total-label {
+        font-size: 9px; /* Mengurangi ukuran font agar lebih muat */
+        padding: 1px; /* Mengurangi padding agar tidak terlalu besar */
+        word-wrap: break-word; /* Memastikan teks tetap rapi dalam sel */
+  }
+       #quotation-table #grand-total {
+        font-size: 9px; /* Mengurangi ukuran font agar lebih muat */
+        padding: 1px; /* Mengurangi padding agar tidak terlalu besar */
+        word-wrap: break-word; /* Memastikan teks tetap rapi dalam sel */
   }
        /* Menyesuaikan header dan sel agar tidak terlalu lebar */
         th:nth-child(1), td:nth-child(1) { width: 15%; } /* Order ID */
