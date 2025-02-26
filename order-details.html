@@ -233,27 +233,65 @@
             <td>${cols[3]}</td>
             <td>${cols[4]}</td>
             <td>${cols[5]}</td>
-            <td>${costValue.toLocaleString()} ${foundCurrency}</td>
+            <td>${costValue.toLocaleString()} ${foundCurrency !== "N/A" ? foundCurrency : ""}</td>
           </tr>
         `;
       });
     }
 
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + " " + foundCurrency;
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== N/A ? " " + foundCurrency : "");
 
     // Signature Pad
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    canvas.addEventListener("mousedown", () => drawing = true);
-    canvas.addEventListener("mousemove", (e) => drawing && ctx.lineTo(e.offsetX, e.offsetY) && ctx.stroke());
+    canvas.addEventListener("mousedown", (e) => {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+   });
+    canvas.addEventListener("mousemove", (e) => {
+      if (!drawing) return;
+      ctx.lineTo(e.offsetX, e.offsetY);
+      ctx.stroke();
+   });
     canvas.addEventListener("mouseup", () => drawing = false);
 
     document.getElementById("save-signature").addEventListener("click", () => {
       document.getElementById("signature-image").src = canvas.toDataURL();
       document.getElementById("signature-image").style.display = "block";
       document.getElementById("signature-name").textContent = decodeParam("customer_name");
+      document.getElementById("signature-name").style.display = "block";
+      const img = document.getElementById("signature-image");
+      img.src = canvas.toDataURL();
+      img.style.display = "block";
+      document.getElementById("signature-name").textContent = decodeParam("customer_name");
+      document.getElementById("signature-name").style.display = "block";
+
+      // Simpan tanda tangan sebelum print
+      localStorage.setItem("savedSignature", img.src);
+      localStorage.setItem("savedSignatureName", decodeParam("customer_name"));
+});
+    document.getElementById("clear-signature").addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      localStorage.removeItem("savedSignature");
+      localStorage.removeItem("savedSignatureName");
+      document.getElementById("signature-image").style.display = "none";
+      document.getElementById("signature-name").style.display = "none";
+});
+
+// Cek apakah ada tanda tangan yang sudah disimpan
+window.onload = () => {
+  const savedSignature = localStorage.getItem("savedSignature");
+  const savedSignatureName = localStorage.getItem("savedSignatureName");
+  if (savedSignature) {
+    document.getElementById("signature-image").src = savedSignature;
+    document.getElementById("signature-image").style.display = "block";
+    document.getElementById("signature-name").textContent = savedSignatureName;
+    document.getElementById("signature-name").style.display = "block";
+  }
+
     });
   </script>
 
