@@ -1,278 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quotation</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-
-    /* Logo dan Header */
-    #logo-container {
-      position: relative;
-      width: 100%;
-      height: 100px;
-      margin-bottom: 0px;
-      margin-top: 50px;
-      transform-origin: top left;
-    }
-
-    .blue-shape {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 50%;
-      height: 30px;
-      background-color: #000080;
-      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
-      z-index: 0;
-    }
-
-    #brinks-logo {
-      position: relative;
-      z-index: 1;
-      height: 20px;
-      width: 10%;
-      margin-bottom: 90px;
-      margin-top: 5px;
-    }
-
-    #company-headline {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    #customer-headline {
-      font-size: 16px;
-      font-weight: normal;
-      margin-bottom: 10px;
-    }
-
-    /* Tombol Print */
-    #print-pdf-btn {
-      cursor: pointer;
-      background: #007BFF;
-      color: #fff;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    /* Tabel Order */
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
-      border: 1px solid #000;
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f4f4f4;
-    }
-
-    table tr td:nth-child(7) {
-      text-align: right;
-    }
-
-    /* Tabel Quotation */
-    #quotation-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-
-    #quotation-table {
-      border: 1px solid #000;
-      border-collapse: collapse;
-      width: 50%;
-    }
-
-    #quotation-table td {
-      border: 1px solid #000;
-      padding: 10px;
-      text-align: right;
-    }
-
-    #quotation-table #grand-total-label {
-      background-color: #f4f4f4;
-      font-weight: bold;
-    }
-
-    #quotation-table #grand-total {
-      font-weight: bold;
-    }
-
-    /* Signature Area */
-    .signature-container {
-      border: 1px solid #000;
-      padding: 10px;
-      width: 300px;
-      text-align: center;
-    }
-
-    canvas {
-      border: 1px solid #000;
-      width: 100%;
-      height: 100px;
-      cursor: crosshair;
-      touch-action: none;
-    }
-
-    .signature-buttons {
-      margin-top: 10px;
-    }
-
-    .signature-buttons button {
-      padding: 5px 10px;
-      margin-right: 5px;
-      cursor: pointer;
-    }
-
-    /* Signature Display */
-    #saved-signature-container {
-      text-align: center;
-      margin-top: 20px;
-      display: none;
-      width: 50%;
-    }
-
-    #signature-image {
-      border: 1px solid #000;
-      width: 100%;
-      height: auto;
-    }
-
-    /* Print */
-    @media print {
-      .blue-shape { width: 55%; height: 80px; }
-      #print-pdf-btn, .signature-buttons { display: none; }
-      thead { display: table-header-group; }
-      tfoot { display: table-footer-group; }
-
-      #brinks-logo {
-        height: 50px;
-        width: 40%;
-        margin-bottom: 60px;
-        margin-top: 15px;
-      }
-
-      #saved-signature-container {
-        display: block !important;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brinks Order Summary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            width: 150px;
+        }
+        .blue-shape {
+            background-color: #0033a0;
+            height: 30px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .order-table, .total-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .order-table th, .order-table td, 
+        .total-table th, .total-table td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        .total-table {
+            margin-top: 20px;
+        }
+        .signature-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .signature-pad {
+            border: 1px solid black;
+            width: 300px;
+            height: 100px;
+        }
+        .signature-display {
+            border: 1px solid black;
+            width: 300px;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+        }
+        .hidden {
+            display: none;
+        }
+        .print-btn {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <img src="brinks_logo.png" alt="Brinks Logo" class="logo">
+        </div>
+        <div class="blue-shape"></div>
 
-  <div id="logo-container">
-    <div class="blue-shape"></div>
-    <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
-  </div>
+        <h3>PT. Brinks Solutions Indonesia</h3>
+        <p>Customer Name: <span id="customer-name">Safna</span></p>
 
-  <div id="company-headline">PT. Brinks Solutions Indonesia</div>
-  <div id="customer-headline">Customer Name : N/A</div>
+        <button class="print-btn" onclick="printPDF()">Print PDF</button>
 
-  <button id="print-pdf-btn">Print PDF</button>
+        <table class="order-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>From</th>
+                    <th>To</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ORD3</td>
+                    <td>February 18, 2025</td>
+                    <td>Gold</td>
+                    <td>20 Kg</td>
+                    <td>Jakarta</td>
+                    <td>Surabaya</td>
+                </tr>
+                <tr>
+                    <td>ORD4</td>
+                    <td>February 17, 2025</td>
+                    <td>Silver</td>
+                    <td>30 Kg</td>
+                    <td>Jakarta</td>
+                    <td>Papua</td>
+                </tr>
+            </tbody>
+        </table>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Order ID</th>
-          <th>Date</th>
-          <th>Item</th>
-          <th>Quantity</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Total Cost</th>
-        </tr>
-      </thead>
-      <tbody id="orders-table-body"></tbody>
-    </table>
-  </div>
+        <table class="total-table">
+            <tr>
+                <th>Grand Total</th>
+            </tr>
+            <tr>
+                <td id="total-cost">12,720,000 IDR</td>
+            </tr>
+        </table>
 
-  <div id="quotation-container">
-    <table id="quotation-table">
-      <tr><td id="grand-total-label">Grand Total</td></tr>
-      <tr><td id="grand-total">N/A</td></tr>
-    </table>
-
-    <div id="saved-signature-container">
-      <p>Customer Signature:</p>
-      <img id="signature-image">
-      <p id="customer-name-signature"></p>
+        <div class="signature-container">
+            <div>
+                <p>Customer Signature:</p>
+                <canvas id="signature-pad" class="signature-pad"></canvas>
+                <button onclick="clearSignature()">Clear</button>
+                <button onclick="saveSignature()">Save</button>
+            </div>
+            <div>
+                <p>Customer Signature:</p>
+                <div id="saved-signature" class="signature-display">[Signature]</div>
+                <p id="signature-name">Safna</p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <!-- Signature Section -->
-  <div class="signature-container">
-    <p>Customer Signature:</p>
-    <canvas id="signature-pad"></canvas>
-    <div class="signature-buttons">
-      <button id="clear-signature">Clear</button>
-      <button id="save-signature">Save</button>
-    </div>
-  </div>
+    <script>
+        // Format total cost dengan pemisah ribuan
+        function formatCurrency(amount) {
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " IDR";
+        }
+        document.getElementById("total-cost").innerText = formatCurrency(12720000);
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    function decodeParam(key) { return decodeURIComponent(params.get(key) || "N/A"); }
+        // Signature pad
+        let canvas = document.getElementById("signature-pad");
+        let ctx = canvas.getContext("2d");
+        let isDrawing = false;
 
-    document.getElementById("customer-headline").textContent = "Customer Name : " + decodeParam("customer_name");
+        canvas.addEventListener("mousedown", () => isDrawing = true);
+        canvas.addEventListener("mouseup", () => isDrawing = false);
+        canvas.addEventListener("mousemove", draw);
 
-    const ordersString = decodeParam("orders");
-    const tableBody = document.getElementById("orders-table-body");
+        function draw(event) {
+            if (!isDrawing) return;
+            ctx.lineWidth = 2;
+            ctx.lineCap = "round";
+            ctx.strokeStyle = "black";
+            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            ctx.stroke();
+        }
 
-    let grandTotal = 0;
-    let foundCurrency = decodeParam("currency");
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
-    if (ordersString === "N/A" || ordersString.trim() === "") {
-      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
-    } else {
-      const rows = ordersString.split(";");
-      rows.forEach(rowStr => {
-        const cols = rowStr.split("|");
-        grandTotal += parseFloat(cols[6]) || 0;
-        tableBody.innerHTML += `
-          <tr>
-            <td>${cols[0]}</td>
-            <td>${cols[1]}</td>
-            <td>${cols[2]}</td>
-            <td>${cols[3]}</td>
-            <td>${cols[4]}</td>
-            <td>${cols[5]}</td>
-            <td>${cols[6]}</td>
-          </tr>
-        `;
-      });
-    }
+        function saveSignature() {
+            let dataURL = canvas.toDataURL("image/png");
+            let img = new Image();
+            img.src = dataURL;
+            img.onload = function () {
+                let savedSignature = document.getElementById("saved-signature");
+                savedSignature.innerHTML = "";
+                savedSignature.appendChild(img);
+            };
+        }
 
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + " " + foundCurrency;
+        // Print PDF
+        function printPDF() {
+            let signaturePad = document.getElementById("signature-pad");
+            signaturePad.style.display = "none";  // Hilangkan signature pad
 
-    document.getElementById("save-signature").addEventListener("click", () => {
-      document.getElementById("signature-image").src = document.getElementById("signature-pad").toDataURL();
-      document.getElementById("customer-name-signature").textContent = decodeParam("customer_name");
-      document.getElementById("saved-signature-container").style.display = "block";
-    });
-  </script>
+            window.print();
 
+            signaturePad.style.display = "block";  // Munculkan kembali setelah print
+        }
+    </script>
 </body>
 </html>
