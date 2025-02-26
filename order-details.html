@@ -1,188 +1,296 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quotation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            text-align: center;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .total-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .grand-total {
-            font-size: 20px;
-            font-weight: bold;
-            text-align: right;
-        }
-        .signature-container {
-            text-align: left;
-            margin-top: 20px;
-        }
-        .signature-pad {
-            border: 1px solid black;
-            width: 100%;
-            height: 100px;
-        }
-        .hidden {
-            display: none;
-        }
-        .signature-box {
-            width: 100%;
-            text-align: right;
-        }
-        @media screen and (max-width: 600px) {
-            table, th, td {
-                font-size: 12px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quotation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    /* Logo dan Header */
+    #logo-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 0px;
+      margin-top: 50px;
+      transform-origin: top left;
+    }
+
+    .blue-shape {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 30px;
+      background-color: #000080;
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+      z-index: 0;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    #brinks-logo {
+      position: relative;
+      z-index: 1;
+      height: 20px;
+      width: 10%
+      margin-bottom: 90px;
+      margin-top: 5px;
+    }
+
+    #company-headline, {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    #customer-headline {
+      font-size: 16px;
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    /* Tombol Print */
+    #print-pdf-btn {
+      cursor: pointer;
+      background: #007BFF;
+      color: #fff;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    /* Tabel */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    table tr td:nth-child(7) {
+      text-align: right;
+    }
+
+    /* Grand Total */
+    #quotation-table {
+      margin-top: 20px;
+      border: 1px solid #000;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    #quotation-table td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: right;
+    }
+    #quotation-table #grand-total-label {
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+    #quotation-table #grand-total {
+      font-weight: bold;
+    }
+
+    /* Signature Area */
+    .signature-container {
+      margin-top: 20px;
+      border: 1px solid #000;
+      padding: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #000;
+      width: 100%;
+      height: 100px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .signature-buttons {
+      margin-top: 10px;
+    }
+    .signature-buttons button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+    
+    /* Print */
+    @media print {
+      .blue-shape { width: 55%; height: 80px; }
+      #print-pdf-btn, .signature-buttons { display: none; }
+      thead { display: table-header-group; }
+      tfoot { display: table-footer-group; }
+
+      #brinks-logo {
+      position: relative;
+      z-index: 1;
+      height: 50px;
+      width: 40%;
+      margin-bottom: 60px;
+      margin-top: 15px;
+        
+    }
+
+      #company-headline {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+       #customer-headline {
+        font-size: 16px;
+        font-weight: normal;
+        margin-bottom: 10px;
+       }
+        
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <img src="brinks_logo.png" alt="Brinks Logo" width="200">
-        <h3>PT. Brinks Solutions Indonesia</h3>
-        <p><b>Customer Name:</b> <span id="customerName"></span></p>
+  <div id="logo-container">
+    <div class="blue-shape"></div>
+    <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
+  </div>
 
-        <button id="printButton">Print PDF</button>
+  <div id="company-headline">PT. Brinks Solutions Indonesia</div>
+  <div id="customer-headline">Customer Name : N/A</div>
 
-        <table id="orderTable">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Date</th>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Total Cost</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Data dari Glide Apps akan diisi di sini -->
-            </tbody>
-        </table>
+  <button id="print-pdf-btn">Print PDF</button>
 
-        <div class="total-container">
-            <div class="grand-total">
-                <p>Grand Total</p>
-                <p id="grandTotal">0 IDR</p>
-            </div>
-        </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Total Cost</th>
+      </tr>
+    </thead>
+    <tbody id="orders-table-body"></tbody>
+  </table>
 
-        <div class="signature-container">
-            <p>Customer Signature:</p>
-            <canvas id="signaturePad" class="signature-pad"></canvas>
-            <button id="clearSignature">Clear</button>
-            <button id="saveSignature">Save</button>
-        </div>
+  <table id="quotation-table">
+    <tr><td id="grand-total-label">Grand Total</td></tr>
+    <tr><td id="grand-total">N/A</td></tr>
+  </table>
 
-        <div class="signature-box hidden" id="savedSignatureBox">
-            <p><b>Customer Signature:</b></p>
-            <img id="savedSignatureImage" src="" alt="Signature" width="200">
-            <p id="savedCustomerName"></p>
-        </div>
+  <!-- Signature Section -->
+  <div class="signature-container">
+    <p>Customer Signature:</p>
+    <canvas id="signature-pad"></canvas>
+    <div class="signature-buttons">
+      <button id="clear-signature">Clear</button>
+      <button id="save-signature">Save</button>
     </div>
+    <img id="signature-image" style="display: none; width: 100%;">
+  </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let urlParams = new URLSearchParams(window.location.search);
-            let customerName = urlParams.get("customerName"); // Ambil customerName dari URL
-            let orders = JSON.parse(decodeURIComponent(urlParams.get("orders"))); // Data order dari Glide Apps
+  <script>
+    // Ambil parameter dari URL
+    const params = new URLSearchParams(window.location.search);
+    function decodeParam(key) { return decodeURIComponent(params.get(key) || "N/A"); }
 
-            document.getElementById("customerName").innerText = customerName;
+    document.getElementById("customer-headline").textContent = "Customer Name : " + decodeParam("customer_name");
 
-            let orderTable = document.getElementById("orderTable").getElementsByTagName("tbody")[0];
-            let grandTotal = 0;
+    const ordersString = decodeParam("orders");
+    const tableBody = document.getElementById("orders-table-body");
 
-            orders.forEach(order => {
-                let row = orderTable.insertRow();
-                row.insertCell(0).innerText = order.orderID;
-                row.insertCell(1).innerText = order.date;
-                row.insertCell(2).innerText = order.item;
-                row.insertCell(3).innerText = order.quantity + " Kg";
-                row.insertCell(4).innerText = order.from;
-                row.insertCell(5).innerText = order.to;
-                row.insertCell(6).innerText = formatCurrency(order.totalCost);
+    let grandTotal = 0;
+    let foundCurrency = decodeParam("currency");
 
-                grandTotal += parseInt(order.totalCost);
-            });
+    if (ordersString === "N/A" || ordersString.trim() === "") {
+      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
+    } else {
+      const rows = ordersString.split(";");
+      rows.forEach(rowStr => {
+        const cols = rowStr.split("|");
+        const formattedDate = new Date(cols[1]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const costValue = parseFloat(cols[6]) || 0;
+        const costFormatted = costValue.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
+        grandTotal += costValue;
 
-            document.getElementById("grandTotal").innerText = formatCurrency(grandTotal) + " IDR";
+        tableBody.innerHTML += `
+          <tr>
+            <td>${cols[0]}</td>
+            <td>${formattedDate}</td>
+            <td>${cols[2]}</td>
+            <td>${cols[3]}</td>
+            <td>${cols[4]}</td>
+            <td>${cols[5]}</td>
+            <td>${costFormatted}</td>
+          </tr>
+        `;
+      });
+    }
 
-            function formatCurrency(amount) {
-                return new Intl.NumberFormat("id-ID").format(amount);
-            }
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
 
-            // Signature Pad
-            let canvas = document.getElementById("signaturePad");
-            let ctx = canvas.getContext("2d");
-            let drawing = false;
+    document.getElementById("print-pdf-btn").addEventListener("click", () => window.print());
 
-            canvas.addEventListener("mousedown", function() {
-                drawing = true;
-                ctx.beginPath();
-            });
+    // Signature Pad
+    const canvas = document.getElementById("signature-pad");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
 
-            canvas.addEventListener("mouseup", function() {
-                drawing = false;
-            });
+    function getPosition(event) {
+      const rect = canvas.getBoundingClientRect();
+      if (event.touches) {
+        return { x: event.touches[0].clientX - rect.left, y: event.touches[0].clientY - rect.top };
+      } else {
+        return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      }
+    }
 
-            canvas.addEventListener("mousemove", function(event) {
-                if (!drawing) return;
-                ctx.lineTo(event.offsetX, event.offsetY);
-                ctx.stroke();
-            });
+    function startDrawing(event) {
+      event.preventDefault();
+      drawing = true;
+      const pos = getPosition(event);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    }
 
-            document.getElementById("clearSignature").addEventListener("click", function() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-            });
+    function draw(event) {
+      if (!drawing) return;
+      const pos = getPosition(event);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
 
-            document.getElementById("saveSignature").addEventListener("click", function() {
-                let imageData = canvas.toDataURL("image/png");
-                document.getElementById("savedSignatureImage").src = imageData;
-                document.getElementById("savedSignatureBox").classList.remove("hidden");
-                document.getElementById("savedCustomerName").innerText = customerName;
-            });
+    function stopDrawing() {
+      drawing = false;
+    }
 
-            // Print Functionality
-            document.getElementById("printButton").addEventListener("click", function() {
-                document.getElementById("signaturePad").classList.add("hidden");
-                document.getElementById("clearSignature").classList.add("hidden");
-                document.getElementById("saveSignature").classList.add("hidden");
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
 
-                window.print();
+    canvas.addEventListener("touchstart", startDrawing);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", stopDrawing);
 
-                document.getElementById("signaturePad").classList.remove("hidden");
-                document.getElementById("clearSignature").classList.remove("hidden");
-                document.getElementById("saveSignature").classList.remove("hidden");
-            });
-        });
-    </script>
+    document.getElementById("clear-signature").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+
+    document.getElementById("save-signature").addEventListener("click", () => {
+      document.getElementById("signature-image").src = canvas.toDataURL();
+      document.getElementById("signature-image").style.display = "block";
+    });
+  </script>
 
 </body>
 </html>
