@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quotation</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    
     /* Header dan Logo */
     #logo-container {
       position: relative;
@@ -34,6 +31,28 @@
       z-index: 1;
       height: 50px;
       margin-top: 15px;
+    }
+
+    /* Tabel */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th { background-color: #f2f2f2; }
+
+    /* Grand Total */
+    #grand-total {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
     }
 
     /* Signature Section */
@@ -74,20 +93,40 @@
 
     /* Print */
     @media print {
-      .blue-shape { width: 50%; height: 80px; }
-      #print-pdf-btn, .signature-container { display: none; } /* Signature Pad hilang */
-      #saved-signature-container { display: block !important; } /* Tanda tangan tetap muncul */
+      #print-pdf-btn, .signature-container { display: none; }
+      #saved-signature-container { display: block !important; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Header -->
   <div id="logo-container">
     <div class="blue-shape"></div>
     <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
   </div>
 
   <button id="print-pdf-btn" onclick="window.print()">Print PDF</button>
+
+  <!-- Tabel Order -->
+  <h2>Order Details</h2>
+  <table id="order-table">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Total Cost</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Grand Total -->
+  <p id="grand-total">Grand Total: 0 IDR</p>
 
   <!-- Signature Section -->
   <div class="signature-section">
@@ -106,6 +145,40 @@
   </div>
 
   <script>
+    // Ambil parameter dari URL
+    const params = new URLSearchParams(window.location.search);
+    const customerName = params.get("customer");
+    const orderId = params.get("order_id");
+
+    // Dummy Data (gantilah dengan data dari Glide)
+    const orders = [
+      { orderId: "1001", date: "2025-02-25", item: "Gold", quantity: "2 Kg", from: "Jakarta", to: "Singapore", totalCost: "1000000 IDR", customer: "John Doe" },
+      { orderId: "1002", date: "2025-02-26", item: "Silver", quantity: "3 Kg", from: "Bali", to: "Bangkok", totalCost: "2000000 IDR", customer: "John Doe" }
+    ];
+
+    // Filter order berdasarkan Customer Name & Order ID
+    const filteredOrders = orders.filter(order => order.customer === customerName);
+
+    // Render tabel order
+    const tableBody = document.querySelector("#order-table tbody");
+    let grandTotal = 0;
+
+    filteredOrders.forEach(order => {
+      const row = `<tr>
+        <td>${order.orderId}</td>
+        <td>${order.date}</td>
+        <td>${order.item}</td>
+        <td>${order.quantity}</td>
+        <td>${order.from}</td>
+        <td>${order.to}</td>
+        <td>${order.totalCost}</td>
+      </tr>`;
+      tableBody.innerHTML += row;
+      grandTotal += parseInt(order.totalCost.replace(/\D/g, ""));
+    });
+
+    document.getElementById("grand-total").textContent = Grand Total: ${grandTotal.toLocaleString()} IDR;
+
     // Signature Pad Variables
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
@@ -125,33 +198,22 @@
       event.preventDefault();
     }
 
-    function stopDraw() {
-      drawing = false;
-    }
+    function stopDraw() { drawing = false; }
 
-    function getX(event) {
-      return event.clientX || event.touches[0].clientX - canvas.getBoundingClientRect().left;
-    }
+    function getX(event) { return event.clientX || event.touches[0].clientX - canvas.getBoundingClientRect().left; }
+    function getY(event) { return event.clientY || event.touches[0].clientY - canvas.getBoundingClientRect().top; }
 
-    function getY(event) {
-      return event.clientY || event.touches[0].clientY - canvas.getBoundingClientRect().top;
-    }
-
-    // Mouse Events
+    // Mouse & Touch Events
     canvas.addEventListener("mousedown", startDraw);
     canvas.addEventListener("mousemove", draw);
     canvas.addEventListener("mouseup", stopDraw);
     canvas.addEventListener("mouseleave", stopDraw);
-
-    // Touch Events
     canvas.addEventListener("touchstart", startDraw);
     canvas.addEventListener("touchmove", draw);
     canvas.addEventListener("touchend", stopDraw);
 
     // Clear Signature
-    document.getElementById("clear-signature").addEventListener("click", () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
+    document.getElementById("clear-signature").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
 
     // Save Signature
     document.getElementById("save-signature").addEventListener("click", () => {
