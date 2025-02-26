@@ -7,222 +7,158 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             text-align: center;
         }
-
-        .header {
-            background: #005A9C;
-            color: white;
-            padding: 20px;
-            position: relative;
-        }
-
-        .header img {
-            position: absolute;
-            left: 20px;
-            top: 10px;
-            width: 100px;
-        }
-
         .container {
-            width: 80%;
-            margin: 20px auto;
-            text-align: left;
+            width: 90%;
+            margin: auto;
+            padding: 20px;
         }
-
+        .header {
+            background-color: #0074D9;
+            padding: 10px;
+            color: white;
+        }
+        .logo {
+            width: 150px;
+            display: block;
+            margin: auto;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
-
         th, td {
             border: 1px solid black;
             padding: 10px;
             text-align: center;
         }
-
-        th {
-            background: #ddd;
-        }
-
         .signature-container {
-            display: flex;
-            justify-content: space-between;
+            text-align: right;
             margin-top: 20px;
         }
-
         .signature-pad {
             border: 1px solid black;
             width: 300px;
             height: 100px;
-            position: relative;
         }
-
-        #signatureImage {
-            width: 300px;
-            height: 100px;
-        }
-
-        .signature-box {
-            text-align: center;
-        }
-
-        .button-container {
+        .btn {
             margin-top: 10px;
-        }
-
-        .print-button {
-            background: #005A9C;
+            padding: 10px 20px;
+            background: blue;
             color: white;
-            padding: 10px;
             border: none;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
+
+<div class="container">
     <div class="header">
-        <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
+        <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo" class="logo">
         <h2>PT. Brinks Solution Indonesia</h2>
     </div>
 
-    <div class="container">
-        <h3 id="customerName">Customer Name: </h3>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Date</th>
-                    <th>Item</th>
-                    <th>Quantity</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Total Cost</th>
-                </tr>
-            </thead>
-            <tbody id="orderTable"></tbody>
-        </table>
+    <h3>Customer Name: <span id="customerName"></span></h3>
 
-        <h3>Grand Total: <span id="grandTotal">0</span></h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Total Cost</th>
+            </tr>
+        </thead>
+        <tbody id="orderTableBody">
+            <!-- Data akan dimasukkan di sini -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6"><strong>Grand Total</strong></td>
+                <td id="grandTotal">0</td>
+            </tr>
+        </tfoot>
+    </table>
 
-        <div class="signature-container">
-            <div>
-                <canvas id="signaturePad" class="signature-pad"></canvas>
-                <div class="button-container">
-                    <button onclick="clearSignature()">Clear</button>
-                    <button onclick="saveSignature()">Save</button>
-                </div>
-            </div>
-            <div class="signature-box">
-                <p>Customer Signature</p>
-                <img id="signatureImage" src="" alt="Signature">
-                <p id="signedCustomer"></p>
-            </div>
-        </div>
-
-        <button class="print-button" onclick="window.print()">Print PDF</button>
+    <div class="signature-container">
+        <h3>Customer Signature</h3>
+        <canvas id="signature-pad" class="signature-pad"></canvas>
+        <br>
+        <button class="btn" onclick="clearSignature()">Clear</button>
+        <button class="btn" onclick="saveSignature()">Save</button>
     </div>
 
-    <script>
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                customer_name: params.get('customer_name'),
-                orders: params.get('orders'),
-                currency: params.get('currency')
-            };
+    <button class="btn" onclick="printPage()">Print PDF</button>
+</div>
+
+<script>
+    function getQueryParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let data = urlParams.get("orders");
+
+        try {
+            return JSON.parse(decodeURIComponent(data));
+        } catch (error) {
+            console.error("Error parsing orders:", error);
+            return [];
         }
+    }
 
-        function formatCurrency(amount, currency) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: currency || 'IDR'
-            }).format(amount);
-        }
+    function loadOrderData() {
+        const queryParams = getQueryParams();
+        let customerName = new URLSearchParams(window.location.search).get("customer_name") || "Unknown";
+        document.getElementById("customerName").textContent = customerName;
 
-        function loadOrderData() {
-            const { customer_name, orders, currency } = getQueryParams();
+        let tableBody = document.getElementById("orderTableBody");
+        let grandTotal = 0;
 
-            document.getElementById('customerName').innerText = Customer Name : ${customer_name};
-            document.getElementById('signedCustomer').innerText = customer_name;
+        queryParams.forEach(order => {
+            let row = `
+                <tr>
+                    <td>${order.order_id}</td>
+                    <td>${order.date}</td>
+                    <td>${order.item}</td>
+                    <td>${order.quantity}</td>
+                    <td>${order.from}</td>
+                    <td>${order.to}</td>
+                    <td>${order.total_cost}</td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+            grandTotal += parseFloat(order.total_cost.replace(/[^0-9.-]+/g, ""));
+        });
 
-            if (!orders) {
-                console.error("Data orders tidak ditemukan di URL!");
-                return;
-            }
+        document.getElementById("grandTotal").textContent = grandTotal.toLocaleString();
+    }
 
-            const orderTable = document.getElementById('orderTable');
-            let grandTotal = 0;
+    function printPage() {
+        document.querySelector(".btn").style.display = "none";
+        window.print();
+        document.querySelector(".btn").style.display = "block";
+    }
 
-            const orderList = orders.split(';');
-            orderList.forEach(order => {
-                const details = order.split('|');
-                if (details.length === 7) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${details[0]}</td>
-                        <td>${details[1]}</td>
-                        <td>${details[2]}</td>
-                        <td>${details[3]}</td>
-                        <td>${details[4]}</td>
-                        <td>${details[5]}</td>
-                        <td>${formatCurrency(details[6], currency)}</td>
-                    `;
-                    orderTable.appendChild(row);
-                    grandTotal += parseFloat(details[6]);
-                } else {
-                    console.error("Format order tidak sesuai:", order);
-                }
-            });
+    function clearSignature() {
+        let canvas = document.getElementById("signature-pad");
+        let ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-            document.getElementById('grandTotal').innerText = formatCurrency(grandTotal, currency);
-        }
+    function saveSignature() {
+        let canvas = document.getElementById("signature-pad");
+        let imgURL = canvas.toDataURL();
+        let imgElement = document.createElement("img");
+        imgElement.src = imgURL;
+        document.querySelector(".signature-container").appendChild(imgElement);
+    }
 
-        function clearSignature() {
-            const canvas = document.getElementById("signaturePad");
-            const ctx = canvas.getContext("2d");
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            document.getElementById("signatureImage").src = "";
-        }
+    window.onload = loadOrderData;
+</script>
 
-        function saveSignature() {
-            const canvas = document.getElementById("signaturePad");
-            const imageData = canvas.toDataURL("image/png");
-            document.getElementById("signatureImage").src = imageData;
-        }
-
-        window.onload = function() {
-            loadOrderData();
-
-            const canvas = document.getElementById("signaturePad");
-            const ctx = canvas.getContext("2d");
-            let drawing = false;
-
-            canvas.addEventListener("mousedown", function(e) {
-                drawing = true;
-                ctx.beginPath();
-                ctx.moveTo(e.offsetX, e.offsetY);
-            });
-
-            canvas.addEventListener("mousemove", function(e) {
-                if (drawing) {
-                    ctx.lineTo(e.offsetX, e.offsetY);
-                    ctx.stroke();
-                }
-            });
-
-            canvas.addEventListener("mouseup", function() {
-                drawing = false;
-            });
-
-            canvas.addEventListener("mouseleave", function() {
-                drawing = false;
-            });
-        };
-    </script>
 </body>
 </html>
