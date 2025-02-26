@@ -3,86 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brinks Order Summary</title>
+    <title>Print Quotation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
         }
         .container {
-            width: 90%;
+            max-width: 800px;
             margin: auto;
         }
-        .header {
-            display: flex;
-            align-items: center;
-        }
-        .logo {
-            width: 150px;
-        }
-        .blue-shape {
-            background-color: #0033a0;
-            height: 30px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-        .order-table, .total-table {
+        table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
-        .order-table th, .order-table td, 
-        .total-table th, .total-table td {
+        th, td {
             border: 1px solid black;
             padding: 8px;
             text-align: center;
         }
-        .total-table {
-            margin-top: 20px;
+        th {
+            background-color: #f2f2f2;
         }
-        .signature-container {
+        .total-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-top: 20px;
         }
+        .grand-total {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .signature-container {
+            text-align: left;
+            margin-top: 20px;
+        }
         .signature-pad {
             border: 1px solid black;
-            width: 300px;
+            width: 100%;
             height: 100px;
-        }
-        .signature-display {
-            border: 1px solid black;
-            width: 300px;
-            height: 100px;
-            text-align: center;
-            line-height: 100px;
         }
         .hidden {
             display: none;
         }
-        .print-btn {
-            margin-top: 10px;
-            padding: 10px 15px;
-            background-color: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
+        .signature-box {
+            width: 100%;
+            text-align: right;
+        }
+        @media screen and (max-width: 600px) {
+            table, th, td {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="header">
-            <img src="brinks_logo.png" alt="Brinks Logo" class="logo">
-        </div>
-        <div class="blue-shape"></div>
-
+        <img src="brinks_logo.png" alt="Brinks Logo" width="200">
         <h3>PT. Brinks Solutions Indonesia</h3>
-        <p>Customer Name: <span id="customer-name">Safna</span></p>
+        <p><b>Customer Name:</b> <span id="customerName"></span></p>
 
-        <button class="print-btn" onclick="printPDF()">Print PDF</button>
+        <button id="printButton">Print PDF</button>
 
-        <table class="order-table">
+        <table id="orderTable">
             <thead>
                 <tr>
                     <th>Order ID</th>
@@ -91,101 +79,110 @@
                     <th>Quantity</th>
                     <th>From</th>
                     <th>To</th>
+                    <th>Total Cost</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>ORD3</td>
-                    <td>February 18, 2025</td>
-                    <td>Gold</td>
-                    <td>20 Kg</td>
-                    <td>Jakarta</td>
-                    <td>Surabaya</td>
-                </tr>
-                <tr>
-                    <td>ORD4</td>
-                    <td>February 17, 2025</td>
-                    <td>Silver</td>
-                    <td>30 Kg</td>
-                    <td>Jakarta</td>
-                    <td>Papua</td>
-                </tr>
+                <!-- Data dari Glide Apps akan diisi di sini -->
             </tbody>
         </table>
 
-        <table class="total-table">
-            <tr>
-                <th>Grand Total</th>
-            </tr>
-            <tr>
-                <td id="total-cost">12,720,000 IDR</td>
-            </tr>
-        </table>
+        <div class="total-container">
+            <div class="grand-total">
+                <p>Grand Total</p>
+                <p id="grandTotal">0 IDR</p>
+            </div>
+        </div>
 
         <div class="signature-container">
-            <div>
-                <p>Customer Signature:</p>
-                <canvas id="signature-pad" class="signature-pad"></canvas>
-                <button onclick="clearSignature()">Clear</button>
-                <button onclick="saveSignature()">Save</button>
-            </div>
-            <div>
-                <p>Customer Signature:</p>
-                <div id="saved-signature" class="signature-display">[Signature]</div>
-                <p id="signature-name">Safna</p>
-            </div>
+            <p>Customer Signature:</p>
+            <canvas id="signaturePad" class="signature-pad"></canvas>
+            <button id="clearSignature">Clear</button>
+            <button id="saveSignature">Save</button>
+        </div>
+
+        <div class="signature-box hidden" id="savedSignatureBox">
+            <p><b>Customer Signature:</b></p>
+            <img id="savedSignatureImage" src="" alt="Signature" width="200">
+            <p id="savedCustomerName"></p>
         </div>
     </div>
 
     <script>
-        // Format total cost dengan pemisah ribuan
-        function formatCurrency(amount) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " IDR";
-        }
-        document.getElementById("total-cost").innerText = formatCurrency(12720000);
+        document.addEventListener("DOMContentLoaded", function() {
+            let urlParams = new URLSearchParams(window.location.search);
+            let customerName = urlParams.get("customerName"); // Ambil customerName dari URL
+            let orders = JSON.parse(decodeURIComponent(urlParams.get("orders"))); // Data order dari Glide Apps
 
-        // Signature pad
-        let canvas = document.getElementById("signature-pad");
-        let ctx = canvas.getContext("2d");
-        let isDrawing = false;
+            document.getElementById("customerName").innerText = customerName;
 
-        canvas.addEventListener("mousedown", () => isDrawing = true);
-        canvas.addEventListener("mouseup", () => isDrawing = false);
-        canvas.addEventListener("mousemove", draw);
+            let orderTable = document.getElementById("orderTable").getElementsByTagName("tbody")[0];
+            let grandTotal = 0;
 
-        function draw(event) {
-            if (!isDrawing) return;
-            ctx.lineWidth = 2;
-            ctx.lineCap = "round";
-            ctx.strokeStyle = "black";
-            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-            ctx.stroke();
-        }
+            orders.forEach(order => {
+                let row = orderTable.insertRow();
+                row.insertCell(0).innerText = order.orderID;
+                row.insertCell(1).innerText = order.date;
+                row.insertCell(2).innerText = order.item;
+                row.insertCell(3).innerText = order.quantity + " Kg";
+                row.insertCell(4).innerText = order.from;
+                row.insertCell(5).innerText = order.to;
+                row.insertCell(6).innerText = formatCurrency(order.totalCost);
 
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+                grandTotal += parseInt(order.totalCost);
+            });
 
-        function saveSignature() {
-            let dataURL = canvas.toDataURL("image/png");
-            let img = new Image();
-            img.src = dataURL;
-            img.onload = function () {
-                let savedSignature = document.getElementById("saved-signature");
-                savedSignature.innerHTML = "";
-                savedSignature.appendChild(img);
-            };
-        }
+            document.getElementById("grandTotal").innerText = formatCurrency(grandTotal) + " IDR";
 
-        // Print PDF
-        function printPDF() {
-            let signaturePad = document.getElementById("signature-pad");
-            signaturePad.style.display = "none";  // Hilangkan signature pad
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat("id-ID").format(amount);
+            }
 
-            window.print();
+            // Signature Pad
+            let canvas = document.getElementById("signaturePad");
+            let ctx = canvas.getContext("2d");
+            let drawing = false;
 
-            signaturePad.style.display = "block";  // Munculkan kembali setelah print
-        }
+            canvas.addEventListener("mousedown", function() {
+                drawing = true;
+                ctx.beginPath();
+            });
+
+            canvas.addEventListener("mouseup", function() {
+                drawing = false;
+            });
+
+            canvas.addEventListener("mousemove", function(event) {
+                if (!drawing) return;
+                ctx.lineTo(event.offsetX, event.offsetY);
+                ctx.stroke();
+            });
+
+            document.getElementById("clearSignature").addEventListener("click", function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+            document.getElementById("saveSignature").addEventListener("click", function() {
+                let imageData = canvas.toDataURL("image/png");
+                document.getElementById("savedSignatureImage").src = imageData;
+                document.getElementById("savedSignatureBox").classList.remove("hidden");
+                document.getElementById("savedCustomerName").innerText = customerName;
+            });
+
+            // Print Functionality
+            document.getElementById("printButton").addEventListener("click", function() {
+                document.getElementById("signaturePad").classList.add("hidden");
+                document.getElementById("clearSignature").classList.add("hidden");
+                document.getElementById("saveSignature").classList.add("hidden");
+
+                window.print();
+
+                document.getElementById("signaturePad").classList.remove("hidden");
+                document.getElementById("clearSignature").classList.remove("hidden");
+                document.getElementById("saveSignature").classList.remove("hidden");
+            });
+        });
     </script>
+
 </body>
 </html>
