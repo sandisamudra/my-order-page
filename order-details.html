@@ -129,11 +129,24 @@
       cursor: pointer;
     }
 
+    #signature-image {
+      display: none;
+      width: 100%;
+      border: 1px solid #000;
+    }
+
+    #signature-name {
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 5px;
+      display: none;
+    }
+
     /* Print */
     @media print {
       .blue-shape { width: 55%; height: 80px; }
-      #print-pdf-btn { display: none; } /* Tombol hanya hilang saat print */
-      .signature-buttons { display: none; }
+      #print-pdf-btn, .signature-buttons, canvas { display: none; }
+      #signature-image, #signature-name { display: block; }
     }
   </style>
 </head>
@@ -177,7 +190,8 @@
       <button id="clear-signature">Clear</button>
       <button id="save-signature">Save</button>
     </div>
-    <img id="signature-image" style="display: none; width: 100%;">
+    <img id="signature-image">
+    <div id="signature-name"></div>
   </div>
 
   <script>
@@ -193,58 +207,43 @@
     let grandTotal = 0;
     let foundCurrency = decodeParam("currency");
 
-    if (ordersString === "N/A" || ordersString.trim() === "") {
-      tableBody.innerHTML = "<tr><td colspan='7'>No orders found</td></tr>";
-    } else {
+    if (ordersString !== "N/A") {
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const formattedDate = new Date(cols[1]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         const costValue = parseFloat(cols[6]) || 0;
-        const costFormatted = costValue.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
         grandTotal += costValue;
 
         tableBody.innerHTML += `
           <tr>
             <td>${cols[0]}</td>
-            <td>${formattedDate}</td>
+            <td>${cols[1]}</td>
             <td>${cols[2]}</td>
             <td>${cols[3]}</td>
             <td>${cols[4]}</td>
             <td>${cols[5]}</td>
-            <td>${costFormatted}</td>
+            <td>${costValue.toLocaleString()} ${foundCurrency}</td>
           </tr>
         `;
       });
     }
 
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + " " + foundCurrency;
 
-    // Signature Pad Fix
+    // Signature Pad
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    function startDrawing(event) {
-      drawing = true;
-      ctx.beginPath();
-      ctx.moveTo(event.offsetX || event.touches[0].clientX, event.offsetY || event.touches[0].clientY);
-    }
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mousemove", (e) => drawing && ctx.lineTo(e.offsetX, e.offsetY) && ctx.stroke());
+    canvas.addEventListener("mouseup", () => drawing = false);
 
-    function draw(event) {
-      if (!drawing) return;
-      ctx.lineTo(event.offsetX || event.touches[0].clientX, event.offsetY || event.touches[0].clientY);
-      ctx.stroke();
-    }
-
-    function stopDrawing() { drawing = false; }
-
-    canvas.addEventListener("mousedown", startDrawing);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", stopDrawing);
-    canvas.addEventListener("touchstart", startDrawing);
-    canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", stopDrawing);
+    document.getElementById("save-signature").addEventListener("click", () => {
+      document.getElementById("signature-image").src = canvas.toDataURL();
+      document.getElementById("signature-image").style.display = "block";
+      document.getElementById("signature-name").textContent = decodeParam("customer_name");
+    });
   </script>
 
 </body>
