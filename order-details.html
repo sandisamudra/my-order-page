@@ -1,53 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quotation</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    
-    /* Header */
-    #logo-container { margin-bottom: 20px; }
-    #brinks-logo { height: 50px; }
-    #company-headline { font-size: 20px; font-weight: bold; }
-    #customer-headline { font-size: 16px; font-weight: normal; margin-top: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    /* Logo dan Header */
+    #logo-container {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      margin-bottom: 0px;
+      margin-top: 50px;
+    }
+
+    .blue-shape {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 60px;
+      background-color: #000080;
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+      z-index: 0;
+    }
+
+    #brinks-logo {
+      position: absolute;
+      left: 20px;
+      top: 15px;
+      height: 40px;
+      width: auto;
+      z-index: 1;
+    }
+
+    #company-headline {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    #customer-headline {
+      font-size: 16px;
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
 
     /* Tabel */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-    th { background-color: #f4f4f4; }
-    table tr td:nth-child(7) { text-align: right; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    table tr td:nth-child(7) {
+      text-align: right;
+    }
 
-    /* Grand Total & Signature */
-    .summary-container { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px; }
-    #quotation-table { width: 40%; border: 1px solid #000; border-collapse: collapse; }
-    #quotation-table td { border: 1px solid #000; padding: 10px; text-align: right; font-weight: bold; background-color: #f4f4f4; }
+    /* Grand Total */
+    #quotation-table {
+      margin-top: 20px;
+      border: 1px solid #000;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    #quotation-table td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: right;
+    }
+    #quotation-table #grand-total-label {
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+    #quotation-table #grand-total {
+      font-weight: bold;
+    }
+
+    /* Signature Area */
+    .signature-container {
+      margin-top: 20px;
+      border: 1px solid #000;
+      padding: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    canvas {
+      border: 1px solid #000;
+      width: 100%;
+      height: 100px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .signature-buttons {
+      margin-top: 10px;
+    }
+    .signature-buttons button {
+      padding: 5px 10px;
+      margin-right: 5px;
+      cursor: pointer;
+    }
     
-    .signature-container { width: 40%; text-align: center; }
-    canvas { border: 1px solid #000; width: 100%; height: 100px; cursor: crosshair; touch-action: none; }
-    .signature-buttons { margin-top: 10px; }
-    .signature-buttons button { padding: 5px 10px; cursor: pointer; }
-
     /* Print */
-    #print-pdf-btn { cursor: pointer; background: #007BFF; color: #fff; padding: 8px 12px; border: none; border-radius: 4px; margin-bottom: 20px; }
-    
     @media print {
-      #print-pdf-btn, .signature-buttons, canvas { display: none; }
-      #signature-image { display: block; width: 100%; }
+      .blue-shape { width: 55%; height: 80px; }
+      #print-pdf-btn, .signature-buttons { display: none; }
     }
   </style>
 </head>
 <body>
 
   <div id="logo-container">
+    <div class="blue-shape"></div>
     <img id="brinks-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/9bJYk9GT6IyTBG0O3axw/pub/WUN6P1oA1DyaMrGJa3WT.png" alt="Brinks Logo">
   </div>
 
   <div id="company-headline">PT. Brinks Solutions Indonesia</div>
-  <div id="customer-headline">Customer Name: N/A</div>
-
-  <button id="print-pdf-btn">Print PDF</button>
+  <div id="customer-headline">Customer Name : N/A</div>
 
   <table>
     <thead>
@@ -64,24 +145,20 @@
     <tbody id="orders-table-body"></tbody>
   </table>
 
-  <div class="summary-container">
-    <!-- Grand Total -->
-    <table id="quotation-table">
-      <tr><td>Grand Total</td></tr>
-      <tr><td id="grand-total">N/A</td></tr>
-    </table>
+  <table id="quotation-table">
+    <tr><td id="grand-total-label">Grand Total</td></tr>
+    <tr><td id="grand-total">N/A</td></tr>
+  </table>
 
-    <!-- Signature -->
-    <div class="signature-container">
-      <p>Customer Signature:</p>
-      <canvas id="signature-pad"></canvas>
-      <div class="signature-buttons">
-        <button id="clear-signature">Clear</button>
-        <button id="save-signature">Save</button>
-      </div>
-      <img id="signature-image" style="display: none;">
-      <p id="signature-name" style="margin-top: 5px;"></p>
+  <!-- Signature Section -->
+  <div class="signature-container">
+    <p>Customer Signature:</p>
+    <canvas id="signature-pad"></canvas>
+    <div class="signature-buttons">
+      <button id="clear-signature">Clear</button>
+      <button id="save-signature">Save</button>
     </div>
+    <img id="signature-image" style="display: none; width: 100%;">
   </div>
 
   <script>
@@ -89,9 +166,7 @@
     const params = new URLSearchParams(window.location.search);
     function decodeParam(key) { return decodeURIComponent(params.get(key) || "N/A"); }
 
-    const customerName = decodeParam("customer_name");
-    document.getElementById("customer-headline").textContent = "Customer Name: " + customerName;
-    document.getElementById("signature-name").textContent = customerName;
+    document.getElementById("customer-headline").textContent = "Customer Name : " + decodeParam("customer_name");
 
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
@@ -105,66 +180,49 @@
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const formattedDate = new Date(cols[1]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         const costValue = parseFloat(cols[6]) || 0;
-        const costFormatted = costValue.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
         grandTotal += costValue;
 
         tableBody.innerHTML += `
           <tr>
             <td>${cols[0]}</td>
-            <td>${formattedDate}</td>
+            <td>${cols[1]}</td>
             <td>${cols[2]}</td>
             <td>${cols[3]}</td>
             <td>${cols[4]}</td>
             <td>${cols[5]}</td>
-            <td>${costFormatted}</td>
+            <td>${costValue.toLocaleString()} ${foundCurrency}</td>
           </tr>
         `;
       });
     }
 
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== "N/A" ? " " + foundCurrency : "");
-
-    document.getElementById("print-pdf-btn").addEventListener("click", () => window.print());
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + " " + foundCurrency;
 
     // Signature Pad
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    function getPosition(event) {
-      const rect = canvas.getBoundingClientRect();
-      return event.touches
-        ? { x: event.touches[0].clientX - rect.left, y: event.touches[0].clientY - rect.top }
-        : { x: event.clientX - rect.left, y: event.clientY - rect.top };
-    }
-
     function startDrawing(event) {
       event.preventDefault();
       drawing = true;
-      const pos = getPosition(event);
       ctx.beginPath();
-      ctx.moveTo(pos.x, pos.y);
+      ctx.moveTo(event.offsetX, event.offsetY);
     }
 
     function draw(event) {
       if (!drawing) return;
-      const pos = getPosition(event);
-      ctx.lineTo(pos.x, pos.y);
+      ctx.lineTo(event.offsetX, event.offsetY);
       ctx.stroke();
     }
 
-    function stopDrawing() {
-      drawing = false;
-    }
+    function stopDrawing() { drawing = false; }
 
-    canvas.addEventListener("mousedown", startDrawing);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", stopDrawing);
-    canvas.addEventListener("touchstart", startDrawing);
-    canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", stopDrawing);
+    canvas.addEventListener("pointerdown", startDrawing);
+    canvas.addEventListener("pointermove", draw);
+    canvas.addEventListener("pointerup", stopDrawing);
+    canvas.addEventListener("pointerleave", stopDrawing);
 
     document.getElementById("clear-signature").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
 
