@@ -164,12 +164,12 @@
 
   /* Menyesuaikan header dan sel agar tidak terlalu lebar */
   th:nth-child(1), td:nth-child(1) { width: 15%; } /* Order ID */
-  th:nth-child(2), td:nth-child(2) { width: 20%; } /* Date */
+  th:nth-child(2), td:nth-child(2) { width: 25%; } /* Date */
   th:nth-child(3), td:nth-child(3) { width: 10%; } /* Item */
-  th:nth-child(4), td:nth-child(4) { width: 18%; } /* Quantity */
+  th:nth-child(4), td:nth-child(4) { width: 15%; } /* Quantity */
   th:nth-child(5), td:nth-child(5) { width: 15%; } /* From */
   th:nth-child(6), td:nth-child(6) { width: 15%; } /* To */
-  th:nth-child(7), td:nth-child(7) { width: 25%; } /* Total Cost */
+  th:nth-child(7), td:nth-child(7) { width: 20%; } /* Total Cost */
 }
 
     /* Print */
@@ -208,8 +208,6 @@
   <div id="company-headline">PT. Brinks Solutions Indonesia</div>
   <div id="customer-headline">Customer Name : N/A</div>
 
-  <button id="print-pdf-btn" onclick="window.print()">Print PDF</button>
-
   <table>
     <thead>
       <tr>
@@ -229,6 +227,8 @@
     <tr><td id="grand-total-label">Grand Total</td></tr>
     <tr><td id="grand-total">N/A</td></tr>
   </table>
+
+  <button id="print-pdf-btn" onclick="window.print()">Print PDF</button>
 
   <!-- Signature Section -->
   <div class="signature-container">
