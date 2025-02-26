@@ -239,7 +239,7 @@
       });
     }
 
-    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() + (foundCurrency !== N/A ? " " + foundCurrency : "");
+    document.getElementById("grand-total").textContent = grandTotal.toLocaleString() +  " " + foundCurrency;
 
     // Signature Pad
     const canvas = document.getElementById("signature-pad");
