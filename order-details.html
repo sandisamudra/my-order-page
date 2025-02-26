@@ -254,6 +254,36 @@
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
+    // Fungsi untuk memulai gambar
+    function startDrawing(e) {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(getX(e), getY(e));
+      e.preventDefault(); // Mencegah scroll saat menggambar di mobile
+}
+
+    // Fungsi untuk menggambar
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineTo(getX(e), getY(e));
+      ctx.stroke();
+      e.preventDefault();
+}
+
+    // Fungsi untuk menghentikan gambar
+    function stopDrawing() {
+      drawing = false;
+}
+
+    // Ambil posisi X dan Y dari event (mouse atau touch)
+    function getX(e) {
+      return e.clientX || e.touches[0].clientX - canvas.getBoundingClientRect().left;
+}
+
+    function getY(e) {
+     return e.clientY || e.touches[0].clientY - canvas.getBoundingClientRect().top;
+}
+
 
     canvas.addEventListener("mousedown", (e) => {
       drawing = true;
@@ -266,6 +296,19 @@
       ctx.stroke();
    });
     canvas.addEventListener("mouseup", () => drawing = false);
+
+    // Event Listener untuk Mouse
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseleave", stopDrawing);
+
+    // Event Listener untuk Touch (Mobile)
+    canvas.addEventListener("touchstart", startDrawing);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", stopDrawing);
+
+
 
     document.getElementById("save-signature").addEventListener("click", () => {
       document.getElementById("signature-image").src = canvas.toDataURL();
