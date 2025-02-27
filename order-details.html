@@ -480,14 +480,14 @@ window.onload = () => {
     let remarksText = "";
 
     if (orderIds.length > 0 && customerRemarks.length > 0) {
-        orderIds.forEach((order_Id, index) => {
+        orderIds.forEach((orderId, index) => {
             const remark = customerRemarks[index];
 
             // Debug: Cek remark yang sedang diproses
-            console.log('Processing Order ID: ${order_Id}, Remark: ${remark}');
+            console.log('Processing Order ID: ${orderId}, Remark: ${remark}');
 
             if (remark && remark !== "N/A") {
-                remarksText += '• ${customerRemark} (Order ID: ${order_Id})<br>';
+                remarksText += '• ${Remark} (Order ID: ${orderId})<br>';
             }
         });
     }
