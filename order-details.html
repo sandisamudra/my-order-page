@@ -459,10 +459,10 @@ window.onload = () => {
     };
   document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const remarksContainer = document.getElementById("customerRemarks");
+    const remarksContainer = document.getElementById("customer_remarks");
 
     if (!remarksContainer) {
-        console.error("Element #customerRemarks tidak ditemukan.");
+        console.error("Element #customerRemarks not found.");
         return;
     }
 
@@ -475,13 +475,13 @@ window.onload = () => {
 
     // Debug: Cek apakah orderIds dan customerRemarks benar
     console.log("Order IDs:", orderIds);
-    console.log("Customer Remarks:", customerRemarks);
+    console.log("Customer Remarks:", customer_remarks);
 
     let remarksText = "";
 
-    if (orderIds.length > 0 && customerRemarks.length > 0) {
+    if (orderIds.length > 0 && customer_remarks.length > 0) {
         orderIds.forEach((orderId, index) => {
-            const remark = customerRemarks[index];
+            const remark = customer_remarks[index];
 
             // Debug: Cek remark yang sedang diproses
             console.log('Processing Order ID: ${orderId}, Remark: ${remark}');
@@ -494,7 +494,7 @@ window.onload = () => {
 
     // Debug: Cek hasil akhir remarksText
    
-    console.log("Processed customerRemarks:", customerRemarks);
+    console.log("Processed customer_remarks:", customer_remarks);
     console.log("Final Remarks Text:", remarksText);
 
     // Jika ada remarks, tampilkan di HTML
