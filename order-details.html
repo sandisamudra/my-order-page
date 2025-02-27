@@ -459,11 +459,12 @@ window.onload = () => {
     };
   document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
-    const remarksContainer = document.getElementById("customer_remarks");
-    if (!remarksContainer) {
-        console.error("Element #customer_remarks not found!");
-        returm;
-    }
+    const remarksElement = document.getElementById("customer_remarks");
+    if (remark && orderId) {
+              remarksElement.innerHTML = '${Remark} (Order ID: ${orderId})<br>';
+            } else {
+                remarksElement.textContent = "No remarks provided";
+            }
    
     // Debug: Tampilkan semua parameter di console
     console.log("URL Params:", urlParams.toString());
@@ -486,9 +487,7 @@ window.onload = () => {
             // Debug: Cek remark yang sedang diproses
             console.log('Processing Order ID: ${orderId}, Remark: ${remark}');
 
-            if (remark && remark !== "N/A") {
-                remarksText += '• ${Remark} (Order ID: ${orderId})<br>';
-            }
+            
         });
     }
 
