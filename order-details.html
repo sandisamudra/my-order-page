@@ -457,7 +457,7 @@ window.onload = () => {
 });
 
     };
-    document.addEventListener("DOMContentLoaded", function () {
+   document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const remarksContainer = document.getElementById("customerRemarks");
 
@@ -473,15 +473,16 @@ window.onload = () => {
     let remarksText = "";
 
     if (orderIds.length > 0 && customerRemarks.length > 0) {
-        for (let i = 0; i < orderIds.length; i++) {
-            if (customerRemarks[i] && customerRemarks[i] !== "N/A") {
-                remarksText += • ${customerRemarks[i]} (Order ID: ${orderIds[i]})<br>;
+        orderIds.forEach((orderId, index) => {
+            const remark = customerRemarks[index];
+            if (remark && remark !== "N/A") {
+                remarksText += • ${remark} (Order ID: ${orderId})<br>;
             }
-        }
+        });
     }
 
     // Jika ada remarks, tampilkan di HTML
-    if (remarksText) {
+    if (remarksText !== "") {
         remarksContainer.innerHTML = remarksText;
     } else {
         remarksContainer.textContent = "No remarks provided.";
