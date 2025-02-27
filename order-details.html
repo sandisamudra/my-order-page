@@ -457,7 +457,7 @@ window.onload = () => {
 });
 
     };
-   document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const remarksContainer = document.getElementById("customerRemarks");
 
@@ -466,19 +466,34 @@ window.onload = () => {
         return;
     }
 
+    // Debug: Tampilkan semua parameter di console
+    console.log("URL Params:", urlParams.toString());
+
     // Ambil semua order_id dan customer_remarks dari URL
     const orderIds = urlParams.getAll("order_id");
     const customerRemarks = urlParams.getAll("customer_remarks");
+
+    // Debug: Cek apakah orderIds dan customerRemarks benar
+    console.log("Order IDs:", orderIds);
+    console.log("Customer Remarks:", customerRemarks);
 
     let remarksText = "";
 
     if (orderIds.length > 0 && customerRemarks.length > 0) {
         orderIds.forEach((orderId, index) => {
             const remark = customerRemarks[index];
+
+            // Debug: Cek remark yang sedang diproses
+            console.log(Processing Order ID: ${orderId}, Remark: ${remark});
+
             if (remark && remark !== "N/A") {
-                remarksText += '• ${remark} (Order ID: ${orderId})<br>';
+                remarksText += • ${remark} (Order ID: ${orderId})<br>;
             }
         });
+    }
+
+    // Debug: Cek hasil akhir remarksText
+    console.log("Final Remarks Text:", remarksText);
 
     // Jika ada remarks, tampilkan di HTML
     if (remarksText !== "") {
@@ -486,8 +501,7 @@ window.onload = () => {
     } else {
         remarksContainer.textContent = "No remarks provided.";
     }
-}
-   });
+});
 </script>
 
 </body>
