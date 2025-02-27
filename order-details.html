@@ -280,6 +280,7 @@
   </table>
 <!-- Customer Remarks -->
   <div id="customer-remarks-container" style="text-align: right; margin-top: 20px; font-style: italic;"></div>
+  
   <table id="quotation-table">
     <tr><td id="grand-total-label">Grand Total</td></tr>
     <tr><td id="grand-total">N/A</td></tr>
@@ -342,27 +343,6 @@
 
     document.getElementById("grand-total").textContent = grandTotal.toLocaleString() +  " " + foundCurrency;
 
-    // Menampilkan Customer Remarks di bawah tabel order
-    const customerRemarks = decodeParam("customer_remarks");
-
-   document.addEventListener("DOMContentLoaded", function () {
-  // Ambil elemen Customer Remarks
-  const remarksContainer = document.getElementById("customer-remarks-container");
-
-  if (remarksContainer) {
-    // Ambil Customer Remarks dari parameter URL
-    const customerRemarks = decodeParam("customer_remarks");
-    const orderId = decodeParam("order_id");
-
-    // Format teks hanya jika ada Customer Remarks
-    if (customerRemarks !== "N/A") {
-      remarksContainer.textContent = "${customerRemarks} - (Order ID: ${orderId})";
-    }
-  } else {
-    console.error("Element #customer-remarks-container tidak ditemukan.");
-  }
-});
-    
     // Signature Pad
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
@@ -479,6 +459,22 @@ window.onload = () => {
 });
 
     };
+    document.addEventListener("DOMContentLoaded", function () {
+    const remarksContainer = document.getElementById("customer-remarks-container");
+
+    if (remarksContainer) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerRemarks = urlParams.get("customer_remarks") || "N/A";
+        const orderId = urlParams.get("order_id") || "Unknown";
+
+        if (customerRemarks !== "N/A") {
+            remarksContainer.textContent = "${customerRemarks} - (Order ID: ${orderId})";
+        }
+    } else {
+        console.error("Element #customer-remarks-container tidak ditemukan.");
+    }
+});
+
   </script>
 
 </body>
