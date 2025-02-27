@@ -482,6 +482,8 @@ window.onload = () => {
     if (orderIds.length > 0 && customerRemarks.length > 0) {
         orderIds.forEach((orderId, index) => {
             const remark = customerRemarks[index];
+            const customerRemarksRaw = decodeURIComponent(urlParams.get("customer_remarks") || "");
+            const customerRemarks = customerRemarksRaw ? customerRemarksRaw.split("|") : [];
 
             // Debug: Cek remark yang sedang diproses
             console.log('Processing Order ID: ${orderId}, Remark: ${remark}');
@@ -493,7 +495,7 @@ window.onload = () => {
     }
 
     // Debug: Cek hasil akhir remarksText
-    console.log("Raw customerRemarks:", customerRemarksRaw);
+   
     console.log("Processed customerRemarks:", customerRemarks);
     console.log("Final Remarks Text:", remarksText);
 
