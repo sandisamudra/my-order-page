@@ -340,7 +340,21 @@
     }
 
     document.getElementById("grand-total").textContent = grandTotal.toLocaleString() +  " " + foundCurrency;
-  
+
+    // Menampilkan Customer Remarks di bawah tabel order
+    const customerRemarks = decodeParam("customer_remarks");
+
+    if (customerRemarks !== "N/A") {
+      const orderId = decodeParam("order_id"); // Mengambil Order ID dari parameter URL
+      const remarksContainer = document.createElement("div");
+      remarksContainer.style.marginTop = "20px";
+      remarksContainer.style.textAlign = "right";
+      remarksContainer.style.fontSize = "14px";
+      remarksContainer.style.fontWeight = "bold";
+
+      remarksContainer.textContent = ${customerRemarks} - (Order ID: ${orderId});
+      document.body.appendChild(remarksContainer);
+}
     
     // Signature Pad
     const canvas = document.getElementById("signature-pad");
