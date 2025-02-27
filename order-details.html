@@ -460,7 +460,10 @@ window.onload = () => {
   document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const remarksContainer = document.getElementById("customer_remarks");
-
+    if (!remarksContainer) {
+        console.error("Element #customer_remarks not found!");
+        returm;
+    }
    
     // Debug: Tampilkan semua parameter di console
     console.log("URL Params:", urlParams.toString());
