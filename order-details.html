@@ -469,7 +469,8 @@ window.onload = () => {
     console.log("URL Params:", urlParams.toString());
 
     // Ambil semua order_id dan customer_remarks dari URL
-    const orderIds = urlParams.get("orders")?.split("|") || [];
+    const allParams = urlParams.get("orders")?.split("|") || [];
+    const orderIds = allParams.filter(id => id.startsWith("ORD")); // Hanya ambil yang berawalan "ORD"
     const customer_remarks = urlParams.getAll("customer_remarks");
 
     // Debug: Cek apakah orderIds dan customerRemarks benar
