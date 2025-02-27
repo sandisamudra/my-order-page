@@ -434,7 +434,7 @@
     document.getElementById("signature-pad").style.display = "block";
     document.getElementById("save-signature").style.display = "inline-block";
     document.getElementById("clear-signature").style.display = "inline-block";
-    
+      
 // Cek apakah ada tanda tangan yang sudah disimpan
 window.onload = () => {
   const savedSignature = localStorage.getItem("savedSignature");
@@ -459,7 +459,7 @@ window.onload = () => {
 
     };
     document.addEventListener("DOMContentLoaded", function () {
-    const remarksContainer = document.getElementById("customer-remarks-container");
+    const remarksContainer = document.getElementById("customerRemarks");
 
     if (remarksContainer) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -470,7 +470,7 @@ window.onload = () => {
             remarksContainer.textContent = "${customerRemarks} - (Order ID: ${orderId})";
         }
     } else {
-        console.error("Element #customer-remarks-container tidak ditemukan.");
+        console.error("Element #customerRemarks tidak ditemukan.");
     }
 });
 function getQueryParam(param) {
