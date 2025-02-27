@@ -442,6 +442,17 @@ window.onload = () => {
     document.getElementById("signature-name").textContent = savedSignatureName;
     document.getElementById("signature-name").style.display = "block";
   }
+    document.addEventListener("DOMContentLoaded", function () {
+    // Loop setiap sel di kolom Total Cost
+    document.querySelectorAll('.total-cost').forEach(cell => {
+        let value = cell.innerText.trim();
+        
+        // Jika total cost adalah 0 atau 0 IDR, ubah ke "Price not ready"
+        if (value === "0" || value === "0 IDR") {
+            cell.innerText = "Price not ready";
+        }
+    });
+});
 
     };
   </script>
