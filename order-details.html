@@ -466,12 +466,12 @@ window.onload = () => {
         const orderId = urlParams.get("order_id") || "Unknown";
 
         if (customerRemarks !== "N/A") {
-            remarksContainer.textContent = ${customerRemarks} - (Order ID: ${orderId});
+            remarksContainer.textContent = '${customerRemarks} - (Order ID: ${orderId})';
         } else {
-            remarksContainer.textContent = "Tidak ada catatan customer.";
+            remarksContainer.textContent = "No remarks provided.";
         }
     } else {
-        console.error("Element #customerRemarks tidak ditemukan.");
+        console.error("Element #customerRemarks not found.");
     }
 });
   </script>
