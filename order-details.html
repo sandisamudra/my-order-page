@@ -466,23 +466,12 @@ window.onload = () => {
         const orderId = urlParams.get("order_id") || "Unknown";
 
         if (customerRemarks !== "N/A") {
-            remarksContainer.textContent = "${customerRemarks} - (Order ID: ${orderId})";
+            remarksContainer.textContent = ${customerRemarks} - (Order ID: ${orderId});
+        } else {
+            remarksContainer.textContent = "Tidak ada catatan customer.";
         }
     } else {
         console.error("Element #customerRemarks tidak ditemukan.");
-    }
-});
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    const remarks = getQueryParam("customer_remarks");
-    if (remarks) {
-        document.getElementById("customerRemarks").textContent = remarks;
-    } else {
-        document.getElementById("customerRemarks").textContent = "No remarks provided.";
     }
 });
   </script>
