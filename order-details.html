@@ -315,7 +315,7 @@
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const costValue = parseFloat(cols[6]) || ("Price not ready");
+        const costValue = parseFloat(cols[6]) || 0;
         grandTotal += costValue;
 
         tableBody.innerHTML += `
