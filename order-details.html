@@ -469,11 +469,11 @@ window.onload = () => {
     console.log("URL Params:", urlParams.toString());
 
     // Ambil semua order_id dan customer_remarks dari URL
-    const orderIds = urlParams.get("orders")?.split(",") || [];
+    const orderIds = urlParams.get("orders")?.split("|") || [];
     const customer_remarks = urlParams.getAll("customer_remarks");
 
     // Debug: Cek apakah orderIds dan customerRemarks benar
-    console.log("Order IDs:", orderIds);
+    console.log("Extracted Order IDs:", orderIds);
     console.log("Customer Remarks:", customer_remarks);
 
     let remarksText = "";
