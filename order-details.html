@@ -458,20 +458,33 @@ window.onload = () => {
 
     };
     document.addEventListener("DOMContentLoaded", function () {
+    const urlParams = new URLSearchParams(window.location.search);
     const remarksContainer = document.getElementById("customerRemarks");
 
-    if (remarksContainer) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const customerRemarks = urlParams.get("customer_remarks") || "N/A";
-        const orderId = urlParams.get("order_id") || "Unknown";
+    if (!remarksContainer) {
+        console.error("Element #customerRemarks tidak ditemukan.");
+        return;
+    }
 
-        if (customerRemarks !== "N/A") {
-            remarksContainer.textContent = customerRemarks + " - (Order ID: " + order_id + ")";
-        } else {
-            remarksContainer.textContent = "No remarks provided.";
+    // Ambil semua order_id dan customer_remarks dari URL
+    const orderIds = urlParams.getAll("order_id");
+    const customerRemarks = urlParams.getAll("customer_remarks");
+
+    let remarksText = "";
+
+    if (orderIds.length > 0 && customerRemarks.length > 0) {
+        for (let i = 0; i < orderIds.length; i++) {
+            if (customerRemarks[i] && customerRemarks[i] !== "N/A") {
+                remarksText += • ${customerRemarks[i]} (Order ID: ${orderIds[i]})<br>;
+            }
         }
+    }
+
+    // Jika ada remarks, tampilkan di HTML
+    if (remarksText) {
+        remarksContainer.innerHTML = remarksText;
     } else {
-        console.error("Element #customerRemarks not found.");
+        remarksContainer.textContent = "Tidak ada catatan customer.";
     }
 });
   </script>
