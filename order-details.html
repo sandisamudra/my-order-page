@@ -314,22 +314,29 @@
     if (ordersString !== "N/A") {
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
-        const cols = rowStr.split("|");
-        const costValue = parseFloat(cols[6]) || 0;
-        grandTotal += costValue;
+      const cols = rowStr.split("|");
+      let costValue = parseFloat(cols[6]);
 
-        tableBody.innerHTML += `
-          <tr>
-            <td>${cols[0]}</td>
-            <td>${cols[1]}</td>
-            <td>${cols[2]}</td>
-            <td>${cols[3]}</td>
-            <td>${cols[4]}</td>
-            <td>${cols[5]}</td>
-            <td>${costValue.toLocaleString()} ${foundCurrency !== "N/A" ? foundCurrency : ""}</td>
-          </tr>
-        `;
-      });
+      // Jika Total Cost kosong, nol, atau NaN, ganti menjadi "Price not ready"
+      let displayCost = isNaN(costValue) || costValue === 0 ? "Price not ready" : costValue.toLocaleString() + " " + foundCurrency;
+
+      // Jika harga valid, tambahkan ke Grand Total
+      if (!isNaN(costValue) && costValue > 0) {
+      grandTotal += costValue;
+  }
+
+  tableBody.innerHTML += `
+    <tr>
+      <td>${cols[0]}</td>
+      <td>${cols[1]}</td>
+      <td>${cols[2]}</td>
+      <td>${cols[3]}</td>
+      <td>${cols[4]}</td>
+      <td>${cols[5]}</td>
+      <td>${displayCost}</td>
+    </tr>
+  `;
+});
     }
 
     document.getElementById("grand-total").textContent = grandTotal.toLocaleString() +  " " + foundCurrency;
