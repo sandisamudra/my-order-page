@@ -422,7 +422,18 @@
       document.getElementById("signature-image").style.display = "none";
       document.getElementById("signature-name").style.display = "none";
 });
-    document.getElementById("print-pdf").addEventListener("click", () => {
+    document.addEventListener("DOMContentLoaded", function() {
+    const printButton = document.getElementById("print-pdf");
+
+    if (printButton) {
+        printButton.addEventListener("click", function() {
+            // Fungsi print di sini
+            console.log("Print button clicked!");
+        });
+    } else {
+        console.error("Elemen #print-pdf tidak ditemukan!");
+    }
+});
     document.getElementById("signature-pad").style.display = "none";
     document.getElementById("save-signature").style.display = "none";
     document.getElementById("clear-signature").style.display = "none";
