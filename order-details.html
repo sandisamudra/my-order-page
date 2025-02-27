@@ -461,11 +461,7 @@ window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const remarksContainer = document.getElementById("customer_remarks");
 
-    if (!remarksContainer) {
-        console.error("Element #customer_remarks not found.");
-        return;
-    }
-
+   
     // Debug: Tampilkan semua parameter di console
     console.log("URL Params:", urlParams.toString());
 
