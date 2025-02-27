@@ -278,7 +278,8 @@
     </thead>
     <tbody id="orders-table-body"></tbody>
   </table>
-
+<!-- Customer Remarks -->
+  <div id="customer-remarks-container" style="text-align: right; margin-top: 20px; font-style: italic;"></div>
   <table id="quotation-table">
     <tr><td id="grand-total-label">Grand Total</td></tr>
     <tr><td id="grand-total">N/A</td></tr>
@@ -352,8 +353,8 @@
       remarksContainer.style.fontSize = "14px";
       remarksContainer.style.fontWeight = "bold";
 
-      remarksContainer.textContent = ${customerRemarks} - (Order ID: ${orderId});
-      document.body.appendChild(remarksContainer);
+      document.getElementById("customer-remarks-container").textContent = 
+      "${customerRemarks} - (Order ID: ${orderId})";
 }
     
     // Signature Pad
