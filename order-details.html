@@ -308,14 +308,14 @@
     const ordersString = decodeParam("orders");
     const tableBody = document.getElementById("orders-table-body");
 
-    let grandTotal = 0;
+    let grandTotal = ("Price not ready");
     let foundCurrency = decodeParam("currency");
 
     if (ordersString !== "N/A") {
       const rows = ordersString.split(";");
       rows.forEach(rowStr => {
         const cols = rowStr.split("|");
-        const costValue = parseFloat(cols[6]) || Price not ready;
+        const costValue = parseFloat(cols[6]) || 0;
         grandTotal += costValue;
 
         tableBody.innerHTML += `
