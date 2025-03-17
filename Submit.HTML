@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Data</title>
+</head>
+<body>
+    <script>
+        // URL Apps Script kamu
+        const scriptURL = "https://script.google.com/macros/s/AKfycbwYsFP5Pjn_xho-w5DIiax2TSO6GfYf3lwJUB8HvQ1cPUA8fBaWbyKXi8ptVnrAFcjM/exec";
+        
+        // Data yang dikirim (ambil dari URL)
+        const params = new URLSearchParams(window.location.search);
+        
+        // Kirim data ke Apps Script
+        fetch(${scriptURL}?${params.toString()})
+            .then(response => response.text())
+            .then(data => {
+                alert("Data berhasil dikirim!");
+                window.history.back(); // Kembali ke halaman sebelumnya
+            })
+            .catch(error => {
+                alert("Gagal mengirim data!");
+                console.error(error);
+            });
+    </script>
+</body>
+</html>
