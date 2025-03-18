@@ -461,37 +461,17 @@ window.onload = () => {
   document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // Pastikan elemen customer_remarks ada di dalam HTML
-    const remarksElement = document.getElementById("customer_remarks");
-
+   
     // Debug: Tampilkan semua parameter di console
     console.log("URL Params:", urlParams.toString());
 
     // Ambil semua order_id dan customer_remarks dari URL
     const allParams = urlParams.get("orders")?.split("|") || [];
     const orderIds = allParams.filter(id => id.startsWith("ORD")); // Hanya order dengan prefix "ORD"
-    const customer_remarks = urlParams.getAll("customer_remarks");
-
-    // Debug: Cek apakah orderIds dan customerRemarks benar
-    console.log("Extracted Order IDs:", orderIds);
-    console.log("Customer Remarks:", customer_remarks);
-
+    
     let remarksText = ""; // Variabel untuk menyimpan semua remarks
 
-    if (orderIds.length > 0 && customer_remarks.length > 0) {
-        orderIds.forEach((orderId, index) => {
-            const remark = customer_remarks[index] || "No remarks"; // Ambil remark atau default
-            
-            // Debug: Cek Remark yang sedang diproses
-            console.log(`Processing Order ID: ${orderId}, Remark: ${remark}`);
-            
-            // Gabungkan semua remark dalam format yang diinginkan
-            remarksText += `${remark} (Order ID: ${orderId})<br>`;
-        });
-    }
-
-    // Setelah loop selesai, masukkan semua remarks ke elemen HTML
-    remarksElement.innerHTML = remarksText || "No remarks provided.";
+    
 });
 </script>
 
