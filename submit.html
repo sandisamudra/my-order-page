@@ -43,7 +43,10 @@
         const params = new URLSearchParams(window.location.search);
 
         // Kirim data ke Google Sheets
-        fetch(scriptUrl + "?" + params.toString())
+        fetch(scriptUrl + "?" + params.toString(), {
+            method: "GET",
+            mode: "no-cors"
+        })
             .then(response => response.text())
             .then(data => {
                 document.getElementById("status").innerText = "Data Berhasil Disubmit!";
