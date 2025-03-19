@@ -51,7 +51,7 @@
             .then(data => {
                 document.getElementById("status").innerText = "Data Berhasil Disubmit!";
                 setTimeout(() => {
-                    window.history.go(-2);
+                    window.close();
                 }, 1000);
             })
             .catch(error => {
