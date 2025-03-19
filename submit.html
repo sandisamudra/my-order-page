@@ -4,27 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submit Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-top: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-<script>
-    // URL Apps Script kamu
-    const scriptURL = "https://script.google.com/macros/s/AKfycbw5PF9jP_xho-wSD1Iax27S06GFY13uD8WhQ1cPU48F5baI6y0JEtpWtrAFc1jEvxec/exec";
-    
-    // Data yang dikirim (ambil dari URL)
-    const params = new URLSearchParams(window.location.search);
-    
-    // Kirim data ke Apps Script
-    fetch(${scriptURL}?${params.toString()})
-        .then(response => response.text())
-        .then(data => {
-            alert("Data berhasil dikirim!");
-            window.location.href = "https://brinkssuperapp.glide.page/dl/da19fa"; // Ganti dengan URL aplikasi Glide-mu
-            window.history.back();
-        })
-        .catch(error => {
-            alert("Gagal mengirim data!");
-            console.error(error);
-        });
-</script>
+    <h1 id="status">Mengirim Data...</h1>
+    <div class="loading"></div>
+
+    <script>
+        // URL Apps Script kamu
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbw5P5PjXn_xho-wSD1ax27S06GFYf13uDBW8hQIcPLU4Bf84aly8Q15gEVtinvAFcjE/exec";
+        
+        // Ambil data dari URL
+        const params = new URLSearchParams(window.location.search);
+
+        // Kirim data ke Google Sheets
+        fetch(scriptUrl + "?" + params.toString())
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("status").innerText = "Data Berhasil Disubmit!";
+                setTimeout(() => window.history.back(), 1000); // Kembali setelah 1 detik
+            })
+            .catch(error => {
+                document.getElementById("status").innerText = "Gagal Mengirim Data!";
+                console.error(error);
+            });
+    </script>
 </body>
-</html>
+</html>    
