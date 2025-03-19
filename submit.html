@@ -49,10 +49,10 @@
         })
             .then(response => response.text())
             .then(data => {
-                document.getElementById("status").innerText = "Order success, please wait until brinks confirm";
+                document.getElementById("status").innerText = "Order submitted";
                 setTimeout(() => {
                     window.close();
-                }, 1000);
+                }, 2000);
             })
             .catch(error => {
                 document.getElementById("status").innerText = "Order Failed!";
