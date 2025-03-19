@@ -32,7 +32,7 @@
     </style>
 </head>
 <body>
-    <h1 id="status">Mengirim Data...</h1>
+    <h1 id="status">Sending Order...</h1>
     <div class="loading"></div>
 
     <script>
@@ -49,13 +49,13 @@
         })
             .then(response => response.text())
             .then(data => {
-                document.getElementById("status").innerText = "Data Berhasil Disubmit!";
+                document.getElementById("status").innerText = "Order success, please wait until brinks confirm";
                 setTimeout(() => {
                     window.close();
                 }, 1000);
             })
             .catch(error => {
-                document.getElementById("status").innerText = "Gagal Mengirim Data!";
+                document.getElementById("status").innerText = "Order Failed!";
                 console.error(error);
             });
     </script>
