@@ -37,7 +37,7 @@
 
     <script>
         // URL Apps Script kamu
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbxVTVGkSOrFjCx04xXsqJCol3GAWEQfgbaVo3EEj5VOOb7TgPc45OXESMg_Pc6EuZyP/exec";
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyzZWNI3qSYHG6HIZ0YTzJX4hSGSSunz94N_yEwyUlpYOroYtchlOePveRV3Q_c_fM/exec";
         
         // Ambil data dari URL
         const params = new URLSearchParams(window.location.search);
@@ -55,7 +55,7 @@
                 }, 2000);
             })
             .catch(error => {
-                document.getElementById("status").innerText = "Order Failed!";
+                document.getElementById("status").innerText = "Order Failed!" + error.message;
                 console.error(error);
             });
     </script>
