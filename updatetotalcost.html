@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Total Cost - Agent</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #333; }
+        label { display: block; margin-top: 10px; }
+        input, button { margin-top: 5px; padding: 8px; width: 100%; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Update Total Cost - Agent</h1>
+    <label for="orderId">Order ID:</label>
+    <input type="text" id="orderId" placeholder="Enter Order ID">
+
+    <label for="newTotalCost">New Total Cost:</label>
+    <input type="text" id="newTotalCost" placeholder="Enter New Total Cost">
+
+    <button onclick="updateTotalCost()">Update Total Cost</button>
+
+    <p id="result"></p>
+
+    <script>
+        function updateTotalCost() {
+            const orderId = document.getElementById('orderId').value;
+            const newTotalCost = document.getElementById('newTotalCost').value;
+
+            if (!orderId || !newTotalCost) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            google.script.run.withSuccessHandler((response) => {
+                document.getElementById('result').innerText = response;
+            }).processTotalCostUpdate(orderId, newTotalCost);
+        }
+    </script>
+</body>
+</html>
