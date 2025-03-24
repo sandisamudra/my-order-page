@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5;url=https://brinkssuperapp.glide.page/dl/245b4e">
     <title>Sending WhatsApp...</title>
 </head>
 <body>
@@ -22,14 +21,6 @@
                 if (response.ok) {
                     alert('Submit Success!');
                     window.close(); // Menutup jendela setelah sukses
-                } else {
-                    alert('Failed to send WhatsApp notification.');
-                    window.close(); // Menutup jendela meskipun gagal
-                }
-            })
-            .catch(error => {
-                alert('Error sending WhatsApp notification: ' + error.message);
-                window.close(); // Menutup jendela jika ada error
             });
     </script>
 </body>
