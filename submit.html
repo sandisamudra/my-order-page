@@ -21,12 +21,15 @@
             .then(response => {
                 if (response.ok) {
                     alert('Submit Success!');
+                    window.close(); // Menutup jendela setelah sukses
                 } else {
                     alert('Failed to send WhatsApp notification.');
+                    window.close(); // Menutup jendela meskipun gagal
                 }
             })
             .catch(error => {
                 alert('Error sending WhatsApp notification: ' + error.message);
+                window.close(); // Menutup jendela jika ada error
             });
     </script>
 </body>
