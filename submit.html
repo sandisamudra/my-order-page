@@ -3,61 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Data</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .loading {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #ccc;
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-top: 20px;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+    <meta http-equiv="refresh" content="5;url=https://brinkssuperapp.glide.page/dl/245b4e">
+    <title>Sending WhatsApp...</title>
 </head>
 <body>
-    <h1 id="status">Sending Order...</h1>
-    <div class="loading"></div>
+    <h1>Requesting order...</h1>
+    <p>Please wait...</p>
 
     <script>
-        // URL Apps Script kamu
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbxEr9lVVkKv-gEzHMlfBkxTocwbkMRGnHs5bfJwOD-pEfdlZv30kRg7kLI074LLLE4Thw/exec";
-        
-        // Ambil data dari URL
-        const params = new URLSearchParams(window.location.search);
+        // Ganti dengan nomor, API Key, dan pesan kamu
+        const phoneNumber = '6281270916520';  // Nomor HP tujuan
+        const apiKey = '3131283';  // API Key dari CallMeBot
+        const message = encodeURIComponent('New order submitted! Please check the app.');
 
-        // Kirim data ke Google Sheets
-        fetch(scriptUrl + "?" + params.toString(), {
-            method: "GET",
-            mode: "no-cors"
-        })
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("status").innerText = "Order submitted";
-                setTimeout(() => {
-                    window.close();
-                }, 2000);
+        // Kirim pesan ke WhatsApp
+        fetch(`https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apikey=${apiKey}`)
+            .then(response => {
+                if (response.ok) {
+                    alert('Submit Success!');
+                } else {
+                    alert('Failed to send WhatsApp notification.');
+                }
             })
             .catch(error => {
-                document.getElementById("status").innerText = "Order Failed!" + error.message;
-                console.error(error);
+                alert('Error sending WhatsApp notification: ' + error.message);
             });
     </script>
 </body>
-</html>    
+</html>
