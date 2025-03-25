@@ -70,7 +70,7 @@
         const encodedMessage = encodeURIComponent(message);
 
         // ======= KIRIM PESAN =========
-        fetch(https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey})
+        fetch(`https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`)
             .then(response => {
                 if (response.ok) {
                     document.getElementById("status").innerText = "Order submitted!";
