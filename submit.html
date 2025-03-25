@@ -42,9 +42,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const customerName = urlParams.get('customerName');
         const orders = urlParams.get('orders');
-        const phoneNumber = urlParams.get('phoneNumber');
-        const apikey = urlParams.get('apikey');
-
+      
         if (!orders) {
             alert('No orders found!');
         } else {
