@@ -10,18 +10,51 @@
     <p>Please wait...</p>
 
     <script>
-        // Ganti dengan nomor, API Key, dan pesan kamu
+        // ======= KONFIGURASI =========
         const phoneNumber = '6281270916520';  // Nomor HP tujuan
         const apiKey = '3131283';  // API Key dari CallMeBot
-        const message = encodeURIComponent('New order submitted! Please check the app.');
+        
+        // ======= AMBIL DATA DARI URL =========
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderID = urlParams.getAll('orderID');
+        const customerName = urlParams.get('customerName');
+        const date = urlParams.get('date');
+        const items = urlParams.getAll('item');
+        const quantities = urlParams.getAll('quantity');
+        const froms = urlParams.getAll('from');
+        const tos = urlParams.getAll('to');
+        const totalCosts = urlParams.getAll('totalCost');
 
-        // Kirim pesan ke WhatsApp
-        fetch(`https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apikey=${apiKey}`)
+        // ======= SUSUN PESAN =========
+        let message = New Request Order\n\nCustomer Name: ${customerName}\nDate: ${date}\n\n;
+        
+        for (let i = 0; i < orderID.length; i++) {
+            message += Order ID: ${orderID[i]}\n;
+            message += Item: ${items[i]}\n;
+            message += Quantity: ${quantities[i]} Kg\n;
+            message += From: ${froms[i]}\n;
+            message += To: ${tos[i]}\n;
+            message += Total Cost: ${totalCosts[i]}\n;
+            message += '---------------------------\n';
+        }
+
+        message += \nTotal Orders: ${orderID.length}\n;
+
+        // Encode pesan untuk URL
+        const encodedMessage = encodeURIComponent(message);
+
+        // ======= KIRIM PESAN =========
+        fetch(`https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`)
             .then(response => {
                 if (response.ok) {
                     alert('Submit Success!');
-                    window.close(); // Menutup jendela setelah sukses
+                    setTimeout(() => window.close(), 1500);  // Tutup halaman setelah 1.5 detik
+                } else {
+                    alert('Failed to send WhatsApp notification.');
                 }
+            })
+            .catch(error => {
+                alert('Error sending WhatsApp notification: ' + error.message);
             });
     </script>
 </body>
