@@ -48,13 +48,13 @@
         const from = urlParams.get('from');
         const to = urlParams.get('to');
         const phoneNumber = urlParams.get('phoneNumber');
-        const apiKey = urlParams.get('apiKey');
+        const apikey = urlParams.get('apikey');
 
         // Buat pesan otomatis
         const message = `Customer: ${customer}%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}`;
 
         // Kirim ke CallMeBot
-        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apiKey=${apiKey}`;
+        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apikey=${apikey}`;
         window.location.href = whatsappUrl;
     </script>
 </body>
