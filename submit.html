@@ -38,24 +38,39 @@
     </div>
 
     <script>
-        // Ambil data dari URL Glide Apps
+        // Ambil parameter dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const customerName = urlParams.get('customerName');
-        const orderId = urlParams.get('orderId');
-        const date = urlParams.get('date');
-        const item = urlParams.get('item');
-        const quantity = urlParams.get('quantity');
-        const from = urlParams.get('from');
-        const to = urlParams.get('to');
+        const orders = urlParams.get('orders');
         const phoneNumber = urlParams.get('phoneNumber');
         const apikey = urlParams.get('apikey');
 
-        // Buat pesan otomatis
-        const message = `Customer Name: ${customerName}%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}`;
+        // Cek apakah parameter ada
+        if (!customerName || !orders || !phoneNumber || !apikey) {
+            alert("Missing parameters. Please check your URL.");
+        } else {
+            // Pisahkan setiap order (dipisahkan dengan "|")
+            const orderList = orders.split('|');
+            let message = `Customer Name: ${customerName}\n\n`;
 
-        // Kirim ke CallMeBot
-        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apikey=${apikey}`;
-        window.location.href = whatsappUrl;
+            // Proses setiap order
+            orderList.forEach((order, index) => {
+                const [orderID, date, item, quantity, from, to] = order.split(',');
+
+                message += `Order #${index + 1}:\n`;
+                message += - `Order ID: ${orderID}\n`;
+                message += - `Date: ${date}\n`;
+                message += - `Item: ${item}\n`;
+                message += - `Quantity: ${quantity}\n`;
+                message += - `From: ${from}\n`;
+                message += - `To: ${to}\n\n`;
+            });
+
+            // Kirim ke WhatsApp melalui Callmebot API
+            const apiUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}&apikey=${apikey}`;
+            window.location.href = apiUrl;
+        }
     </script>
+
 </body>
 </html>
