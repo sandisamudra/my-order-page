@@ -3,85 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sending Order...</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
-        .loading {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #ccc;
-            border-top: 4px solid #007bff;
+        .loading-container {
+            text-align: center;
+        }
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
             border-radius: 50%;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin-top: 20px;
+            margin: 20px auto;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .loading-text {
+            font-size: 18px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
-    <h1 id="status">Sending Order...</h1>
-    <div class="loading"></div>
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <div class="loading-text">Sending Order...</div>
+    </div>
 
     <script>
-        // ======= KONFIGURASI =========
-        const phoneNumber = '6281270916520';  // Nomor HP tujuan
-        const apiKey = '3131283';  // API Key dari CallMeBot
-        
-        // ======= AMBIL DATA DARI URL =========
+        // Ambil parameter dari URL
         const urlParams = new URLSearchParams(window.location.search);
-        const orderID = urlParams.getAll('orderID');
-        const customerName = urlParams.get('customerName');
-        const date = urlParams.get('date');
-        const items = urlParams.getAll('item');
-        const quantities = urlParams.getAll('quantity');
-        const froms = urlParams.getAll('from');
-        const tos = urlParams.getAll('to');
-        const totalCosts = urlParams.getAll('totalCost');
+        const customerName = urlParams.get('customerName') || 'Unknown Customer';
+        const orders = urlParams.get('orders') ? urlParams.get('orders').split('|') : [];
+        const apiKey = urlParams.get('apiKey') || '3131283';  // Ganti dengan API Key CallMeBot Anda
+        const phoneNumber = urlParams.get('phoneNumber') || '6281270916520'; // Nomor tujuan (format internasional)
 
-        // ======= SUSUN PESAN =========
-        let message = New Request Order\n\nCustomer Name: ${customerName}\nDate: ${date}\n\n;
-        
-        for (let i = 0; i < orderID.length; i++) {
-            message += Order ID: ${orderID[i]}\n;
-            message += Item: ${items[i]}\n;
-            message += Quantity: ${quantities[i]} Kg\n;
-            message += From: ${froms[i]}\n;
-            message += To: ${tos[i]}\n;
-            message += Total Cost: ${totalCosts[i]}\n;
-            message += '---------------------------\n';
-        }
+        // Format pesan WhatsApp
+        let message = Customer Name: ${customerName}\n\nOrders:\n;
+        orders.forEach((order, index) => {
+            const items = order.split(',');
+            message += \nOrder ${index + 1}\n;
+            message += - Order ID: ${items[0]}\n;
+            message += - Date: ${items[1]}\n;
+            message += - Item: ${items[2]}\n;
+            message += - Quantity: ${items[3]}\n;
+            message += - From: ${items[4]}\n;
+            message += - To: ${items[5]}\n;
+            message += - Total Cost: ${items[6]}\n;
+        });
 
-        message += \nTotal Orders: ${orderID.length}\n;
-
-        // Encode pesan untuk URL
+        // Encode pesan agar sesuai format URL
         const encodedMessage = encodeURIComponent(message);
 
-        // ======= KIRIM PESAN =========
-        fetch(`https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`)
+        // Kirim pesan WhatsApp melalui CallMeBot
+        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`;
+
+        // Kirim permintaan
+        fetch(whatsappUrl)
             .then(response => {
                 if (response.ok) {
-                    document.getElementById("status").innerText = "Order submitted!";
-                    setTimeout(() => window.close(), 1500);  // Tutup halaman setelah 1.5 detik
+                    alert("Order berhasil dikirim ke WhatsApp!");
+                    window.close();  // Tutup jendela jika berhasil
                 } else {
-                    document.getElementById("status").innerText = "Failed to send WhatsApp notification.";
+                    alert("Gagal mengirim order ke WhatsApp.");
                 }
             })
             .catch(error => {
-                document.getElementById("status").innerText = "Error sending WhatsApp notification!";
-                console.error(error);
+                console.error("Error:", error);
+                alert("Terjadi kesalahan saat mengirim order.");
             });
     </script>
 </body>
