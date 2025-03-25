@@ -51,7 +51,7 @@
             const orders = urlParams.get('orders') ? urlParams.get('orders').split('|') : [];
 
             // Format pesan
-            let message = Customer Name: ${customerName}\nOrders:\n;
+            let message = `Customer Name: ${customerName}\nOrders:\n`;
             orders.forEach((order, index) => {
                 const [orderId, date, item, quantity, from, to] = order.split(',');
                 message += `Order ${index + 1}: ${orderId}, ${date}, ${item}, ${quantity}, ${from}, ${to}\n`;
