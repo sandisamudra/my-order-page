@@ -3,86 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sending Order...</title>
+    <title>Send Order</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
             font-family: Arial, sans-serif;
-        }
-        .loading-container {
             text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .spinner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         .spinner {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #3498db;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #3498db;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         .loading-text {
+            margin-top: 20px;
             font-size: 18px;
             color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="loading-container">
+    <div class="spinner-container">
         <div class="spinner"></div>
         <div class="loading-text">Sending Order...</div>
     </div>
 
     <script>
-        // Ambil parameter dari URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const customerName = urlParams.get('customerName') || 'Unknown Customer';
-        const orders = urlParams.get('orders') ? urlParams.get('orders').split('|') : [];
-        const apiKey = urlParams.get('apiKey') || '3131283';  // Ganti dengan API Key CallMeBot Anda
-        const phoneNumber = urlParams.get('phoneNumber') || '6281270916520'; // Nomor tujuan (format internasional)
+        async function sendOrder() {
+            // Data dari URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const customerName = urlParams.get('customerName');
+            const orders = urlParams.get('orders') ? urlParams.get('orders').split('|') : [];
 
-        // Format pesan WhatsApp
-        let message = `Customer Name: ${customerName}\n\nOrders:\n`;
-        orders.forEach((order, index) => {
-            const items = order.split(',');
-            message += `\nOrder ${index + 1}\n`;
-            message += - `Order ID: ${items[0]}\n`;
-            message += - `Date: ${items[1]}\n`;
-            message += - `Item: ${items[2]}\n`;
-            message += - `Quantity: ${items[3]}\n`;
-            message += - `From: ${items[4]}\n`;
-            message += - `To: ${items[5]}\n`;
-        });
-
-        // Encode pesan agar sesuai format URL
-        const encodedMessage = encodeURIComponent(message);
-
-        // Kirim pesan WhatsApp melalui CallMeBot
-        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`;
-
-        // Kirim permintaan
-        fetch(whatsappUrl)
-            .then(response => {
-                if (response.ok) {
-                    alert("Order berhasil dikirim ke WhatsApp!");
-                    window.close();  // Tutup jendela jika berhasil
-                } else {
-                    alert("Gagal mengirim order ke WhatsApp.");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("Terjadi kesalahan saat mengirim order.");
+            // Format pesan
+            let message = Customer Name: ${customerName}\nOrders:\n;
+            orders.forEach((order, index) => {
+                const [orderId, date, item, quantity, from, to] = order.split(',');
+                message += `Order ${index + 1}: ${orderId}, ${date}, ${item}, ${quantity}, ${from}, ${to}\n`;
             });
+
+            // Kirim ke CallMeBot
+            const phoneNumber = '6281270916520'; // Ganti dengan nomor WhatsApp
+            const apiKey = '3131283'; // Ganti dengan API Key CallMeBot
+            const encodedMessage = encodeURIComponent(message);
+            const url = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`;
+
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    alert('Order sent successfully!');
+                    window.close(); // Tutup halaman setelah berhasil kirim
+                } else {
+                    alert('Failed to send order.');
+                }
+            } catch (error) {
+                alert('An error occurred while sending the order.');
+            }
+        }
+
+        // Panggil fungsi saat halaman dimuat
+        window.onload = sendOrder;
     </script>
 </body>
 </html>
