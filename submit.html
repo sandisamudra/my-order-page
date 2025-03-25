@@ -37,7 +37,7 @@
         <p>Sending Order...</p>
     </div>
 
-   <script>
+    <script>
         // Ambil data dari URL Glide Apps
         const urlParams = new URLSearchParams(window.location.search);
         const customerName = urlParams.get('customerName');
@@ -45,23 +45,24 @@
         const phoneNumber = urlParams.get('phoneNumber');
         const apikey = urlParams.get('apikey');
 
-        // Pisahkan semua order berdasarkan simbol "|"
-        const orderList = orders.split('|');
+        if (!orders) {
+            alert('No orders found!');
+        } else {
+            // Pisahkan semua order berdasarkan simbol "|"
+            const orderList = orders.split('|');
 
-        // Buat pesan otomatis
-        let message = `Customer Name: ${customerName}%0A`;
+            // Buat pesan otomatis
+            let message = `Customer Name: ${customerName}%0A`;
 
-        orderList.forEach((orders, index) => {
-            const [orderId, date, item, quantity, from, to] = orders.split(',');
-            message += `%0AOrder ${index + 1}:%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}%0A`;
-        });
+            orderList.forEach((order, index) => {
+                const [orderId, date, item, quantity, from, to] = order.split(',');
+                message += `%0AOrder ${index + 1}:%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}%0A------------------------`;
+            });
 
-        // Kirim ke CallMeBot
-        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apiKey=${apikey}`;
-        window.location.href = whatsappUrl;
+            // Kirim ke CallMeBot
+            const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apiKey=${apikey}`;
+            window.location.href = whatsappUrl;
+        }
     </script>
-
-
-
 </body>
 </html>
