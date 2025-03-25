@@ -51,17 +51,17 @@
         const phoneNumber = urlParams.get('phoneNumber') || '6281270916520'; // Nomor tujuan (format internasional)
 
         // Format pesan WhatsApp
-        let message = Customer Name: ${customerName}\n\nOrders:\n;
+        let message = `Customer Name: ${customerName}\n\nOrders:\n`;
         orders.forEach((order, index) => {
             const items = order.split(',');
-            message += \nOrder ${index + 1}\n;
-            message += - Order ID: ${items[0]}\n;
-            message += - Date: ${items[1]}\n;
-            message += - Item: ${items[2]}\n;
-            message += - Quantity: ${items[3]}\n;
-            message += - From: ${items[4]}\n;
-            message += - To: ${items[5]}\n;
-            message += - Total Cost: ${items[6]}\n;
+            message += `\nOrder ${index + 1}\n`;
+            message += - `Order ID: ${items[0]}\n`;
+            message += - `Date: ${items[1]}\n`;
+            message += - `Item: ${items[2]}\n`;
+            message += - `Quantity: ${items[3]}\n`;
+            message += - `From: ${items[4]}\n`;
+            message += - `To: ${items[5]}\n`;
+            message += - `Total Cost: ${items[6]}\n`;
         });
 
         // Encode pesan agar sesuai format URL
