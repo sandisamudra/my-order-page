@@ -40,7 +40,7 @@
     <script>
         // Ambil data dari URL Glide Apps
         const urlParams = new URLSearchParams(window.location.search);
-        const customer = urlParams.get('customer');
+        const customerName = urlParams.get('customerName');
         const orderId = urlParams.get('orderId');
         const date = urlParams.get('date');
         const item = urlParams.get('item');
@@ -51,7 +51,7 @@
         const apikey = urlParams.get('apikey');
 
         // Buat pesan otomatis
-        const message = `Customer: ${customer}%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}`;
+        const message = `Customer Name: ${customerName}%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}`;
 
         // Kirim ke CallMeBot
         const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apikey=${apikey}`;
