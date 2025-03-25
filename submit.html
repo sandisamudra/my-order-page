@@ -3,81 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Order</title>
+    <title>Sending Order...</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        .spinner-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
+            margin: 0;
+        }
+        .loading-container {
+            text-align: center;
         }
         .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #3498db;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
             animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        .loading-text {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #333;
-        }
     </style>
 </head>
 <body>
-    <div class="spinner-container">
+    <div class="loading-container">
         <div class="spinner"></div>
-        <div class="loading-text">Sending Order...</div>
+        <p>Sending Order...</p>
     </div>
 
     <script>
-        async function sendOrder() {
-            // Data dari URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const customerName = urlParams.get('customerName');
-            const orders = urlParams.get('orders') ? urlParams.get('orders').split('|') : [];
+        // Ambil data dari URL Glide Apps
+        const urlParams = new URLSearchParams(window.location.search);
+        const customer = urlParams.get('customer');
+        const orderId = urlParams.get('orderId');
+        const date = urlParams.get('date');
+        const item = urlParams.get('item');
+        const quantity = urlParams.get('quantity');
+        const from = urlParams.get('from');
+        const to = urlParams.get('to');
+        const phoneNumber = urlParams.get('phoneNumber');
+        const apiKey = urlParams.get('apiKey');
 
-            // Format pesan
-            let message = `Customer Name: ${customerName}\nOrders:\n`;
-            orders.forEach((order, index) => {
-                const [orderId, date, item, quantity, from, to] = order.split(',');
-                message += `Order ${index + 1}: ${orderId}, ${date}, ${item}, ${quantity}, ${from}, ${to}\n`;
-            });
+        // Buat pesan otomatis
+        const message = `Customer: ${customer}%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}`;
 
-            // Kirim ke CallMeBot
-            const phoneNumber = '6281270916520'; // Ganti dengan nomor WhatsApp
-            const apiKey = '3131283'; // Ganti dengan API Key CallMeBot
-            const encodedMessage = encodeURIComponent(message);
-            const url = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodedMessage}&apikey=${apiKey}`;
-
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    alert('Order sent successfully!');
-                    window.close(); // Tutup halaman setelah berhasil kirim
-                } else {
-                    alert('Failed to send order.');
-                }
-            } catch (error) {
-                alert('An error occurred while sending the order.');
-            }
-        }
-
-        // Panggil fungsi saat halaman dimuat
-        window.onload = sendOrder;
+        // Kirim ke CallMeBot
+        const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apiKey=${apiKey}`;
+        window.location.href = whatsappUrl;
     </script>
 </body>
 </html>
