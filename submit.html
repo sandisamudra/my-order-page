@@ -49,7 +49,7 @@
         const orderList = orders.split('|');
 
         // Buat pesan otomatis
-        let message = `Customer Name: ${customer}%0A`;
+        let message = `Customer Name: ${customerName}%0A`;
 
         orderList.forEach((order, index) => {
             const [orderId, date, item, quantity, from, to] = order.split(',');
