@@ -42,8 +42,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         const customerName = urlParams.get('customerName');
         const orders = urlParams.get('orders');
-      
-        if (!orders) {
+        const apikey = urlParams.get('apikey');
+
+        // Cek jika apikey tidak ditemukan
+        if (!apikey) {
+            alert('API Key is missing!');
+        } else if (!orders) {
             alert('No orders found!');
         } else {
             // Pisahkan semua order berdasarkan simbol "|"
@@ -57,8 +61,11 @@
                 message += `%0AOrder ${index + 1}:%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}%0A------------------------`;
             });
 
+            // Encode pesan untuk menghindari karakter khusus
+            const encodedMessage = encodeURIComponent(message);
+
             // Kirim ke CallMeBot
-            const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=+6281270916520&text=${message}&apikey=3131283`;
+            const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=+6281270916520&text=${encodedMessage}&apikey=${apikey}`;
             window.location.href = whatsappUrl;
         }
     </script>
