@@ -38,39 +38,45 @@
     </div>
 
     <script>
-        // Ambil parameter dari URL
+        // Ambil data dari URL Glide Apps
         const urlParams = new URLSearchParams(window.location.search);
         const customerName = urlParams.get('customerName');
-        const orders = urlParams.get('orders');
         const phoneNumber = urlParams.get('phoneNumber');
         const apikey = urlParams.get('apikey');
 
-        // Cek apakah parameter ada
-        if (!customerName || !orders || !phoneNumber || !apikey) {
+        // Ambil semua order sebagai string dan pisahkan dengan "|"
+        const orderIds = urlParams.get('orderId') ? urlParams.get('orderId').split('|') : [];
+        const dates = urlParams.get('date') ? urlParams.get('date').split('|') : [];
+        const items = urlParams.get('item') ? urlParams.get('item').split('|') : [];
+        const quantities = urlParams.get('quantity') ? urlParams.get('quantity').split('|') : [];
+        const froms = urlParams.get('from') ? urlParams.get('from').split('|') : [];
+        const tos = urlParams.get('to') ? urlParams.get('to').split('|') : [];
+
+        // Cek apakah semua parameter penting sudah ada
+        if (!customerName || !phoneNumber || !apikey || orderIds.length === 0) {
             alert("Missing parameters. Please check your URL.");
         } else {
-            // Pisahkan setiap order (dipisahkan dengan "|")
-            const orderList = orders.split('|');
-            let message = `Customer Name: ${customerName}\n\n`;
+            // Buat pesan otomatis
+            let message = `Customer Name: ${customerName}%0A%0A`;
 
-            // Proses setiap order
-            orderList.forEach((order, index) => {
-                const [orderID, date, item, quantity, from, to] = order.split(',');
+            // Loop untuk setiap order
+            for (let i = 0; i < orderIds.length; i++) {
+                message += `Order ${i + 1}:%0A`;
+                message += `Order ID: ${orderIds[i] || 'N/A'}%0A`;
+                message += `Date: ${dates[i] || 'N/A'}%0A`;
+                message += `Item: ${items[i] || 'N/A'}%0A`;
+                message += `Quantity: ${quantities[i] || 'N/A'}%0A`;
+                message += `From: ${froms[i] || 'N/A'}%0A`;
+                message += `To: ${tos[i] || 'N/A'}%0A`;
+                message += `%0A`; // Tambahkan baris kosong antara setiap order
+            }
 
-                message += `Order #${index + 1}:\n`;
-                message += - `Order ID: ${orderID}\n`;
-                message += - `Date: ${date}\n`;
-                message += - `Item: ${item}\n`;
-                message += - `Quantity: ${quantity}\n`;
-                message += - `From: ${from}\n`;
-                message += - `To: ${to}\n\n`;
-            });
-
-            // Kirim ke WhatsApp melalui Callmebot API
-            const apiUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${encodeURIComponent(message)}&apikey=${apikey}`;
-            window.location.href = apiUrl;
+            // Kirim ke CallMeBot
+            const whatsappUrl = `https://api.callmebot.com/whatsapp.php?phone=${phoneNumber}&text=${message}&apikey=${apikey}`;
+            window.location.href = whatsappUrl;
         }
     </script>
+
 
 </body>
 </html>
