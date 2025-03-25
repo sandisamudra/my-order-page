@@ -51,8 +51,8 @@
         // Buat pesan otomatis
         let message = `Customer Name: ${customerName}%0A`;
 
-        orderList.forEach((order, index) => {
-            const [orderId, date, item, quantity, from, to] = order.split(',');
+        orderList.forEach((orders, index) => {
+            const [orderId, date, item, quantity, from, to] = orders.split(',');
             message += `%0AOrder ${index + 1}:%0AOrder ID: ${orderId}%0ADate: ${date}%0AItem: ${item}%0AQuantity: ${quantity}%0AFrom: ${from}%0ATo: ${to}%0A`;
         });
 
