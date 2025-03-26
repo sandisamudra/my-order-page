@@ -32,6 +32,8 @@
     <script>
         // Ambil parameter dari URL Glide Apps
         const urlParams = new URLSearchParams(window.location.search);
+        const allOrders = decodeURIComponent(urlParams.get('allOrders'));
+        console.log(allOrders);
         const customerName = urlParams.get('customerName');
         const allOrders = urlParams.get('allOrders');
         const agentEmail = urlParams.get('agentEmail');
