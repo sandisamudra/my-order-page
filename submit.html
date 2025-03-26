@@ -30,28 +30,42 @@
   <div class="spinner"></div>
 
   <script>
-    // Ambil parameter dari URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const customerName = urlParams.get('customerName');
-    const allOrders = urlParams.get('allOrders');
+    // Fungsi untuk mendapatkan parameter dari URL
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return params;
+    }
 
-    // Kirim data ke Google Apps Script
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxLCJ831Et0aV10c-1lVf6VAwjZACGmfxtSHgT1dbReI3oL04WiBm4huolthoaG3gkxJQ/exec';
-    fetch(scriptURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ customerName, allOrders })
-    })
-    .then(response => response.text())
-    .then(data => {
-      console.log('Success:', data);
-      document.querySelector('h2').innerText = 'Order Submitted';
-      setTimeout(() => window.close(), 3000);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      document.querySelector('h2').innerText = 'Failed to submit order';
-    });
+    // Fungsi untuk mengirim data ke Google Apps Script
+    function sendData() {
+      const params = getQueryParams();
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbxLCJ831Et0aV10c-1lVf6VAwjZACGmfxtSHgT1dbReI3oL04WiBm4huolthoaG3gkxJQ/exec'; // Ganti dengan URL Web App Apps Script Anda
+      const url = ${scriptUrl}?${params.toString()};
+
+      // Tampilkan indikator loading
+      document.getElementById('loading').style.display = 'block';
+
+      fetch(url, { method: 'GET' })
+        .then(response => response.text())
+        .then(data => {
+          console.log('Response:', data);
+          document.getElementById('status').innerText = 'Order Submitted';
+          // Tutup jendela setelah 2 detik
+          setTimeout(() => window.close(), 2000);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('status').innerText = 'Submission Failed';
+        })
+        .finally(() => {
+          // Sembunyikan indikator loading
+          document.getElementById('loading').style.display = 'none';
+        });
+    }
+
+    // Panggil fungsi sendData saat halaman dimuat
+    window.onload = sendData;
   </script>
+
 </body>
 </html>    
