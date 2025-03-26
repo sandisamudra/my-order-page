@@ -38,7 +38,7 @@
 
     // Fungsi untuk mengirim data ke Google Apps Script
     function sendData() {
-      const params = getQueryParams();
+      const params = const params = new URLSearchParams(window.location.search);
       const scriptUrl = 'https://script.google.com/macros/s/AKfycbxLCJ831Et0aV10c-1lVf6VAwjZACGmfxtSHgT1dbReI3oL04WiBm4huolthoaG3gkxJQ/exec'; // Ganti dengan URL Web App Apps Script Anda
       const url = ${scriptUrl}?${params.toString()};
 
