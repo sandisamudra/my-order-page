@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submitting Order...</title>
+    <title>Submit Data</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 20% auto;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
+        .loading {
             width: 40px;
             height: 40px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin-top: 20px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -26,34 +32,32 @@
     </style>
 </head>
 <body>
-    <h2>Sending order...</h2>
-    <div class="spinner"></div>
+    <h1 id="status">Sending Order...</h1>
+    <div class="loading"></div>
 
     <script>
-        // Ambil parameter dari URL Glide Apps
-        const urlParams = new URLSearchParams(window.location.search);
-        const allOrders = decodeURIComponent(urlParams.get('allOrders'));
-        console.log(allOrders);
-        const customerName = urlParams.get('customerName');
-        const allOrders = urlParams.get('allOrders');
-        const agentEmail = urlParams.get('agentEmail');
+        // URL Apps Script kamu
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyf985RSVY51n_YnUroiuJ9jRiemYTlIv4w213IpG1Y9dl0T8R2cjPVDjYxBieABXW6/exec";
+        
+        // Ambil data dari URL
+        const params = new URLSearchParams(window.location.search);
 
-        // URL Apps Script (ganti dengan URL yang benar)
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbyd9fkGilEN_7xTINEH2LFjQ5JtXB7LzjgLiftYkEVgzlaOtXMo364gfq2nV1hfP2RG2g/exec';
-
-        // Buat URL dengan parameter untuk kirim ke Apps Script
-        const fullURL = `${scriptURL}?customerName=${encodeURIComponent(customerName)}&allOrders=${encodeURIComponent(allOrders)}&agentEmail=${encodeURIComponent(agentEmail)}`;
-
-        // Kirim data ke Apps Script menggunakan fetch
-        fetch(fullURL)
+        // Kirim data ke Google Sheets
+        fetch(scriptUrl + "?" + params.toString(), {
+            method: "GET",
+            mode: "no-cors"
+        })
             .then(response => response.text())
-            .then(result => {
-                alert(result);  // Tampilkan pesan sukses dari Apps Script
-                window.close(); // Tutup halaman otomatis setelah sukses
+            .then(data => {
+                document.getElementById("status").innerText = "Order submitted";
+                setTimeout(() => {
+                    window.close();
+                }, 2000);
             })
             .catch(error => {
-                alert('Failed to submit order: ' + error);
+                document.getElementById("status").innerText = "Order Failed!" + error.message;
+                console.error(error);
             });
     </script>
 </body>
-</html>
+</html>    
