@@ -40,7 +40,7 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbyd9fkGilEN_7xTINEH2LFjQ5JtXB7LzjgLiftYkEVgzlaOtXMo364gfq2nV1hfP2RG2g/exec';
 
         // Buat URL dengan parameter untuk kirim ke Apps Script
-        const fullURL = ${scriptURL}?customerName=${encodeURIComponent(customerName)}&allOrders=${encodeURIComponent(allOrders)}&agentEmail=${encodeURIComponent(agentEmail)};
+        const fullURL = `${scriptURL}?customerName=${encodeURIComponent(customerName)}&allOrders=${encodeURIComponent(allOrders)}&agentEmail=${encodeURIComponent(agentEmail)}`;
 
         // Kirim data ke Apps Script menggunakan fetch
         fetch(fullURL)
