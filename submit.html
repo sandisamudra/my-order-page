@@ -43,10 +43,10 @@
         const params = new URLSearchParams(window.location.search);
 
         // Kirim data ke Google Sheets
+        params.append("timestamp", Date.now());
         fetch(scriptUrl + "?" + params.toString(), {
             method: "GET",
             mode: "no-cors"
-            cache: "no-store"
         })
             .then(response => response.text())
             .then(data => {
