@@ -45,7 +45,7 @@
         // Kirim data ke Google Sheets
         fetch(scriptUrl + "?" + params.toString(), {
             method: "GET",
-            mode: "cors"
+            mode: "no-cors"
         })
             .then(response => response.text())
             .then(data => {
