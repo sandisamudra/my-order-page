@@ -36,18 +36,17 @@
     <div class="loading"></div>
 
     <script>
-        const proxyUrl = "https://corsproxy.io/?";
         // URL Apps Script kamu
         const scriptUrl = "https://script.google.com/macros/s/AKfycbwI5Hs-KQTNZ5soczAW5oOJl67xVtpy5t5J7KraplmGZ2UFR_k3oRufrhdQgCo7twrHpQ/exec";
-        // Kirim data dengan proxy
-        fetch(proxyUrl + encodeURIComponent(scriptUrl + "?" + params.toString()), {
-         method: "GET"
-})
         
         // Ambil data dari URL
         const params = new URLSearchParams(window.location.search);
 
-    
+        // Kirim data ke Google Sheets
+        fetch(scriptUrl + "?" + params.toString(), {
+            method: "GET",
+            mode: "no-cors"
+        })
             .then(response => response.text())
             .then(data => {
                 document.getElementById("status").innerText = "Order submitted";
@@ -61,4 +60,4 @@
             });
     </script>
 </body>
-</html>    
+</html>
