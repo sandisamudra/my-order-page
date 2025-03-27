@@ -46,6 +46,7 @@
         fetch(scriptUrl + "?" + params.toString(), {
             method: "GET",
             mode: "no-cors"
+            cache: "no-store"
         })
             .then(response => response.text())
             .then(data => {
