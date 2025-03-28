@@ -42,7 +42,11 @@
             const scriptURL = "https://script.google.com/macros/s/AKfycbxYEFK4ucrtX1i4yN_R_H_0J6tkJIKysF6Lpu65FN5tsO4u4M5EzisknhGDdltNcBiB/exec?orderID=" + encodeURIComponent(orderID);
 
             // Kirim request ke Google Apps Script
-            fetch(scriptURL)
+        
+            fetch(scriptUrl + "?" + params.toString(), {
+            method: "GET",
+            mode: "no-cors"
+        })
                 .then(response => response.text())
                 .then(result => {
                     document.getElementById("status").innerText = result;
