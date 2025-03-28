@@ -1,65 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sending Notification</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin-top: 50px;
-        }
-        .spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #3498db;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            display: block;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <title>Sending Notification</title>
+  <style>
+    body { text-align: center; font-family: Arial, sans-serif; }
+    .loading { font-size: 18px; margin-top: 20px; }
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: #09f;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
+  <h2>Updating Total Cost....</h2>
+  <div class="spinner"></div>
+  <div class="loading">Please wait...</div>
 
-    <h2>Sending Notification to Customer...</h2>
-    <div class="spinner"></div>
-    <p id="status">Please wait...</p>
+  <script>
+    // Ambil parameter dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const customerName = urlParams.get('customer_name');
+    const customerEmail = urlParams.get('customer_email');
 
-    <script>
-        // Ambil parameter Order ID dari URL Glide
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderID = urlParams.get('orderID');  // Contoh: ?orderID=12345
-
-        if (orderID) {
-            // URL Google Apps Script yang sudah di-deploy
-            const scriptURL = "https://script.google.com/macros/s/AKfycbxYEFK4ucrtX1i4yN_R_H_0J6tkJIKysF6Lpu65FN5tsO4u4M5EzisknhGDdltNcBiB/exec?orderID=" + encodeURIComponent(orderID);
-
-            // Kirim request ke Google Apps Script
-        
-            fetch(scriptUrl + "?" + params.toString(), {
-            method: "GET",
-            mode: "no-cors"
+    if (customerName && customerEmail) {
+      // Panggil Google Apps Script (Agent.gs)
+      fetch('https://script.google.com/macros/s/AKfycbxYEFK4ucrtX1i4yN_R_H_0J6tkJIKysF6Lpu65FN5tsO4u4M5EzisknhGDdltNcBiB/exec?customer_name=' + encodeURIComponent(customerName) + '&customer_email=' + encodeURIComponent(customerEmail))
+        .then(response => response.text())
+        .then(data => {
+          console.log(data);
+          setTimeout(() => {
+            window.close(); // Tutup halaman setelah sukses
+          }, 2000);
         })
-                .then(response => response.text())
-                .then(result => {
-                    document.getElementById("status").innerText = result;
-                    setTimeout(() => window.close(), 2000); // Tutup halaman setelah 2 detik
-                })
-                .catch(error => {
-                    document.getElementById("status").innerText = "Failed to send notification.";
-                    console.error("Error:", error);
-                });
-        } else {
-            document.getElementById("status").innerText = "Error: No Order ID provided.";
-        }
-    </script>
-
+        .catch(error => console.error('Error:', error));
+    } else {
+      document.querySelector(".loading").innerText = "Error: Missing parameters!";
+    }
+  </script>
 </body>
 </html>
