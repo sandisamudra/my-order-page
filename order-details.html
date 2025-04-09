@@ -467,7 +467,7 @@ window.onload = () => {
 
     // Ambil semua order_id dan customer_remarks dari URL
     const allParams = urlParams.get("orders")?.split("|") || [];
-    const orderIds = allParams.filter(id => id.startsWith("ORD")); // Hanya order dengan prefix "ORD"
+    const orderIds = allParams.filter(id => id.startsWith("QTN")); // Hanya order dengan prefix "ORD"
     
     let remarksText = ""; // Variabel untuk menyimpan semua remarks
 
