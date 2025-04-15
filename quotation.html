@@ -1,23 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quotation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
     }
 
-    h1 {
+    h1, h2 {
       text-align: center;
-    }
-
-    .table-container {
-      overflow-x: auto;
     }
 
     table {
@@ -26,20 +22,22 @@
       margin-top: 20px;
     }
 
-    table, th, td {
-      border: 1px solid #000;
-    }
-
     th, td {
+      border: 1px solid #333;
       padding: 8px;
       text-align: left;
     }
 
+    .category-section {
+      margin-top: 30px;
+    }
+
+    .summary {
+      margin-top: 30px;
+    }
+
     #signature-pad {
       margin-top: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: start;
     }
 
     canvas {
@@ -47,7 +45,10 @@
       width: 100%;
       max-width: 300px;
       height: 150px;
-      margin-bottom: 10px;
+    }
+
+    .signature-buttons {
+      margin-top: 10px;
     }
 
     .signature-output {
@@ -56,14 +57,13 @@
       text-align: center;
     }
 
-    #printBtn, #saveBtn {
-      margin-top: 20px;
-      padding: 8px 16px;
-      cursor: pointer;
+    #printBtn {
+      margin-top: 30px;
+      padding: 10px 20px;
     }
 
     @media print {
-      #printBtn, #saveBtn, #signature-pad {
+      #printBtn, #signature-pad {
         display: none;
       }
     }
@@ -74,29 +74,20 @@
   <h1>Quotation</h1>
   <p><strong>Project:</strong> <span id="projectName"></span></p>
 
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Category</th>
-          <th>Cost/Item</th>
-          <th>Qty</th>
-          <th>Total Cost</th>
-        </tr>
-      </thead>
-      <tbody id="orderTable"></tbody>
-    </table>
+  <div id="tablesContainer"></div>
+
+  <div class="summary">
+    <p><strong>Discount:</strong> <span id="discountValue"></span>%</p>
+    <h3><strong>Grand Total:</strong> <span id="grandTotal"></span></h3>
   </div>
 
-  <p><strong>Discount:</strong> <span id="discountValue"></span>%</p>
-  <p><strong>Guard and Others:</strong> <span id="guardValue"></span></p>
-  <h3><strong>Grand Total:</strong> <span id="grandTotal"></span></h3>
-
   <div id="signature-pad">
-    <label><strong>Customer Signature:</strong></label>
+    <label><strong>Customer Signature:</strong></label><br>
     <canvas id="canvas"></canvas>
-    <button id="saveBtn">Save Signature</button>
+    <div class="signature-buttons">
+      <button id="saveBtn">Save</button>
+      <button id="clearBtn">Clear</button>
+    </div>
   </div>
 
   <div class="signature-output" id="signatureOutput" style="display:none;">
@@ -121,28 +112,73 @@
 
     document.getElementById("projectName").textContent = getParam("project");
     document.getElementById("discountValue").textContent = getParam("discount");
-    document.getElementById("guardValue").textContent = formatter.format(getParam("guard"));
     document.getElementById("grandTotal").textContent = formatter.format(getParam("grandtotal"));
     document.getElementById("userName").textContent = getParam("user");
 
-    // Populate table
     const orders = getParam("orders").split("||");
-    const table = document.getElementById("orderTable");
+
+    const categories = {
+      "Lighting": [],
+      "Grip Support": [],
+      "Cloth": [],
+      "Lighting Package": [],
+      "Grip Support Package": [],
+      "Guard and Others": []
+    };
 
     orders.forEach(order => {
       const [item, category, cost, qty, total] = order.split("|");
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${item}</td>
-        <td>${category}</td>
-        <td>${formatter.format(cost)}</td>
-        <td>${qty}</td>
-        <td>${formatter.format(total)}</td>
-      `;
-      table.appendChild(row);
+      if (categories[category]) {
+        categories[category].push({ item, cost, qty, total });
+      } else {
+        // fallback kalau kategori typo
+        categories["Guard and Others"].push({ item, cost, qty, total });
+      }
     });
 
-    // Signature Pad
+    const container = document.getElementById("tablesContainer");
+
+    for (const [catName, items] of Object.entries(categories)) {
+      if (items.length === 0) continue;
+
+      const section = document.createElement("div");
+      section.className = "category-section";
+
+      const title = document.createElement("h2");
+      title.textContent = catName;
+      section.appendChild(title);
+
+      const table = document.createElement("table");
+      const thead = document.createElement("thead");
+      thead.innerHTML = `
+        <tr>
+          <th>Item</th>
+          <th>Cost/Item</th>
+          <th>Qty</th>
+          <th>Total</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+
+      items.forEach(({ item, cost, qty, total }) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item}</td>
+          <td>${formatter.format(cost)}</td>
+          <td>${qty}</td>
+          <td>${formatter.format(total)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      table.appendChild(tbody);
+      section.appendChild(table);
+      container.appendChild(section);
+    }
+
+    // Signature Pad Logic
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     let drawing = false;
@@ -167,6 +203,10 @@
       const dataURL = canvas.toDataURL();
       document.getElementById("signatureImage").src = dataURL;
       document.getElementById("signatureOutput").style.display = "block";
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
   </script>
 </body>
