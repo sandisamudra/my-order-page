@@ -3,211 +3,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quotation Summary</title>
+  <title>Quotation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      margin: 0;
-      background: #f9f9f9;
+      max-width: 800px;
+      margin: auto;
     }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      max-height: 60px;
-    }
+
     h1 {
-      margin: 20px 0 10px;
+      text-align: center;
     }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
+      margin-top: 20px;
     }
+
+    table, th, td {
+      border: 1px solid #000;
+    }
+
     th, td {
-      border: 1px solid #ccc;
       padding: 8px;
       text-align: left;
     }
-    .summary {
-      max-width: 400px;
-      float: right;
+
+    #signature-pad {
       margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
     }
-    .summary td {
-      padding: 6px 12px;
-    }
-    #signature-section {
-      margin-top: 60px;
-      text-align: right;
-    }
-    #sigCanvas {
+
+    canvas {
       border: 1px solid #ccc;
-      width: 300px;
+      width: 100%;
+      max-width: 300px;
       height: 150px;
+      margin-bottom: 10px;
     }
-    .no-print {
+
+    .signature-output {
+      margin-top: 30px;
+      float: right;
+      text-align: center;
+    }
+
+    #printBtn, #saveBtn {
       margin-top: 20px;
+      padding: 8px 16px;
+      cursor: pointer;
     }
+
     @media print {
-      .no-print, #sigCanvas {
+      #printBtn, #saveBtn, #signature-pad {
         display: none;
-      }
-      #signature-output {
-        display: block;
       }
     }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <img src="logo.png" class="logo" alt="Company Logo" />
-  <div>
-    <h2>Quotation Summary</h2>
-    <p id="customerName"></p>
-    <p id="orderDate"></p>
+  <h1>Quotation</h1>
+  <p><strong>Project:</strong> <span id="projectName"></span></p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Category</th>
+          <th>Cost/Item</th>
+          <th>Qty</th>
+          <th>Total Cost</th>
+        </tr>
+      </thead>
+      <tbody id="orderTable"></tbody>
+    </table>
   </div>
-</div>
 
-<div id="tables-container"></div>
+  <p><strong>Discount:</strong> <span id="discountValue"></span>%</p>
+  <p><strong>Guard and Others:</strong> <span id="guardValue"></span></p>
+  <h3><strong>Grand Total:</strong> <span id="grandTotal"></span></h3>
 
-<table class="summary">
-  <tr><td><strong>Subtotal</strong></td><td id="subtotal"></td></tr>
-  <tr><td><strong>Discount</strong></td><td id="discount"></td></tr>
-  <tr><td><strong>Guard & Others</strong></td><td id="guard"></td></tr>
-  <tr><td><strong>Grand Total</strong></td><td id="grandtotal" style="font-weight:bold;"></td></tr>
-</table>
-
-<div id="signature-section">
-  <p><strong>Customer Signature</strong></p>
-  <canvas id="sigCanvas"></canvas>
-  <div class="no-print">
-    <button onclick="clearCanvas()">Clear</button>
-    <button onclick="saveSignature()">Save</button>
+  <div id="signature-pad">
+    <label><strong>Customer Signature:</strong></label>
+    <canvas id="canvas"></canvas>
+    <button id="saveBtn">Save Signature</button>
   </div>
-  <div id="signature-output" style="display:none;">
-    <img id="savedSignature" style="max-width:300px; display:block; margin-top:10px;" />
-    <p id="signatureName"></p>
+
+  <div class="signature-output" id="signatureOutput" style="display:none;">
+    <p><strong>Customer Signature</strong></p>
+    <img id="signatureImage" style="max-width: 200px;" />
+    <p id="userName"></p>
   </div>
-</div>
 
-<div class="no-print">
-  <button onclick="window.print()">Print</button>
-</div>
+  <button id="printBtn" onclick="window.print()">Print PDF</button>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const categories = ['Lighting', 'Grip Support', 'Cloth'];
-  const data = {
-    Lighting: [],
-    'Grip Support': [],
-    Cloth: []
-  };
-
-  // Dummy looping for items
-  const items = params.getAll('item[]');
-  const cats = params.getAll('category[]');
-  const cost = params.getAll('cost[]');
-  const qty = params.getAll('qty[]');
-  const total = params.getAll('total[]');
-
-  for (let i = 0; i < items.length; i++) {
-    const category = cats[i];
-    if (categories.includes(category)) {
-      data[category].push({
-        item: items[i],
-        cost: cost[i],
-        qty: qty[i],
-        total: total[i]
-      });
+  <script>
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return decodeURIComponent(url.searchParams.get(name) || "");
     }
-  }
 
-  // Fill customer info
-  document.getElementById('customerName').textContent = "Customer: " + (params.get('customer') || '-');
-  document.getElementById('orderDate').textContent = "Date: " + new Date().toLocaleDateString();
+    const formatter = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    });
 
-  // Generate tables
-  const container = document.getElementById('tables-container');
-  categories.forEach(cat => {
-    if (data[cat].length) {
-      const table = document.createElement('table');
-      const caption = document.createElement('caption');
-      caption.textContent = cat;
-      table.appendChild(caption);
-      table.innerHTML += `
-        <thead><tr>
-          <th>Item</th><th>Cost per Item</th><th>Quantity</th><th>Total Cost</th>
-        </tr></thead>
+    document.getElementById("projectName").textContent = getParam("project");
+    document.getElementById("discountValue").textContent = getParam("discount");
+    document.getElementById("guardValue").textContent = formatter.format(getParam("guard"));
+    document.getElementById("grandTotal").textContent = formatter.format(getParam("grandtotal"));
+    document.getElementById("userName").textContent = getParam("user");
+
+    // Populate table
+    const orders = getParam("orders").split("||");
+    const table = document.getElementById("orderTable");
+
+    orders.forEach(order => {
+      const [item, category, cost, qty, total] = order.split("|");
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${item}</td>
+        <td>${category}</td>
+        <td>${formatter.format(cost)}</td>
+        <td>${qty}</td>
+        <td>${formatter.format(total)}</td>
       `;
-      const tbody = document.createElement('tbody');
-      data[cat].forEach(d => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${d.item}</td>
-            <td>${formatCurrency(d.cost)}</td>
-            <td>${d.qty}</td>
-            <td>${formatCurrency(d.total)}</td>
-          </tr>
-        `;
-      });
-      table.appendChild(tbody);
-      container.appendChild(table);
-    }
-  });
+      table.appendChild(row);
+    });
 
-  // Fill summary
-  document.getElementById('subtotal').textContent = formatCurrency(sumArray(total));
-  document.getElementById('discount').textContent = (params.get('discount') || '0') + '%';
-  document.getElementById('guard').textContent = formatCurrency(params.get('guard') || '0');
-  document.getElementById('grandtotal').textContent = formatCurrency(params.get('grandtotal') || '0');
-  document.getElementById('signatureName').textContent = params.get('customer') || '-';
+    // Signature Pad
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
 
-  function formatCurrency(value) {
-    const n = parseInt(value || 0);
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(n);
-  }
+    canvas.addEventListener("mousedown", (e) => {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
+    });
 
-  function sumArray(arr) {
-    return arr.reduce((acc, val) => acc + parseInt(val || 0), 0);
-  }
+    canvas.addEventListener("mousemove", (e) => {
+      if (drawing) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+      }
+    });
 
-  // Signature Pad
-  const canvas = document.getElementById('sigCanvas');
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mouseout", () => drawing = false);
 
-  canvas.addEventListener('mousedown', e => { drawing = true; draw(e); });
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', () => drawing = false);
-  canvas.addEventListener('mouseout', () => drawing = false);
-
-  function draw(e) {
-    if (!drawing) return;
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#000';
-    const rect = canvas.getBoundingClientRect();
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-  }
-
-  function clearCanvas() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  function saveSignature() {
-    const dataURL = canvas.toDataURL();
-    document.getElementById('savedSignature').src = dataURL;
-    document.getElementById('signature-output').style.display = 'block';
-  }
-</script>
-
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      const dataURL = canvas.toDataURL();
+      document.getElementById("signatureImage").src = dataURL;
+      document.getElementById("signatureOutput").style.display = "block";
+    });
+  </script>
 </body>
 </html>
