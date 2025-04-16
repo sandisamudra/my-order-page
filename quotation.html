@@ -1,184 +1,211 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quotation</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
+    .section-title { margin-top: 40px; font-size: 18px; font-weight: bold; }
+    .signature-container {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
-    h1, h2, h3 {
-      margin-bottom: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 25px;
-    }
-    th, td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: left;
-    }
-    .signature-pad {
-      border: 1px solid #ccc;
-      width: 100%;
-      height: 200px;
-    }
-    .no-print {
+    .signature-actions {
+      display: flex;
+      gap: 10px;
       margin-top: 10px;
     }
+    canvas {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border: 1px solid #ccc;
+      touch-action: none;
+    }
+    .signature-info {
+      text-align: right;
+    }
+    .money { text-align: right; }
+    .total-block { font-weight: bold; }
+    .no-print { margin: 20px 0; }
     @media print {
-      .no-print { display: none; }
+      .no-print, #signature, .signature-actions { display: none !important; }
     }
   </style>
 </head>
 <body>
 
-  <h1 id="project-name">Quotation</h1>
+  <h2 id="project-name"></h2>
 
-  <div id="tables-container"></div>
-
-  <h2>Guard or Others</h2>
-  <div id="guard-table"></div>
-
-  <h3>Total Cost (Sebelum Diskon): Rp<span id="total-cost">-</span></h3>
-  <h3>Discount: <span id="discount">-</span>%</h3>
-  <h2>Grand Total: Rp<span id="grand-total">-</span></h2>
-
-  <h3>Customer Signature</h3>
-  <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="no-print">
-    <button onclick="saveSignature()">Save</button>
-    <button onclick="clearSignature()">Clear</button>
+    <button onclick="window.print()">🖨️ Print</button>
   </div>
 
-  <div id="saved-signature" style="margin-top:20px;"></div>
+  <div id="alat-table"></div>
+  <div id="guard-table"></div>
+
+  <div class="section-title">Discount and Grand Total</div>
+  <table>
+    <tr>
+      <th>Discount</th>
+      <td id="discount" class="money"></td>
+    </tr>
+    <tr>
+      <th>Grand Total</th>
+      <td id="grand-total" class="money"></td>
+    </tr>
+  </table>
+
+  <div class="section-title">Customer Signature</div>
+  <div class="signature-container">
+    <canvas id="signature" width="400" height="200"></canvas>
+    <div class="signature-actions no-print">
+      <button onclick="clearSignature()">Clear</button>
+      <button onclick="saveSignature()">Save</button>
+    </div>
+    <div class="signature-info">
+      <div><strong>Customer Signature</strong></div>
+      <img id="saved-signature" src="" alt="" style="max-width: 300px; display: none;" />
+      <div id="user-name"></div>
+    </div>
+  </div>
 
   <script>
-    const params = new URLSearchParams(location.search);
+    const urlParams = new URLSearchParams(window.location.search);
+    const project = urlParams.get("project");
+    const ordersParam = urlParams.get("orders");
+    const discount = urlParams.get("discount");
+    const grandtotal = urlParams.get("grandtotal");
+    const user = urlParams.get("user");
 
-    document.getElementById("project-name").textContent = params.get("project") || "Quotation";
+    const alatItems = [];
+    const guardItems = [];
 
-    const categories = [
-      "Lighting",
-      "Grip Support",
-      "Cloth",
-      "Lighting Package",
-      "Grip Support Package"
-    ];
+    if (project) document.getElementById("project-name").innerText = `Project: ${decodeURIComponent(project)}`;
+    if (discount) document.getElementById("discount").innerText = formatCurrency(discount);
+    if (grandtotal) document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
+    if (user) document.getElementById("user-name").innerText = decodeURIComponent(user);
 
-    const orderData = (params.get("orders") || "").split("||").map(s => s.split("|")).filter(arr => arr.length === 5);
-    const guardData = (params.get("guard") || "").split("||").map(s => s.split("|")).filter(arr => arr.length === 5);
+    if (ordersParam) {
+      const rows = decodeURIComponent(ordersParam).split("||");
+      rows.forEach(row => {
+        const [item, category, cost, qty, total] = row.split("|");
+        const data = { item, category, cost, qty, total };
+        if (category === "Guard and Others") {
+          guardItems.push(data);
+        } else {
+          alatItems.push(data);
+        }
+      });
 
-    const tablesContainer = document.getElementById("tables-container");
-
-    categories.forEach(cat => {
-      const items = orderData.filter(d => d[1] === cat);
-      if (items.length > 0) {
-        const table = document.createElement("table");
-        const title = document.createElement("h2");
-        title.textContent = cat;
-        table.innerHTML = `
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Cost per Item</th>
-              <th>Qty</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${items.map(d => `
-              <tr>
-                <td>${d[0]}</td>
-                <td>Rp${d[2]}</td>
-                <td>${d[3]}</td>
-                <td>Rp${d[4]}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        `;
-        tablesContainer.appendChild(title);
-        tablesContainer.appendChild(table);
+      if (alatItems.length > 0) {
+        renderTable(alatItems, "Total Cost Alat", "alat-table");
       }
-    });
 
-    // Guard or Others Table
-    if (guardData.length > 0) {
-      const guardTable = document.createElement("table");
-      guardTable.innerHTML = `
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Category</th>
-            <th>Cost per Item</th>
-            <th>Qty</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${guardData.map(d => `
-            <tr>
-              <td>${d[0]}</td>
-              <td>${d[1]}</td>
-              <td>Rp${d[2]}</td>
-              <td>${d[3]}</td>
-              <td>Rp${d[4]}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      `;
-      document.getElementById("guard-table").appendChild(guardTable);
+      if (guardItems.length > 0) {
+        renderTable(guardItems, "Total Cost Guard", "guard-table");
+      }
     }
 
-    // Tampilkan data langsung dari parameter URL
-    document.getElementById("total-cost").textContent = params.get("totalcost") || "-";
-    document.getElementById("discount").textContent = params.get("discount") || "-";
-    document.getElementById("grand-total").textContent = params.get("grandtotal") || "-";
+    function renderTable(data, title, containerId) {
+      const section = document.getElementById(containerId);
+      let html = `<div class="section-title">${title}</div><table><tr>
+        <th>Item</th>
+        <th>Category</th>
+        <th>Cost</th>
+        <th>Qty</th>
+        <th>Total Cost</th>
+      </tr>`;
+      data.forEach(d => {
+        html += `<tr>
+          <td>${d.item}</td>
+          <td>${d.category}</td>
+          <td class="money">${formatCurrency(d.cost)}</td>
+          <td>${d.qty}</td>
+          <td class="money">${formatCurrency(d.total)}</td>
+        </tr>`;
+      });
+      html += `</table>`;
+      section.innerHTML = html;
+    }
+
+    function formatCurrency(value) {
+      const number = parseInt(value);
+      if (isNaN(number)) return "Rp 0";
+      return "Rp " + number.toLocaleString("id-ID");
+    }
 
     // Signature Pad
-    const canvas = document.getElementById("signature-pad");
+    const canvas = document.getElementById("signature");
     const ctx = canvas.getContext("2d");
-    let drawing = false;
+    let isDrawing = false;
+
+    const getPosition = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        return {
+          x: e.touches[0].clientX - rect.left,
+          y: e.touches[0].clientY - rect.top
+        };
+      }
+      return null;
+    };
 
     canvas.addEventListener("mousedown", e => {
-      drawing = true;
+      isDrawing = true;
       ctx.beginPath();
       ctx.moveTo(e.offsetX, e.offsetY);
     });
 
     canvas.addEventListener("mousemove", e => {
-      if (drawing) {
+      if (isDrawing) {
         ctx.lineTo(e.offsetX, e.offsetY);
         ctx.stroke();
       }
     });
 
-    canvas.addEventListener("mouseup", () => drawing = false);
-    canvas.addEventListener("mouseout", () => drawing = false);
+    canvas.addEventListener("mouseup", () => isDrawing = false);
+    canvas.addEventListener("mouseleave", () => isDrawing = false);
+
+    canvas.addEventListener("touchstart", e => {
+      e.preventDefault();
+      const pos = getPosition(e);
+      if (pos) {
+        isDrawing = true;
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+      }
+    });
+
+    canvas.addEventListener("touchmove", e => {
+      e.preventDefault();
+      const pos = getPosition(e);
+      if (pos && isDrawing) {
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+      }
+    });
+
+    canvas.addEventListener("touchend", () => isDrawing = false);
 
     function clearSignature() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      document.getElementById("saved-signature").innerHTML = "";
+      document.getElementById("saved-signature").style.display = "none";
     }
 
     function saveSignature() {
       const dataURL = canvas.toDataURL();
-      const img = document.createElement("img");
-      img.src = dataURL;
-      img.style.maxWidth = "300px";
-
-      const label = document.createElement("div");
-      label.innerHTML = `<strong>Signed by:</strong> ${params.get("user") || "Customer"}`;
-
-      const container = document.getElementById("saved-signature");
-      container.innerHTML = "";
-      container.appendChild(img);
-      container.appendChild(label);
+      document.getElementById("saved-signature").src = dataURL;
+      document.getElementById("saved-signature").style.display = "block";
     }
   </script>
+
 </body>
 </html>
