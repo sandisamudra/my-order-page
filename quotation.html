@@ -1,195 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quotation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 900px;
-      margin: auto;
+      margin: 40px;
     }
-
-    h1, h2 {
-      text-align: center;
+    h1, h2, h3 {
+      margin-bottom: 10px;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-bottom: 25px;
     }
-
     th, td {
-      border: 1px solid #333;
+      border: 1px solid #000;
       padding: 8px;
       text-align: left;
     }
-
-    .category-section {
-      margin-top: 30px;
-    }
-
-    .summary {
-      margin-top: 30px;
-    }
-
-    #signature-pad {
-      margin-top: 30px;
-    }
-
-    canvas {
+    .signature-pad {
       border: 1px solid #ccc;
       width: 100%;
-      max-width: 300px;
-      height: 150px;
+      height: 200px;
     }
-
-    .signature-buttons {
+    .no-print {
       margin-top: 10px;
     }
-
-    .signature-output {
-      margin-top: 30px;
-      float: right;
-      text-align: center;
-    }
-
-    #printBtn {
-      margin-top: 30px;
-      padding: 10px 20px;
-    }
-
     @media print {
-      #printBtn, #signature-pad {
-        display: none;
-      }
+      .no-print { display: none; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Quotation</h1>
-  <p><strong>Project:</strong> <span id="projectName"></span></p>
+  <h1 id="project-name">Quotation</h1>
 
-  <div id="tablesContainer"></div>
+  <div id="tables-container"></div>
 
-  <div class="summary">
-    <p><strong>Discount:</strong> <span id="discountValue"></span>%</p>
-    <h3><strong>Grand Total:</strong> <span id="grandTotal"></span></h3>
+  <h2>Guard or Others</h2>
+  <div id="guard-table"></div>
+
+  <h3>Total Cost (Sebelum Diskon): Rp<span id="total-cost">-</span></h3>
+  <h3>Discount: <span id="discount">-</span>%</h3>
+  <h2>Grand Total: Rp<span id="grand-total">-</span></h2>
+
+  <h3>Customer Signature</h3>
+  <canvas id="signature-pad" class="signature-pad"></canvas>
+  <div class="no-print">
+    <button onclick="saveSignature()">Save</button>
+    <button onclick="clearSignature()">Clear</button>
   </div>
 
-  <div id="signature-pad">
-    <label><strong>Customer Signature:</strong></label><br>
-    <canvas id="canvas"></canvas>
-    <div class="signature-buttons">
-      <button id="saveBtn">Save</button>
-      <button id="clearBtn">Clear</button>
-    </div>
-  </div>
-
-  <div class="signature-output" id="signatureOutput" style="display:none;">
-    <p><strong>Customer Signature</strong></p>
-    <img id="signatureImage" style="max-width: 200px;" />
-    <p id="userName"></p>
-  </div>
-
-  <button id="printBtn" onclick="window.print()">Print PDF</button>
+  <div id="saved-signature" style="margin-top:20px;"></div>
 
   <script>
-    function getParam(name) {
-      const url = new URL(window.location.href);
-      return decodeURIComponent(url.searchParams.get(name) || "");
-    }
+    const params = new URLSearchParams(location.search);
 
-    const formatter = new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    });
+    document.getElementById("project-name").textContent = params.get("project") || "Quotation";
 
-    document.getElementById("projectName").textContent = getParam("project");
-    document.getElementById("discountValue").textContent = getParam("discount");
-    document.getElementById("grandTotal").textContent = formatter.format(getParam("grandtotal"));
-    document.getElementById("userName").textContent = getParam("user");
+    const categories = [
+      "Lighting",
+      "Grip Support",
+      "Cloth",
+      "Lighting Package",
+      "Grip Support Package"
+    ];
 
-    const orders = getParam("orders").split("||");
+    const orderData = (params.get("orders") || "").split("||").map(s => s.split("|")).filter(arr => arr.length === 5);
+    const guardData = (params.get("guard") || "").split("||").map(s => s.split("|")).filter(arr => arr.length === 5);
 
-    const categories = {
-      "Lighting": [],
-      "Grip Support": [],
-      "Cloth": [],
-      "Lighting Package": [],
-      "Grip Support Package": [],
-      "Guard and Others": []
-    };
+    const tablesContainer = document.getElementById("tables-container");
 
-    orders.forEach(order => {
-      const [item, category, cost, qty, total] = order.split("|");
-      if (categories[category]) {
-        categories[category].push({ item, cost, qty, total });
-      } else {
-        // fallback kalau kategori typo
-        categories["Guard and Others"].push({ item, cost, qty, total });
+    categories.forEach(cat => {
+      const items = orderData.filter(d => d[1] === cat);
+      if (items.length > 0) {
+        const table = document.createElement("table");
+        const title = document.createElement("h2");
+        title.textContent = cat;
+        table.innerHTML = `
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Cost per Item</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(d => `
+              <tr>
+                <td>${d[0]}</td>
+                <td>Rp${d[2]}</td>
+                <td>${d[3]}</td>
+                <td>Rp${d[4]}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        `;
+        tablesContainer.appendChild(title);
+        tablesContainer.appendChild(table);
       }
     });
 
-    const container = document.getElementById("tablesContainer");
-
-    for (const [catName, items] of Object.entries(categories)) {
-      if (items.length === 0) continue;
-
-      const section = document.createElement("div");
-      section.className = "category-section";
-
-      const title = document.createElement("h2");
-      title.textContent = catName;
-      section.appendChild(title);
-
-      const table = document.createElement("table");
-      const thead = document.createElement("thead");
-      thead.innerHTML = `
-        <tr>
-          <th>Item</th>
-          <th>Cost/Item</th>
-          <th>Qty</th>
-          <th>Total</th>
-        </tr>
+    // Guard or Others Table
+    if (guardData.length > 0) {
+      const guardTable = document.createElement("table");
+      guardTable.innerHTML = `
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Category</th>
+            <th>Cost per Item</th>
+            <th>Qty</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${guardData.map(d => `
+            <tr>
+              <td>${d[0]}</td>
+              <td>${d[1]}</td>
+              <td>Rp${d[2]}</td>
+              <td>${d[3]}</td>
+              <td>Rp${d[4]}</td>
+            </tr>
+          `).join('')}
+        </tbody>
       `;
-      table.appendChild(thead);
-
-      const tbody = document.createElement("tbody");
-
-      items.forEach(({ item, cost, qty, total }) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item}</td>
-          <td>${formatter.format(cost)}</td>
-          <td>${qty}</td>
-          <td>${formatter.format(total)}</td>
-        `;
-        tbody.appendChild(row);
-      });
-
-      table.appendChild(tbody);
-      section.appendChild(table);
-      container.appendChild(section);
+      document.getElementById("guard-table").appendChild(guardTable);
     }
 
-    // Signature Pad Logic
-    const canvas = document.getElementById("canvas");
+    // Tampilkan data langsung dari parameter URL
+    document.getElementById("total-cost").textContent = params.get("totalcost") || "-";
+    document.getElementById("discount").textContent = params.get("discount") || "-";
+    document.getElementById("grand-total").textContent = params.get("grandtotal") || "-";
+
+    // Signature Pad
+    const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    canvas.addEventListener("mousedown", (e) => {
+    canvas.addEventListener("mousedown", e => {
       drawing = true;
       ctx.beginPath();
       ctx.moveTo(e.offsetX, e.offsetY);
     });
 
-    canvas.addEventListener("mousemove", (e) => {
+    canvas.addEventListener("mousemove", e => {
       if (drawing) {
         ctx.lineTo(e.offsetX, e.offsetY);
         ctx.stroke();
@@ -199,15 +160,25 @@
     canvas.addEventListener("mouseup", () => drawing = false);
     canvas.addEventListener("mouseout", () => drawing = false);
 
-    document.getElementById("saveBtn").addEventListener("click", () => {
-      const dataURL = canvas.toDataURL();
-      document.getElementById("signatureImage").src = dataURL;
-      document.getElementById("signatureOutput").style.display = "block";
-    });
-
-    document.getElementById("clearBtn").addEventListener("click", () => {
+    function clearSignature() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
+      document.getElementById("saved-signature").innerHTML = "";
+    }
+
+    function saveSignature() {
+      const dataURL = canvas.toDataURL();
+      const img = document.createElement("img");
+      img.src = dataURL;
+      img.style.maxWidth = "300px";
+
+      const label = document.createElement("div");
+      label.innerHTML = `<strong>Signed by:</strong> ${params.get("user") || "Customer"}`;
+
+      const container = document.getElementById("saved-signature");
+      container.innerHTML = "";
+      container.appendChild(img);
+      container.appendChild(label);
+    }
   </script>
 </body>
 </html>
