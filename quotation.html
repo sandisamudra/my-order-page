@@ -5,47 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quotation</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    h2 { margin-top: 40px; text-align: left; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-    .signature-pad { border: 1px solid #000; width: 100%; height: 200px; }
-    .button-group { margin-top: 10px; }
-    .button-group button { margin-right: 10px; }
-    @media print {
-      #signature-pad, .button-group { display: none; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
     }
-    #print-btn {
-      position: fixed; top: 20px; right: 20px;
-      padding: 10px 20px; background: black; color: white; border: none; cursor: pointer;
+    h2 {
+      margin-top: 40px;
+      text-align: left;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+    .signature-pad {
+      border: 1px solid #000;
+      width: 100%;
+      height: 200px;
+    }
+    .button-group {
+      margin-top: 10px;
+    }
+    .button-group button {
+      margin-right: 10px;
+    }
+    @media print {
+      #signature-pad, .button-group {
+        display: none;
+      }
     }
   </style>
 </head>
 <body>
 
-  <button id="print-btn" onclick="window.print()">Print</button>
-
   <h1 id="project-name"></h1>
-  <h3 id="user-name"></h3>
 
-  <h2>Equipments</h2>
+  <!-- Tabel Equipments -->
   <div id="equipment-section"></div>
+
+  <!-- Total Cost Equipments -->
   <h3>Total Cost Equipments: <span id="total-cost-orders"></span></h3>
 
+  <!-- Tabel Guard and Others -->
   <h2>Guard and Others</h2>
   <table id="guard-table">
     <thead>
       <tr>
-        <th>Subject</th><th>Cost</th><th>Quantity</th><th>Day</th><th>Amount</th>
+        <th>Subject</th>
+        <th>Cost</th>
+        <th>Quantity</th>
+        <th>Day</th>
+        <th>Amount</th>
       </tr>
     </thead>
-    <tbody id="guard-body"></tbody>
+    <tbody></tbody>
   </table>
+
+  <!-- Total Cost Guard and Others -->
   <h3>Total Cost Guard and Others: <span id="total-cost-go"></span></h3>
 
+  <!-- Discount -->
   <h3>Discount: <span id="discount"></span></h3>
+
+  <!-- Grand Total -->
   <h2>Grand Total: <span id="grand-total"></span></h2>
 
+  <!-- Signature Pad -->
   <h3>Customer Signature</h3>
   <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="button-group">
@@ -56,141 +86,139 @@
   <p id="username"></p>
 
   <script>
-    // jika sudah berisi huruf (IDR, USD, %), tampil apa adanya
-    function formatCurrency(value) {
-      if (/[^\d,]/.test(value)) return value;
-      const n = parseInt(value, 10);
-      if (isNaN(n)) return value;
-      return n.toLocaleString("id-ID") + " IDR";
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const project = urlParams.get("project") || "";
+    const user = urlParams.get("user") || "";
+    const orders = urlParams.get("orders") || "";
+    const guardOrders = urlParams.get("guardorders") || "";
+    const categoryList = urlParams.get("category")?.split("||") || [];
+    const totalcostorders = urlParams.get("totalcostorders") || "";
+    const totalcostGO = urlParams.get("totalcostGO") || "";
+    const discount = urlParams.get("discount") || "";
+    const grandtotal = urlParams.get("grandtotal") || "";
 
-    function parseJoinedList(list) {
-      return list
-        ? decodeURIComponent(list).split("||").map(item => item.split("|"))
-        : [];
-    }
+    document.getElementById("project-name").innerText = project;
+    document.getElementById("total-cost-orders").innerText = totalcostorders;
+    document.getElementById("total-cost-go").innerText = totalcostGO;
+    document.getElementById("discount").innerText = discount;
+    document.getElementById("grand-total").innerText = grandtotal;
+    document.getElementById("username").innerText = user;
 
-    function groupByCategory(data) {
-      const groups = {};
-      data.forEach(item => {
-        const [name, category, cost, qty, day, amount] = item;
-        if (!groups[category]) groups[category] = [];
-        groups[category].push([name, cost, qty, day, amount]);
-      });
-      return groups;
-    }
+    const equipmentSection = document.getElementById("equipment-section");
+    const equipmentData = orders.split("||");
+    let categoryIndex = 0;
+    let currentTable = null;
+    let tbody = null;
+    let rowCount = 0;
 
-    function loadData() {
-      const params = new URLSearchParams(window.location.search);
-      const project = params.get("project") || "";
-      const user = params.get("user") || "";
-      const orders = parseJoinedList(params.get("orders"));
-      const guardorders = parseJoinedList(params.get("guardorders"));
-      // ambil parameter apa adanya
-      const totalEquipments = params.get("totalcostorders") || "0";
-      const totalGuards = params.get("totalcostGO") || "0";
-      const discount = params.get("discount") || "";
-      const grandTotal = params.get("grandtotal") || "";
+    equipmentData.forEach((row, i) => {
+      const [item, cost, qty, day, amount] = row.split("|");
+      if (rowCount === 0) {
+        const header = document.createElement("h2");
+        header.textContent = categoryList[categoryIndex] || "Category";
+        equipmentSection.appendChild(header);
 
-      document.getElementById("project-name").textContent = project;
-      document.getElementById("user-name").textContent = Customer: ${user};
-      document.getElementById("discount").textContent = discount;
-
-      // *HANYA DI SINI DI-UPDATE*
-      document.getElementById("total-cost-orders").textContent =
-        formatCurrency(totalEquipments);
-      document.getElementById("total-cost-go").textContent =
-        formatCurrency(totalGuards);
-      document.getElementById("grand-total").textContent =
-        formatCurrency(grandTotal);
-
-      // Equipments grouped by category
-      const grouped = groupByCategory(orders);
-      const equipmentContainer = document.getElementById("equipment-section");
-      Object.entries(grouped).forEach(([cat, items]) => {
-        const tbl = document.createElement("table");
+        currentTable = document.createElement("table");
         const thead = document.createElement("thead");
         thead.innerHTML = `
-          <tr><th colspan="5">${cat}</th></tr>
           <tr>
-            <th>Item</th><th>Cost</th><th>Quantity</th><th>Day</th><th>Amount</th>
+            <th>Item</th>
+            <th>Cost</th>
+            <th>Quantity</th>
+            <th>Day</th>
+            <th>Amount</th>
           </tr>`;
-        tbl.appendChild(thead);
+        currentTable.appendChild(thead);
+        tbody = document.createElement("tbody");
+        currentTable.appendChild(tbody);
+        equipmentSection.appendChild(currentTable);
+      }
 
-        const tbody = document.createElement("tbody");
-        items.forEach(([name,, cost, qty, day, amount]) => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${name}</td>
-            <td>${formatCurrency(cost)}</td>
-            <td>${qty}</td>
-            <td>${day}</td>
-            <td>${formatCurrency(amount)}</td>`;
-          tbody.appendChild(tr);
-        });
-        tbl.appendChild(tbody);
-        equipmentContainer.appendChild(tbl);
+      const tr = document.createElement("tr");
+      [item, cost, qty, day, amount].forEach(text => {
+        const td = document.createElement("td");
+        td.textContent = text;
+        tr.appendChild(td);
       });
+      tbody.appendChild(tr);
 
-      // Guard and Others
-      const guardBody = document.getElementById("guard-body");
-      guardorders.forEach(([subject, cost, qty, day, amount]) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${subject}</td>
-          <td>${formatCurrency(cost)}</td>
-          <td>${qty}</td>
-          <td>${day}</td>
-          <td>${formatCurrency(amount)}</td>`;
-        guardBody.appendChild(tr);
+      rowCount++;
+      if (i + 1 < equipmentData.length) {
+        const nextCategory = categoryList[categoryIndex + 1];
+        if (nextCategory && equipmentData[i + 1].startsWith(nextCategory)) {
+          rowCount = 0;
+          categoryIndex++;
+        }
+      }
+    });
+
+    // Guard and Others Table
+    const guardData = guardOrders.split("||");
+    const guardTableBody = document.querySelector("#guard-table tbody");
+
+    guardData.forEach(row => {
+      const [subject, cost, qty, day, amount] = row.split("|");
+      const tr = document.createElement("tr");
+      [subject, cost, qty, day, amount].forEach(text => {
+        const td = document.createElement("td");
+        td.textContent = text;
+        tr.appendChild(td);
       });
-    }
+      guardTableBody.appendChild(tr);
+    });
 
-    // setup signature pad (touch & mouse)
+    // Signature pad
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const x = e.touches ? e.touches[0].clientX : e.clientX;
-      const y = e.touches ? e.touches[0].clientY : e.clientY;
-      return { x: x - rect.left, y: y - rect.top };
-    }
+    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", endDraw);
+    canvas.addEventListener("touchstart", startDraw);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", endDraw);
+
     function startDraw(e) {
       drawing = true;
-      const pos = getPos(e);
-      ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+      ctx.beginPath();
+      ctx.moveTo(getX(e), getY(e));
       e.preventDefault();
-    }
-    function draw(e) {
-      if (!drawing) return;
-      const pos = getPos(e);
-      ctx.lineTo(pos.x, pos.y); ctx.stroke();
-      e.preventDefault();
-    }
-    function stopDraw(e) {
-      drawing = false; e.preventDefault();
     }
 
-    ["mousedown","touchstart"].forEach(evt =>
-      canvas.addEventListener(evt, startDraw, { passive: false }));
-    ["mousemove","touchmove"].forEach(evt =>
-      canvas.addEventListener(evt, draw, { passive: false }));
-    ["mouseup","mouseleave","touchend"].forEach(evt =>
-      canvas.addEventListener(evt, stopDraw, { passive: false }));
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineTo(getX(e), getY(e));
+      ctx.stroke();
+      e.preventDefault();
+    }
+
+    function endDraw(e) {
+      drawing = false;
+      e.preventDefault();
+    }
+
+    function getX(e) {
+      return e.touches ? e.touches[0].clientX - canvas.offsetLeft : e.clientX - canvas.offsetLeft;
+    }
+
+    function getY(e) {
+      return e.touches ? e.touches[0].clientY - canvas.offsetTop : e.clientY - canvas.offsetTop;
+    }
 
     function clearSignature() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       document.getElementById("saved-signature").innerHTML = "";
     }
+
     function saveSignature() {
       const dataURL = canvas.toDataURL();
-      document.getElementById("saved-signature").innerHTML =
-        <img src="${dataURL}" style="max-width:100%"/>;
+      const img = document.createElement("img");
+      img.src = dataURL;
+      img.style.maxWidth = "300px";
+      document.getElementById("saved-signature").innerHTML = "";
+      document.getElementById("saved-signature").appendChild(img);
     }
-
-    window.onload = loadData;
   </script>
 </body>
 </html>
