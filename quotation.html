@@ -12,6 +12,7 @@
     h2 {
       margin-top: 40px;
       text-align: left;
+      font-size: 20;
     }
     table {
       width: 100%;
@@ -99,7 +100,7 @@
     const grandtotal = urlParams.get("grandtotal") || "";
 
     function formatCurrency(numberStr) {
-    const number = parseFloat(numberStr.replace(/./g. ""));
+    const number = parseFloat(numberStr.replace(/,/g, ""));
     if (isNaN(number)) return numberStr;
     return number.toLocaleString("id-ID") + " IDR";
   }
