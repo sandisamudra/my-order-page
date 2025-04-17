@@ -81,6 +81,7 @@
   <div class="button-group">
     <button onclick="clearSignature()">Clear</button>
     <button onclick="saveSignature()">Save</button>
+    <button onclick="window.print()">Print</button>
   </div>
   <div id="saved-signature"></div>
   <p id="username"></p>
@@ -97,11 +98,17 @@
     const discount = urlParams.get("discount") || "";
     const grandtotal = urlParams.get("grandtotal") || "";
 
+    function formatCurrency(numberStr) {
+    const number = parseFloat(numberStr.replace(/,/g, ""));
+    if (isNaN(number)) return numberStr;
+    return number.toLocaleString("id-ID") + " IDR";
+  }
+
     document.getElementById("project-name").innerText = project;
-    document.getElementById("total-cost-orders").innerText = totalcostorders;
-    document.getElementById("total-cost-go").innerText = totalcostGO;
-    document.getElementById("discount").innerText = discount;
-    document.getElementById("grand-total").innerText = grandtotal;
+    document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
+    document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
+    document.getElementById("discount").innerText = discount + "%";
+    document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
     document.getElementById("username").innerText = user;
 
     const equipmentSection = document.getElementById("equipment-section");
@@ -171,7 +178,12 @@
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
-
+    
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
     canvas.addEventListener("mousedown", startDraw);
     canvas.addEventListener("mousemove", draw);
     canvas.addEventListener("mouseup", endDraw);
