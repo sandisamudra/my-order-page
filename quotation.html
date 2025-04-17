@@ -6,7 +6,7 @@
   <title>Quotation</title>
   <style>
     body {
-      font-family: Nunito, normal;
+      font-family: Nunito;
       padding: 20px;
     }
     h2 {
@@ -26,15 +26,26 @@
     }
     .signature-pad {
       border: 1px solid #000;
-      width: 100%;
+      width: 20%;
       height: 200px;
+      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
     }
     .button-group {
       margin-top: 10px;
     }
     .button-group button {
       margin-right: 10px;
+      padding: 20px 30px;
+      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
+      background-color: #4da6ff; /* biru muda */
+      color: white; /* teks jadi putih */
+      border: none; /* hapus garis tepi default */
+      cursor: pointer; /* ganti kursor saat hover */ 
     }
+    .button-group button:hover {
+    background-color: #3399ff; /* warna saat hover */
+    }
+
     @media print {
       #signature-pad, .button-group {
         display: none;
