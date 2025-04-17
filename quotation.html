@@ -2,101 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quotation</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 30px; }
-    h2 { text-align: left; margin-top: 40px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
-    .totals { font-weight: bold; margin-top: 10px; }
-    .signature-pad-container { margin-top: 40px; }
-    .signature-area {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      max-width: 300px;
-    }
-    canvas {
-      border: 1px solid #000;
-      width: 100%;
-      height: 150px;
-      touch-action: none;
-    }
-    .btn-group {
-      margin-top: 10px;
-      display: flex;
-      gap: 10px;
-    }
-    #signature-preview {
-      margin-top: 10px;
-      border: 1px solid #ccc;
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { margin-top: 40px; text-align: left; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+    .signature-pad { border: 1px solid #000; width: 100%; height: 200px; }
+    .button-group { margin-top: 10px; }
+    .button-group button { margin-right: 10px; }
+    @media print {
+      #signature-pad, .button-group { display: none; }
     }
     #print-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      background-color: black;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    @media print {
-      #print-btn, .signature-area, .btn-group { display: none !important; }
+      position: fixed; top: 20px; right: 20px;
+      padding: 10px 20px; background: black; color: white; border: none; cursor: pointer;
     }
   </style>
 </head>
 <body>
+
   <button id="print-btn" onclick="window.print()">Print</button>
 
-  <h1 id="project-title">Project Name</h1>
-  <h3 id="user-name">Customer: </h3>
+  <h1 id="project-name"></h1>
+  <h3 id="user-name"></h3>
 
   <h2>Equipments</h2>
-  <div id="equipments-table-container"></div>
-  <div class="totals">Total Cost Equipments: <span id="total-equipments-cost"></span></div>
+  <div id="equipment-section"></div>
+  <h3>Total Cost Equipments: <span id="total-cost-orders"></span></h3>
 
   <h2>Guard and Others</h2>
   <table id="guard-table">
     <thead>
       <tr>
-        <th>Subject</th>
-        <th>Cost</th>
-        <th>Quantity</th>
-        <th>Day</th>
-        <th>Amount</th>
+        <th>Subject</th><th>Cost</th><th>Quantity</th><th>Day</th><th>Amount</th>
       </tr>
     </thead>
     <tbody id="guard-body"></tbody>
   </table>
-  <div class="totals">Total Cost Guard and Others: <span id="total-guard-cost"></span></div>
+  <h3>Total Cost Guard and Others: <span id="total-cost-go"></span></h3>
 
-  <div class="totals">Discount: <span id="discount-val"></span></div>
-  <div class="totals">Grand Total: <span id="grand-total-val"></span></div>
+  <h3>Discount: <span id="discount"></span></h3>
+  <h2>Grand Total: <span id="grand-total"></span></h2>
 
-  <div class="signature-pad-container">
-    <h3>Customer Signature</h3>
-    <div class="signature-area">
-      <canvas id="signature-pad"></canvas>
-      <div class="btn-group">
-        <button onclick="clearSignature()">Clear</button>
-        <button onclick="saveSignature()">Save</button>
-      </div>
-      <div id="signature-preview"></div>
-    </div>
+  <h3>Customer Signature</h3>
+  <canvas id="signature-pad" class="signature-pad"></canvas>
+  <div class="button-group">
+    <button onclick="clearSignature()">Clear</button>
+    <button onclick="saveSignature()">Save</button>
   </div>
+  <div id="saved-signature"></div>
+  <p id="username"></p>
 
   <script>
+    // jika sudah berisi huruf (IDR, USD, %), tampil apa adanya
     function formatCurrency(value) {
-      return value.includes("IDR") ? value : parseInt(value).toLocaleString("id-ID") + " IDR";
+      if (/[^\d,]/.test(value)) return value;
+      const n = parseInt(value, 10);
+      if (isNaN(n)) return value;
+      return n.toLocaleString("id-ID") + " IDR";
     }
 
     function parseJoinedList(list) {
-      return list ? decodeURIComponent(list).split("||").map(item => item.split("|")) : [];
+      return list
+        ? decodeURIComponent(list).split("||").map(item => item.split("|"))
+        : [];
     }
 
-    function groupByCategory(data, categories) {
+    function groupByCategory(data) {
       const groups = {};
       data.forEach(item => {
         const [name, category, cost, qty, day, amount] = item;
@@ -108,38 +82,43 @@
 
     function loadData() {
       const params = new URLSearchParams(window.location.search);
-      const project = params.get("project") || "-";
-      const user = params.get("user") || "-";
+      const project = params.get("project") || "";
+      const user = params.get("user") || "";
       const orders = parseJoinedList(params.get("orders"));
       const guardorders = parseJoinedList(params.get("guardorders"));
+      // ambil parameter apa adanya
       const totalEquipments = params.get("totalcostorders") || "0";
       const totalGuards = params.get("totalcostGO") || "0";
-      const discount = params.get("discount") || "0%";
-      const grandTotal = params.get("grandtotal") || "0";
-      const categories = [...new Set(orders.map(o => o[1]))];
+      const discount = params.get("discount") || "";
+      const grandTotal = params.get("grandtotal") || "";
 
-      document.getElementById("project-title").textContent = project;
+      document.getElementById("project-name").textContent = project;
       document.getElementById("user-name").textContent = Customer: ${user};
-      document.getElementById("total-equipments-cost").textContent = formatCurrency(totalEquipments);
-      document.getElementById("total-guard-cost").textContent = formatCurrency(totalGuards);
-      document.getElementById("discount-val").textContent = discount;
-      document.getElementById("grand-total-val").textContent = formatCurrency(grandTotal);
+      document.getElementById("discount").textContent = discount;
 
-      const equipmentContainer = document.getElementById("equipments-table-container");
-      const grouped = groupByCategory(orders, categories);
+      // *HANYA DI SINI DI-UPDATE*
+      document.getElementById("total-cost-orders").textContent =
+        formatCurrency(totalEquipments);
+      document.getElementById("total-cost-go").textContent =
+        formatCurrency(totalGuards);
+      document.getElementById("grand-total").textContent =
+        formatCurrency(grandTotal);
 
-      for (const [cat, items] of Object.entries(grouped)) {
-        const table = document.createElement("table");
+      // Equipments grouped by category
+      const grouped = groupByCategory(orders);
+      const equipmentContainer = document.getElementById("equipment-section");
+      Object.entries(grouped).forEach(([cat, items]) => {
+        const tbl = document.createElement("table");
         const thead = document.createElement("thead");
         thead.innerHTML = `
           <tr><th colspan="5">${cat}</th></tr>
           <tr>
             <th>Item</th><th>Cost</th><th>Quantity</th><th>Day</th><th>Amount</th>
           </tr>`;
-        table.appendChild(thead);
+        tbl.appendChild(thead);
 
         const tbody = document.createElement("tbody");
-        items.forEach(([name, , cost, qty, day, amount]) => {
+        items.forEach(([name,, cost, qty, day, amount]) => {
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${name}</td>
@@ -149,11 +128,11 @@
             <td>${formatCurrency(amount)}</td>`;
           tbody.appendChild(tr);
         });
-        table.appendChild(tbody);
-        equipmentContainer.appendChild(table);
-      }
+        tbl.appendChild(tbody);
+        equipmentContainer.appendChild(tbl);
+      });
 
-      // Guard Table
+      // Guard and Others
       const guardBody = document.getElementById("guard-body");
       guardorders.forEach(([subject, cost, qty, day, amount]) => {
         const tr = document.createElement("tr");
@@ -167,68 +146,48 @@
       });
     }
 
-    // Signature Pad Setup
+    // setup signature pad (touch & mouse)
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    function resizeCanvas() {
-      const ratio = window.devicePixelRatio || 1;
-      canvas.width = canvas.offsetWidth * ratio;
-      canvas.height = canvas.offsetHeight * ratio;
-      canvas.getContext("2d").scale(ratio, ratio);
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const y = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: x - rect.left, y: y - rect.top };
     }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
     function startDraw(e) {
       drawing = true;
-      ctx.beginPath();
       const pos = getPos(e);
-      ctx.moveTo(pos.x, pos.y);
+      ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+      e.preventDefault();
     }
-
     function draw(e) {
       if (!drawing) return;
       const pos = getPos(e);
-      ctx.lineTo(pos.x, pos.y);
-      ctx.stroke();
+      ctx.lineTo(pos.x, pos.y); ctx.stroke();
+      e.preventDefault();
+    }
+    function stopDraw(e) {
+      drawing = false; e.preventDefault();
     }
 
-    function stopDraw() {
-      drawing = false;
-    }
-
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-      return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-      };
-    }
-
-    canvas.addEventListener("mousedown", startDraw);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", stopDraw);
-    canvas.addEventListener("mouseleave", stopDraw);
-    canvas.addEventListener("touchstart", startDraw);
-    canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", stopDraw);
+    ["mousedown","touchstart"].forEach(evt =>
+      canvas.addEventListener(evt, startDraw, { passive: false }));
+    ["mousemove","touchmove"].forEach(evt =>
+      canvas.addEventListener(evt, draw, { passive: false }));
+    ["mouseup","mouseleave","touchend"].forEach(evt =>
+      canvas.addEventListener(evt, stopDraw, { passive: false }));
 
     function clearSignature() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      document.getElementById("signature-preview").innerHTML = "";
+      document.getElementById("saved-signature").innerHTML = "";
     }
-
     function saveSignature() {
       const dataURL = canvas.toDataURL();
-      const img = document.createElement("img");
-      img.src = dataURL;
-      img.style.maxWidth = "100%";
-      document.getElementById("signature-preview").innerHTML = "";
-      document.getElementById("signature-preview").appendChild(img);
+      document.getElementById("saved-signature").innerHTML =
+        <img src="${dataURL}" style="max-width:100%"/>;
     }
 
     window.onload = loadData;
