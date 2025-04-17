@@ -2,65 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quotation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 30px;
+      padding: 20px;
     }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    #logo {
-      width: 150px;
-    }
-    h1 {
-      text-align: center;
-      margin: 20px 0;
+    h2 {
+      margin-top: 40px;
+      text-align: left;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      margin-top: 10px;
     }
     th, td {
-      border: 1px solid #aaa;
+      border: 1px solid #000;
       padding: 8px;
       text-align: left;
     }
-    th {
-      background-color: #f2f2f2;
+    .signature-pad {
+      border: 1px solid #000;
+      width: 100%;
+      height: 200px;
     }
-    #grandTotal {
-      font-weight: bold;
-      margin-top: 20px;
+    .button-group {
+      margin-top: 10px;
     }
-    #printButton {
-      margin: 20px 0;
-      padding: 10px 20px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    #signature-section {
-      margin-top: 40px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 30px;
-    }
-    #signature-preview {
-      text-align: center;
-    }
-    #signature-canvas {
-      border: 1px solid #aaa;
+    .button-group button {
+      margin-right: 10px;
     }
     @media print {
-      #printButton,
-      #signature-pad {
+      #signature-pad, .button-group {
         display: none;
       }
     }
@@ -68,119 +43,182 @@
 </head>
 <body>
 
-<header>
-  <img src="https://yourdomain.com/logo.png" alt="Company Logo" id="logo" />
-  <div>
-    <h2>Brinks Secure Logistics</h2>
-    <p>Jakarta, Indonesia</p>
+  <h1 id="project-name"></h1>
+
+  <!-- Tabel Equipments -->
+  <div id="equipment-section"></div>
+
+  <!-- Total Cost Equipments -->
+  <h3>Total Cost Equipments: <span id="total-cost-orders"></span></h3>
+
+  <!-- Tabel Guard and Others -->
+  <h2>Guard and Others</h2>
+  <table id="guard-table">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Cost</th>
+        <th>Quantity</th>
+        <th>Day</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Total Cost Guard and Others -->
+  <h3>Total Cost Guard and Others: <span id="total-cost-go"></span></h3>
+
+  <!-- Discount -->
+  <h3>Discount: <span id="discount"></span></h3>
+
+  <!-- Grand Total -->
+  <h2>Grand Total: <span id="grand-total"></span></h2>
+
+  <!-- Signature Pad -->
+  <h3>Customer Signature</h3>
+  <canvas id="signature-pad" class="signature-pad"></canvas>
+  <div class="button-group">
+    <button onclick="clearSignature()">Clear</button>
+    <button onclick="saveSignature()">Save</button>
   </div>
-</header>
+  <div id="saved-signature"></div>
+  <p id="username"></p>
 
-<h1>Quotation</h1>
-<p id="customerName">Customer: </p>
-<p id="categoryName">Category: </p>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const project = urlParams.get("project") || "";
+    const user = urlParams.get("user") || "";
+    const orders = urlParams.get("orders") || "";
+    const guardOrders = urlParams.get("guardorders") || "";
+    const categoryList = urlParams.get("category")?.split("||") || [];
+    const totalcostorders = urlParams.get("totalcostorders") || "";
+    const totalcostGO = urlParams.get("totalcostGO") || "";
+    const discount = urlParams.get("discount") || "";
+    const grandtotal = urlParams.get("grandtotal") || "";
 
-<table id="orderTable">
-  <thead>
-    <tr>
-      <th>Order ID</th>
-      <th>Date</th>
-      <th>Item</th>
-      <th>Quantity</th>
-      <th>From</th>
-      <th>To</th>
-      <th>Total Cost</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    document.getElementById("project-name").innerText = project;
+    document.getElementById("total-cost-orders").innerText = totalcostorders;
+    document.getElementById("total-cost-go").innerText = totalcostGO;
+    document.getElementById("discount").innerText = discount;
+    document.getElementById("grand-total").innerText = grandtotal;
+    document.getElementById("username").innerText = user;
 
-<p id="grandTotal">Grand Total: </p>
+    const equipmentSection = document.getElementById("equipment-section");
+    const equipmentData = orders.split("||");
+    let categoryIndex = 0;
+    let currentTable = null;
+    let tbody = null;
+    let rowCount = 0;
 
-<!-- Signature -->
-<div id="signature-pad">
-  <p><strong>Sign before print:</strong></p>
-  <canvas id="signature-canvas" width="300" height="150"></canvas><br/>
-  <button onclick="clearSignature()">Clear</button>
-  <button onclick="saveSignature()">Save</button>
-</div>
+    equipmentData.forEach((row, i) => {
+      const [item, cost, qty, day, amount] = row.split("|");
+      if (rowCount === 0) {
+        const header = document.createElement("h2");
+        header.textContent = categoryList[categoryIndex] || "Category";
+        equipmentSection.appendChild(header);
 
-<div id="signature-section" style="display: none;">
-  <div id="signature-preview">
-    <p><strong>Customer Signature</strong></p>
-    <img id="saved-signature" src="" width="200" />
-    <p id="signed-customer-name"></p>
-  </div>
-</div>
+        currentTable = document.createElement("table");
+        const thead = document.createElement("thead");
+        thead.innerHTML = `
+          <tr>
+            <th>Item</th>
+            <th>Cost</th>
+            <th>Quantity</th>
+            <th>Day</th>
+            <th>Amount</th>
+          </tr>`;
+        currentTable.appendChild(thead);
+        tbody = document.createElement("tbody");
+        currentTable.appendChild(tbody);
+        equipmentSection.appendChild(currentTable);
+      }
 
-<button id="printButton" onclick="window.print()">Print PDF</button>
+      const tr = document.createElement("tr");
+      [item, cost, qty, day, amount].forEach(text => {
+        const td = document.createElement("td");
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
 
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const customer = urlParams.get("customer") || "";
-  const category = urlParams.get("category") || "";
-  const ordersRaw = urlParams.get("orders") || "";
-
-  document.getElementById("customerName").textContent = "Customer: " + customer;
-  document.getElementById("categoryName").textContent = "Category: " + category;
-
-  const orders = decodeURIComponent(ordersRaw).split("||"); // row delimiter
-
-  const tbody = document.querySelector("#orderTable tbody");
-  let grandTotal = 0;
-
-  orders.forEach((order) => {
-    if (!order.trim()) return;
-
-    const [orderId, date, item, quantity, from, to, totalCost] = order.split("|");
-    const costNumber = parseInt(totalCost.replace(/[^\d]/g, ""));
-
-    grandTotal += isNaN(costNumber) ? 0 : costNumber;
-
-    const row = document.createElement("tr");
-    [orderId, date, item, quantity, from, to, totalCost].forEach((val) => {
-      const td = document.createElement("td");
-      td.textContent = val;
-      row.appendChild(td);
+      rowCount++;
+      if (i + 1 < equipmentData.length) {
+        const nextCategory = categoryList[categoryIndex + 1];
+        if (nextCategory && equipmentData[i + 1].startsWith(nextCategory)) {
+          rowCount = 0;
+          categoryIndex++;
+        }
+      }
     });
-    tbody.appendChild(row);
-  });
 
-  // Format grand total with thousand separators
-  document.getElementById("grandTotal").textContent =
-    "Grand Total: " + grandTotal.toLocaleString("id-ID") + " IDR";
+    // Guard and Others Table
+    const guardData = guardOrders.split("||");
+    const guardTableBody = document.querySelector("#guard-table tbody");
 
-  // Signature pad logic
-  const canvas = document.getElementById("signature-canvas");
-  const ctx = canvas.getContext("2d");
-  let drawing = false;
+    guardData.forEach(row => {
+      const [subject, cost, qty, day, amount] = row.split("|");
+      const tr = document.createElement("tr");
+      [subject, cost, qty, day, amount].forEach(text => {
+        const td = document.createElement("td");
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+      guardTableBody.appendChild(tr);
+    });
 
-  canvas.addEventListener("mousedown", () => (drawing = true));
-  canvas.addEventListener("mouseup", () => (drawing = false));
-  canvas.addEventListener("mousemove", drawSignature);
+    // Signature pad
+    const canvas = document.getElementById("signature-pad");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
 
-  function drawSignature(e) {
-    if (!drawing) return;
-    ctx.lineWidth = 2;
-    ctx.lineCap = "round";
-    const rect = canvas.getBoundingClientRect();
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-  }
+    canvas.addEventListener("mousedown", startDraw);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", endDraw);
+    canvas.addEventListener("touchstart", startDraw);
+    canvas.addEventListener("touchmove", draw);
+    canvas.addEventListener("touchend", endDraw);
 
-  function clearSignature() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
+    function startDraw(e) {
+      drawing = true;
+      ctx.beginPath();
+      ctx.moveTo(getX(e), getY(e));
+      e.preventDefault();
+    }
 
-  function saveSignature() {
-    const dataUrl = canvas.toDataURL();
-    document.getElementById("saved-signature").src = dataUrl;
-    document.getElementById("signed-customer-name").textContent = customer;
-    document.getElementById("signature-section").style.display = "flex";
-  }
-</script>
+    function draw(e) {
+      if (!drawing) return;
+      ctx.lineTo(getX(e), getY(e));
+      ctx.stroke();
+      e.preventDefault();
+    }
 
+    function endDraw(e) {
+      drawing = false;
+      e.preventDefault();
+    }
+
+    function getX(e) {
+      return e.touches ? e.touches[0].clientX - canvas.offsetLeft : e.clientX - canvas.offsetLeft;
+    }
+
+    function getY(e) {
+      return e.touches ? e.touches[0].clientY - canvas.offsetTop : e.clientY - canvas.offsetTop;
+    }
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      document.getElementById("saved-signature").innerHTML = "";
+    }
+
+    function saveSignature() {
+      const dataURL = canvas.toDataURL();
+      const img = document.createElement("img");
+      img.src = dataURL;
+      img.style.maxWidth = "300px";
+      document.getElementById("saved-signature").innerHTML = "";
+      document.getElementById("saved-signature").appendChild(img);
+    }
+  </script>
 </body>
 </html>
