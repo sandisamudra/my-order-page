@@ -1,231 +1,186 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Quotation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 30px;
     }
-
-    h2 {
-      margin-top: 40px;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-
+    #logo {
+      width: 150px;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 30px;
     }
-
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #aaa;
       padding: 8px;
       text-align: left;
-      vertical-align: top;
-      word-break: break-word;
     }
-
     th {
       background-color: #f2f2f2;
     }
-
-    @media screen and (max-width: 768px) {
-      table, thead, tbody, th, td, tr {
-        display: block;
-      }
-
-      thead {
-        display: none;
-      }
-
-      tr {
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-      }
-
-      td {
-        display: flex;
-        justify-content: space-between;
-        border: none;
-        border-bottom: 1px solid #eee;
-      }
-
-      td::before {
-        content: attr(data-label);
-        font-weight: bold;
-      }
-    }
-
-    #signature {
-      width: 100%;
-      height: 150px;
-      border: 1px solid #000;
-    }
-
-    #signature-preview {
-      max-width: 300px;
-      margin-top: 10px;
-    }
-
-    .print-hide {
+    #grandTotal {
+      font-weight: bold;
       margin-top: 20px;
     }
-
+    #printButton {
+      margin: 20px 0;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #signature-section {
+      margin-top: 40px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 30px;
+    }
+    #signature-preview {
+      text-align: center;
+    }
+    #signature-canvas {
+      border: 1px solid #aaa;
+    }
     @media print {
-      .print-hide, #signature {
+      #printButton,
+      #signature-pad {
         display: none;
-      }
-
-      #signature-preview {
-        display: block !important;
-        margin-top: 10px;
       }
     }
   </style>
 </head>
 <body>
 
-  <h1 id="projectName"></h1>
-
-  <h2>Order Items</h2>
-  <table id="orderTable">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Category</th>
-        <th>Cost</th>
-        <th>Qty</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <p id="totalOrderCost"></p>
-
-  <h2>Guard and Others</h2>
-  <table id="guardTable">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Category</th>
-        <th>Cost</th>
-        <th>Qty</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <p id="totalGuardCost"></p>
-
-  <p id="discount"></p>
-  <p id="grandtotal"></p>
-
-  <h3>Customer Signature</h3>
-  <canvas id="signature" class="print-hide"></canvas>
-  <div class="print-hide">
-    <button onclick="clearSig()">Clear</button>
-    <button onclick="saveSig()">Save</button>
+<header>
+  <img src="https://yourdomain.com/logo.png" alt="Company Logo" id="logo" />
+  <div>
+    <h2>Brinks Secure Logistics</h2>
+    <p>Jakarta, Indonesia</p>
   </div>
+</header>
 
-  <div id="signature-preview-section" style="display:none;">
-    <p>Customer Signature:</p>
-    <img id="signature-preview" />
-    <p id="username"></p>
+<h1>Quotation</h1>
+<p id="customerName">Customer: </p>
+<p id="categoryName">Category: </p>
+
+<table id="orderTable">
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Date</th>
+      <th>Item</th>
+      <th>Quantity</th>
+      <th>From</th>
+      <th>To</th>
+      <th>Total Cost</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="grandTotal">Grand Total: </p>
+
+<!-- Signature -->
+<div id="signature-pad">
+  <p><strong>Sign before print:</strong></p>
+  <canvas id="signature-canvas" width="300" height="150"></canvas><br/>
+  <button onclick="clearSignature()">Clear</button>
+  <button onclick="saveSignature()">Save</button>
+</div>
+
+<div id="signature-section" style="display: none;">
+  <div id="signature-preview">
+    <p><strong>Customer Signature</strong></p>
+    <img id="saved-signature" src="" width="200" />
+    <p id="signed-customer-name"></p>
   </div>
+</div>
 
-  <button onclick="window.print()" class="print-hide">Print PDF</button>
+<button id="printButton" onclick="window.print()">Print PDF</button>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    document.getElementById('projectName').textContent = "Project: " + decodeURIComponent(params.get('project') || '');
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const customer = urlParams.get("customer") || "";
+  const category = urlParams.get("category") || "";
+  const ordersRaw = urlParams.get("orders") || "";
 
-    document.getElementById('username').textContent = decodeURIComponent(params.get('user') || '');
+  document.getElementById("customerName").textContent = "Customer: " + customer;
+  document.getElementById("categoryName").textContent = "Category: " + category;
 
-    function populateTable(paramKey, tableId) {
-      const raw = decodeURIComponent(params.get(paramKey) || '');
-      const rows = raw.split('~');
-      const tbody = document.querySelector(`#${tableId} tbody`);
-      rows.forEach(row => {
-        const [item, category, cost, qty, total] = row.split('|');
-        if (item) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td data-label="Item">${item}</td>
-            <td data-label="Category">${category}</td>
-            <td data-label="Cost">${cost}</td>
-            <td data-label="Qty">${qty}</td>
-            <td data-label="Total">${total}</td>
-          `;
-          tbody.appendChild(tr);
-        }
-      });
-    }
+  const orders = decodeURIComponent(ordersRaw).split("||"); // row delimiter
 
-    populateTable('orders', 'orderTable');
-    populateTable('guardorders', 'guardTable');
+  const tbody = document.querySelector("#orderTable tbody");
+  let grandTotal = 0;
 
-    document.getElementById('totalOrderCost').textContent =
-      "Total Cost (Alat): Rp" + formatNumber(params.get('totalcostorders'));
-    document.getElementById('totalGuardCost').textContent =
-      "Total Cost (Guard and Others): Rp" + formatNumber(params.get('totalcostGO'));
-    document.getElementById('discount').textContent =
-      "Discount: Rp" + formatNumber(params.get('discount'));
-    document.getElementById('grandtotal').textContent =
-      "Grand Total: Rp" + formatNumber(params.get('grandtotal'));
+  orders.forEach((order) => {
+    if (!order.trim()) return;
 
-    function formatNumber(num) {
-      return (parseInt(num || 0) || 0).toLocaleString("id-ID");
-    }
+    const [orderId, date, item, quantity, from, to, totalCost] = order.split("|");
+    const costNumber = parseInt(totalCost.replace(/[^\d]/g, ""));
 
-    // Signature Pad
-    let canvas = document.getElementById('signature');
-    let ctx = canvas.getContext('2d');
-    let isDrawing = false;
+    grandTotal += isNaN(costNumber) ? 0 : costNumber;
 
-    canvas.addEventListener('mousedown', e => {
-      isDrawing = true;
-      ctx.moveTo(e.offsetX, e.offsetY);
+    const row = document.createElement("tr");
+    [orderId, date, item, quantity, from, to, totalCost].forEach((val) => {
+      const td = document.createElement("td");
+      td.textContent = val;
+      row.appendChild(td);
     });
+    tbody.appendChild(row);
+  });
 
-    canvas.addEventListener('mousemove', e => {
-      if (isDrawing) {
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.stroke();
-      }
-    });
+  // Format grand total with thousand separators
+  document.getElementById("grandTotal").textContent =
+    "Grand Total: " + grandTotal.toLocaleString("id-ID") + " IDR";
 
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('touchstart', e => {
-      e.preventDefault();
-      isDrawing = true;
-      const touch = e.touches[0];
-      const rect = canvas.getBoundingClientRect();
-      ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-    }, { passive: false });
+  // Signature pad logic
+  const canvas = document.getElementById("signature-canvas");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
 
-    canvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      if (isDrawing) {
-        const touch = e.touches[0];
-        const rect = canvas.getBoundingClientRect();
-        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-        ctx.stroke();
-      }
-    }, { passive: false });
+  canvas.addEventListener("mousedown", () => (drawing = true));
+  canvas.addEventListener("mouseup", () => (drawing = false));
+  canvas.addEventListener("mousemove", drawSignature);
 
-    canvas.addEventListener('touchend', () => isDrawing = false);
+  function drawSignature(e) {
+    if (!drawing) return;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  }
 
-    function clearSig() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+  function clearSignature() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 
-    function saveSig() {
-      const dataURL = canvas.toDataURL();
-      document.getElementById('signature-preview').src = dataURL;
-      document.getElementById('signature-preview-section').style.display = 'block';
-    }
-  </script>
+  function saveSignature() {
+    const dataUrl = canvas.toDataURL();
+    document.getElementById("saved-signature").src = dataUrl;
+    document.getElementById("signed-customer-name").textContent = customer;
+    document.getElementById("signature-section").style.display = "flex";
+  }
+</script>
+
 </body>
 </html>
