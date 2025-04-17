@@ -26,7 +26,7 @@
     }
     .signature-pad {
       border: 1px solid #000;
-      width: 40%;
+      width: 50%;
       height: 200px;
       border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
     }
@@ -244,13 +244,24 @@
       e.preventDefault();
     }
 
-    function getX(e) {
-      return e.touches ? e.touches[0].clientX - canvas.offsetLeft : e.clientX - canvas.offsetLeft;
-    }
+   function getCanvasRelativePosition(e) {
+  const rect = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    function getY(e) {
-      return e.touches ? e.touches[0].clientY - canvas.offsetTop : e.clientY - canvas.offsetTop;
-    }
+  return {
+    x: clientX - rect.left,
+    y: clientY - rect.top
+  };
+}
+
+function getX(e) {
+  return getCanvasRelativePosition(e).x;
+}
+
+function getY(e) {
+  return getCanvasRelativePosition(e).y;
+}
 
     function clearSignature() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
