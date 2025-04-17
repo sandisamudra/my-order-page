@@ -46,11 +46,16 @@
     background-color: #3399ff; /* warna saat hover */
     }
     .label-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 18px;
-  margin: 8px 0;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 18px;
+    margin: 8px 0;
+    gap: 10px;
 }
+    .label-row span:first-child {
+  width: 250px;  /* Atur agar semua label panjangnya sama */
+  text-align: right;
+    }
     @media print {
       #signature-pad, .button-group {
         display: none;
