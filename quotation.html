@@ -45,7 +45,12 @@
     .button-group button:hover {
     background-color: #3399ff; /* warna saat hover */
     }
-
+    .label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  margin: 8px 0;
+}
     @media print {
       #signature-pad, .button-group {
         display: none;
@@ -61,7 +66,10 @@
   <div id="equipment-section"></div>
 
   <!-- Total Cost Equipments -->
-  <h3>Total Cost Equipments: <span id="total-cost-orders"></span></h3>
+  <div class="label-row">
+  <span>Total Cost Equipments</span>
+  <span>: <span id="total-cost-orders"></span></span>
+</div>
 
   <!-- Tabel Guard and Others -->
   <h2>Guard and Others</h2>
@@ -79,13 +87,22 @@
   </table>
 
   <!-- Total Cost Guard and Others -->
-  <h3>Total Cost Guard and Others: <span id="total-cost-go"></span></h3>
+  <div class="label-row">
+  <span>Total Cost Guard and Others</span>
+  <span>: <span id="total-cost-go"></span></span>
+  </div>
 
   <!-- Discount -->
-  <h3>Discount: <span id="discount"></span></h3>
+  <div class="label-row">
+  <span>Discount</span>
+  <span>: <span id="discount"></span></span>
+  </div>
 
   <!-- Grand Total -->
-  <h3>Grand Total: <span id="grand-total"></span></h3>
+  <div class="label-row">
+  <span>Grand Total</span>
+  <span>: <span id="grand-total"></span></span>
+  </div>
 
   <!-- Signature Pad -->
   <h3>Customer Signature</h3>
