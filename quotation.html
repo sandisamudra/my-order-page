@@ -77,11 +77,25 @@
     }
     @media print {
       #signature-pad, .button-group {
-        display: none;
-      }
-      canvas {
     display: none !important;
     height: 0 !important;
+    visibility: hidden;
+  }
+  canvas {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden;
+  }
+  #saved-signature {
+    page-break-inside: avoid;
+  }
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
   }
     }
   </style>
