@@ -232,10 +232,15 @@
     guardData.forEach(row => {
       const [subject, cost, qty, day, amount] = row.split("|");
       const tr = document.createElement("tr");
-      [subject, cost, qty, day, amount].forEach(text => {
-        const td = document.createElement("td");
-        td.textContent = text;
-        tr.appendChild(td);
+      [subject, cost, qty, day, amount].forEach((text, index) => {
+  const td = document.createElement("td");
+  if (index === 0) {
+    // Kolom pertama: render HTML (agar <br> jadi line break)
+    td.innerHTML = text;
+  } else {
+    td.textContent = text;
+  }
+  tr.appendChild(td);
       });
       guardTableBody.appendChild(tr);
     });
