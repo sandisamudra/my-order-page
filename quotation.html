@@ -94,7 +94,7 @@
 
   <!-- Total Cost Equipments -->
   <div class="label-row">
-  <span style="margin-bottom: 20px;">Total Cost Equipments</span>
+  <span style="margin-bottom: 20px;">Subtotal Equipments</span>
   <span>: <span id="total-cost-orders"></span></span>
 </div>
 
@@ -115,7 +115,7 @@
 
   <!-- Total Cost Guard and Others -->
   <div class="label-row">
-  <span>Total Cost Guard and Others</span>
+  <span>Subtotal Guard and Others</span>
   <span>: <span id="total-cost-go"></span></span>
   </div>
 
@@ -123,6 +123,12 @@
   <div class="label-row">
   <span>Discount for Equipments</span>
   <span>: <span id="discount"></span></span>
+  </div>
+
+   <!-- After Discount -->
+  <div class="label-row">
+  <span>Total Cost After Discount for Equipments</span>
+  <span>: <span id="afterDiscount"></span></span>
   </div>
 
   <!-- Grand Total -->
@@ -153,6 +159,7 @@
     const totalcostorders = urlParams.get("totalcostorders") || "";
     const totalcostGO = urlParams.get("totalcostGO") || "";
     const discount = urlParams.get("discount") || "";
+    const afterDiscount = urlParams.get("afterDiscount") || "";
     const grandtotal = urlParams.get("grandtotal") || "";
 
     function formatCurrency(numberStr) {
@@ -166,6 +173,7 @@
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
     document.getElementById("discount").innerText = discount + "%";
+    document.getElementById("after-discount").innerText = formatCurrency(afterDiscount);
     document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
     document.getElementById("username").innerText = user;
 
