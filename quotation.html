@@ -79,19 +79,9 @@
       #signature-pad, .button-group {
         display: none;
       }
-       table, tr, td, th, div {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-
-  body {
-    margin: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  html, body {
-    height: auto !important;
-    overflow: visible !important;
+      canvas {
+    display: none !important;
+    height: 0 !important;
   }
     }
   </style>
@@ -144,7 +134,7 @@
   </div>
 
   <!-- Signature Pad -->
-  <h3 style="margin-top: 15px;">Warna Global Surya</h3>
+  <h3 style="margin-top: 30px;">Warna Global Surya</h3>
   <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="button-group">
     <button onclick="clearSignature()">Clear</button>
