@@ -154,7 +154,7 @@
     const productionHouse = urlParams.get("productionHouse") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
-    const guardOrders = urlParams.get("guardorders") || "";
+    const guardOrders = decodeURIComponent(urlParams.get("guardorders") || "");
     const categoryList = urlParams.get("category")?.split("||") || [];
     const totalcostorders = urlParams.get("totalcostorders") || "";
     const totalcostGO = urlParams.get("totalcostGO") || "";
