@@ -184,46 +184,54 @@
     let tbody = null;
     let rowCount = 0;
 
-    equipmentData.forEach((row, i) => {
-      const [item, cost, qty, day, amount] = row.split("|");
-      if (rowCount === 0) {
-        const header = document.createElement("h2");
-        header.textContent = categoryList[categoryIndex] || "Category";
-        equipmentSection.appendChild(header);
+    const parsedEquipment = equipmentData.map(row => {
+  const [category, item, cost, qty, day, amount] = row.split("|");
+  return { category, item, cost, qty, day, amount };
+});
 
-        currentTable = document.createElement("table");
-        const thead = document.createElement("thead");
-        thead.innerHTML = `
-          <tr>
-            <th>Item</th>
-            <th>Cost</th>
-            <th>Quantity</th>
-            <th>Day</th>
-            <th>Amount</th>
-          </tr>`;
-        currentTable.appendChild(thead);
-        tbody = document.createElement("tbody");
-        currentTable.appendChild(tbody);
-        equipmentSection.appendChild(currentTable);
-      }
+// Kelompokkan berdasarkan kategori
+const groupedEquipment = {};
+parsedEquipment.forEach(entry => {
+  if (!groupedEquipment[entry.category]) groupedEquipment[entry.category] = [];
+  groupedEquipment[entry.category].push(entry);
+});
 
-      const tr = document.createElement("tr");
-      [item, cost, qty, day, amount].forEach(text => {
-        const td = document.createElement("td");
+Object.keys(groupedEquipment).forEach(category => {
+  const header = document.createElement("h2");
+  header.textContent = category;
+  equipmentSection.appendChild(header);
+
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  thead.innerHTML = `
+    <tr>
+      <th>Item</th>
+      <th>Cost</th>
+      <th>Quantity</th>
+      <th>Day</th>
+      <th>Amount</th>
+    </tr>`;
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+  groupedEquipment[category].forEach(({ item, cost, qty, day, amount }) => {
+    const tr = document.createElement("tr");
+    [item, cost, qty, day, amount].forEach((text, index) => {
+      const td = document.createElement("td");
+      const isPackage = category.toLowerCase().includes("package");
+      if (index === 0 && isPackage) {
+        td.innerHTML = text; // render <br> untuk paket
+      } else {
         td.textContent = text;
-        tr.appendChild(td);
-      });
-      tbody.appendChild(tr);
-
-      rowCount++;
-      if (i + 1 < equipmentData.length) {
-        const nextCategory = categoryList[categoryIndex + 1];
-        if (nextCategory && equipmentData[i + 1].startsWith(nextCategory)) {
-          rowCount = 0;
-          categoryIndex++;
-        }
       }
+      tr.appendChild(td);
     });
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  equipmentSection.appendChild(table);
+});
 
     // Guard and Others Table
     const guardData = guardOrders.split("||");
