@@ -29,7 +29,11 @@
       text-align: left;
       font-size: 15px;
     }
-  
+   #username {
+      margin-bottom: 0px;
+      text-align: left;
+      font-size: 15px;
+   }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -88,7 +92,7 @@
 
   <h1 id="project-name"></h1>
   <p id="production-house"></p>
-   <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px;">Equipments</p>
+   <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px; font-weight: bold;">Equipments</p>
 
   <!-- Tabel Equipments -->
   <div id="equipment-section"></div>
@@ -100,7 +104,7 @@
 </div>
 
   <!-- Tabel Guard and Others -->
-  <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px;">Guard and Others</p>
+  <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px; font-weight: bold;">Guard and Others</p>
   <table id="guard-table">
     <thead>
       <tr>
@@ -147,8 +151,8 @@
     <button onclick="window.print()">Print</button>
   </div>
   <div id="saved-signature"></div>
-  <p style="margin-bottom: 0px; font-size: 20px;" id="username"></p>
-  <p style="margin-top: 0px; font-weight: bold; font-size: 10px;">PT Warna Global Surya</p>
+  <p id="username"></p>
+  <p style="margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
