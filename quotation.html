@@ -69,6 +69,7 @@
 <body>
 
   <h1 id="project-name"></h1>
+  <h2 id="production-house"></h2>
 
   <!-- Tabel Equipments -->
   <div id="equipment-section"></div>
@@ -126,6 +127,7 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const project = urlParams.get("project") || "";
+    const productionHouse = urlParams.get("productionHouse") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
     const guardOrders = urlParams.get("guardorders") || "";
@@ -142,6 +144,7 @@
   }
 
     document.getElementById("project-name").innerText = project;
+    document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
     document.getElementById("discount").innerText = discount + "%";
