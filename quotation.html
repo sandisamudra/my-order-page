@@ -89,8 +89,10 @@
     visibility: hidden;
       }
       th {
-        background-color: #FFFF00;
-      }
+    background-color: #FFFF00 !important;
+    -webkit-print-color-adjust: exact; /* untuk Chrome & Safari */
+    print-color-adjust: exact;         /* untuk Firefox */
+  }
     }
   </style>
 </head>
