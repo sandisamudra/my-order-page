@@ -102,7 +102,12 @@
 
   <h1 id="project-name"></h1>
   <p id="production-house"></p>
-   <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px; font-weight: bold;">Equipments</p> <p style="text-align: Right; margin-bottom: 0px; margin-top: 20px; font-size: 20px; font-weight: bold;">Quotatation Number : </p>
+  
+  <div class="label-row">
+  <span>Quotation Number</span>
+  <span>: <span id="quote-number"></span></span>
+  </div>
+  <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px; font-weight: bold;">Equipments</p>
 
   <!-- Tabel Equipments -->
   <div id="equipment-section"></div>
@@ -168,6 +173,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const project = urlParams.get("project") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
+    const quoteNumber = urlParams.get("quoteNumber") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
     const guardOrders = decodeURIComponent(urlParams.get("guardorders") || "");
@@ -186,6 +192,7 @@
 
     document.getElementById("project-name").innerText = project;
     document.getElementById("production-house").innerText = productionHouse;
+    document.getElementById("quote-number").innerText = quoteNumber;
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
     document.getElementById("discount").innerText = discount + "%";
