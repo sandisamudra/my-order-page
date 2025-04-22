@@ -97,7 +97,11 @@
   <h1 id="project-name"></h1>
   
   <div class="label-row">
-  <span>Production House/Company</span
+  <span>Submitted To</span>
+  <span>: <span id="client-name"></span></span>
+  </div>
+  <div class="label-row">
+  <span>Production House/Company</span>
   <span>: <span id="production-house"></span></span>
   </div>
   <div class="label-row">
@@ -170,6 +174,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const project = urlParams.get("project") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
+    const clientName = urlParams.get("clientName") || "";
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
@@ -189,6 +194,7 @@
 
     document.getElementById("project-name").innerText = project;
     document.getElementById("production-house").innerText = productionHouse;
+    document.getElementById("client-name").innerText = clientName;
     document.getElementById("quote-number").innerText = quoteNumber;
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
