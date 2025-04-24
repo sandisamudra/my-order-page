@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Responsive Invoice</title>
+  <title>Invoice</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -21,44 +21,15 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .company-info {
-      text-align: right;
-    }
-
-    .invoice-title {
+    h1 {
       text-align: center;
-      font-size: 28px;
-      margin: 30px 0;
-    }
-
-    .invoice-details, .customer-details {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .table-responsive {
-      width: 100%;
-      overflow-x: auto;
+      margin-bottom: 30px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     th, td {
@@ -71,94 +42,113 @@
       background-color: #f2f2f2;
     }
 
-    .total {
-      text-align: right;
-      font-size: 18px;
+    .info-line, .grand-total, .note {
       margin-top: 20px;
+      font-size: 16px;
+    }
+
+    .grand-total {
+      font-weight: bold;
     }
 
     @media (max-width: 600px) {
-      .header, .invoice-details, .customer-details {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .company-info {
-        text-align: center;
-        margin-top: 10px;
-      }
-
-      .total {
-        text-align: center;
+      body {
+        padding: 10px;
       }
     }
   </style>
 </head>
 <body>
   <div class="invoice-container">
-    <div class="header">
-      <div class="logo">My Company</div>
-      <div class="company-info">
-        <div>123 Street Name</div>
-        <div>City, Country</div>
-        <div>Email: info@company.com</div>
-      </div>
-    </div>
+    <h1>INVOICE</h1>
 
-    <div class="invoice-title">INVOICE</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Termin</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="termin"></td>
+          <td id="desc"></td>
+          <td id="amount"></td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div class="invoice-details">
-      <div>
-        <strong>Invoice #:</strong> INV-0001<br>
-        <strong>Date:</strong> 24 Apr 2025
-      </div>
-      <div>
-        <strong>Due Date:</strong> 01 May 2025<br>
-        <strong>Status:</strong> Unpaid
-      </div>
-    </div>
-
-    <div class="customer-details">
-      <div>
-        <strong>Billed To:</strong><br>
-        John Doe<br>
-        johndoe@email.com
-      </div>
-    </div>
-
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Description</th>
-            <th>Qty</th>
-            <th>Unit Price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Gold Delivery</td>
-            <td>Transport of 10kg gold</td>
-            <td>1</td>
-            <td>$1,000</td>
-            <td>$1,000</td>
-          </tr>
-          <tr>
-            <td>Insurance</td>
-            <td>Coverage for transit</td>
-            <td>1</td>
-            <td>$150</td>
-            <td>$150</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="total">
-      <strong>Grand Total: $1,150</strong>
-    </div>
+    <div class="info-line" id="termin-line"></div>
+    <div class="grand-total" id="grand-total"></div>
+    <div class="note" id="grand-total-text"></div>
   </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const termin = urlParams.get("termin") || "";
+    const desc = urlParams.get("desc") || "";
+    const amount = urlParams.get("amount") || "0";
+    const terminPercentage = urlParams.get("terminPercentage") || "";
+    const subtotalAmount = urlParams.get("subtotalAmount") || "0";
+
+    function formatCurrency(value) {
+      const num = parseFloat(value);
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+      }).format(num);
+    }
+
+    function numberToWords(num) {
+      const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+      const belasan = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", 
+                       "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const puluhan = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+      const ribuan = ["", "Thousand", "Million", "Billion"];
+
+      if (isNaN(num)) return "";
+
+      let str = "";
+      let i = 0;
+      while (num > 0) {
+        let s = "";
+        let n = num % 1000;
+        if (n >= 100) {
+          s += angka[Math.floor(n / 100)] + " Hundred ";
+          n %= 100;
+        }
+        if (n >= 10 && n <= 19) {
+          s += belasan[n - 10] + " ";
+        } else {
+          if (n >= 20) {
+            s += puluhan[Math.floor(n / 10)] + " ";
+          }
+          if (n % 10 > 0) {
+            s += angka[n % 10] + " ";
+          }
+        }
+        if (s) {
+          str = s + ribuan[i] + " " + str;
+        }
+        num = Math.floor(num / 1000);
+        i++;
+      }
+      return str.trim();
+    }
+
+    const formattedAmount = formatCurrency(amount);
+    const formattedSubtotal = formatCurrency(subtotalAmount);
+    const textAmount = numberToWords(parseInt(subtotalAmount)).toUpperCase();
+
+    document.getElementById("termin").innerText = termin;
+    document.getElementById("desc").innerText = desc;
+    document.getElementById("amount").innerText = formattedAmount;
+
+    document.getElementById("termin-line").innerText = `${termin} ${terminPercentage} = ${formattedSubtotal}`;
+    document.getElementById("grand-total").innerText = `Grand Total = ${formattedSubtotal}`;
+    document.getElementById("grand-total-text").innerText = `Note: ${textAmount} Rupiahs`;
+  </script>
 </body>
 </html>
