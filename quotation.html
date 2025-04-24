@@ -9,6 +9,14 @@
       font-family: Calibri;
       padding: 20px;
     }
+     .invoice-container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
      .header-line {
     border-bottom: 2px solid black;
     padding-bottom: 10px;
@@ -98,7 +106,7 @@
   </style>
 </head>
 <body>
-
+<div class="invoice-container">
   <h1 id="project-name"></h1>
  
   <div class="label-row">
@@ -124,6 +132,7 @@
   <div class="label-row">
   <span style="margin-bottom: 20px;">Subtotal Equipments</span>
   <span>: <span id="total-cost-orders"></span></span>
+</div>
 </div>
 
   <!-- Tabel Guard and Others -->
