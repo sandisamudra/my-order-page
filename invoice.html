@@ -80,7 +80,7 @@
       </tbody>
     </table>
 
-    <div class="info-line" id="termin-line"></div>
+    <div class="info-line"></div>
     <div class="grand-total" id="grand-total"></div>
     <div class="note" id="grand-total-text"></div>
   </div>
@@ -147,7 +147,6 @@
     document.getElementById("desc").innerText = desc;
     document.getElementById("amount").innerText = formattedAmount;
 
-    document.getElementById("termin-line").innerText = `${termin} ${terminPercentage} = ${formattedSubtotal}`;
     document.getElementById("grand-total").innerText = `Grand Total = ${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note: ${textAmount} rupiahs`;
   </script>
