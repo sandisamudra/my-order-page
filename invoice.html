@@ -49,6 +49,7 @@
 
     .grand-total {
       font-weight: bold;
+      text-align: right;
     }
 
     @media (max-width: 600px) {
@@ -140,7 +141,7 @@
 
     const formattedAmount = formatCurrency(amount);
     const formattedSubtotal = formatCurrency(subtotalAmount);
-    const textAmount = numberToWords(parseInt(subtotalAmount)).toUpperCase();
+    const textAmount = numberToWords(parseInt(subtotalAmount)).toLowerCase();
 
     document.getElementById("termin").innerText = termin;
     document.getElementById("desc").innerText = desc;
