@@ -120,7 +120,7 @@
     <button onclick="window.print()">Print</button>
   </div>
   <div id="saved-signature"></div>
-  <p id="username"></p>
+  <p style="font-weight: normal, font-size: 20px;"did="username"></p>
   <p style="margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
   </div>
 
@@ -131,6 +131,7 @@
     const amount = urlParams.get("amount") || "0";
     const terminPercentage = urlParams.get("terminPercentage") || "";
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
+    const username = urlParams.get("username") || "";
 
     function formatCurrency(value) {
       const num = parseFloat(value);
@@ -183,6 +184,7 @@
     const textAmount = numberToWords(parseInt(subtotalAmount)).toLowerCase();
 
     document.getElementById("termin").innerText = termin;
+    document.getElementById("username").innerText = username;
     document.getElementById("desc").innerText = desc;
     document.getElementById("amount").innerText = formattedAmount;
 
