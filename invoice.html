@@ -51,6 +51,9 @@
       font-weight: bold;
       text-align: right;
     }
+    .termin, .termin-line {
+      text-align: right;
+    }
 
     @media (max-width: 600px) {
       body {
@@ -149,7 +152,7 @@
 
     document.getElementById("termin-line").innerText = `${termin} ${terminPercentage} = ${formattedSubtotal}`;
     document.getElementById("grand-total").innerText = `Grand Total = ${formattedSubtotal}`;
-    document.getElementById("grand-total-text").innerText = `Note: ${textAmount} Rupiahs`;
+    document.getElementById("grand-total-text").innerText = `Note: ${textAmount} rupiahs`;
   </script>
 </body>
 </html>
