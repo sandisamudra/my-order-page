@@ -27,7 +27,7 @@
   }
 
     h1 {
-      text-align: center;
+      text-align: left;
       margin-bottom: 50px;
     }
 
@@ -115,7 +115,7 @@
 </head>
 <body>
   <div class="invoice-container">
-    <h1>INVOICE</h1>
+    <h1>INVOICE</h1> <strong id="logo-container" style="text-align: left; margin-bottom: 20px;"></strong>
   <div class="label-row">
   <span>Submitted To</span>
   <span>: <span id="client-name"></span></span>
@@ -152,7 +152,7 @@
     <span>: <span id="grand-total"></span></span>
     </div>
   
-    <div style="font-size: 16px; font-style: italic;" class="note" id="grand-total-text"></div>
+    <div style="font-size: 12px; font-style: italic;" class="note" id="grand-total-text"></div>
 
 
   <p style="margin-top: 30px; font-weight: normal; font-size: 15px;">Regards,</p>
@@ -178,6 +178,10 @@
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";
+    const logoUrl = params.get("logo");
+  if (logoUrl) {
+    document.getElementById("logo-container").innerHTML = `<img src="${logoUrl}" width="120">`;
+  }
 
     function formatCurrency(value) {
       const num = parseFloat(value);
