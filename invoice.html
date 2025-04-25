@@ -191,7 +191,7 @@
     <button onclick="saveSignature()">Save</button>
     <button onclick="window.print()">Print</button>
   </div>
-  <div style="width: 60px;" id="saved-signature"></div>
+  <div id="saved-signature"></div>
   <p style="font-weight: normal, font-size: 20px;"id="username"></p>
   <p style="margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
   </div>
@@ -347,8 +347,8 @@ const textAmount = toTitleCase(textAmountRaw);
     const dataURL = canvas.toDataURL("image/png");
     const img = document.createElement("img");
     img.src = dataURL;
-    img.style.maxWidth = "300px";
-    img.style.marginTop = "10px";
+    img.style.maxWidth = "100px";
+    img.style.marginTop = "0px";
     document.getElementById("saved-signature").innerHTML = "";
     document.getElementById("saved-signature").appendChild(img);
   }
