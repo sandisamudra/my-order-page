@@ -216,7 +216,16 @@
 
     const formattedAmount = formatCurrency(amount);
     const formattedSubtotal = formatCurrency(subtotalAmount);
-    const textAmount = numberToWords(parseInt(subtotalAmount)).toLowerCase();
+
+    function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+  });
+}
+
+const textAmountRaw = numberToWords(parseInt(subtotalAmount));
+const textAmount = toTitleCase(textAmountRaw);
+
 
     document.getElementById("termin").innerText = termin;
     document.getElementById("username").innerText = username;
