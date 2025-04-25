@@ -57,28 +57,6 @@
       background-color: black;
       color: white;
     }
-
-    .signature-pad {
-      border: 1px solid #000;
-      width: 50%;
-      height: 200px;
-      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
-    }
-    .button-group {
-      margin-top: 10px;
-    }
-    .button-group button {
-      margin-right: 10px;
-      padding: 15px 30px;
-      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
-      background-color: #4da6ff; /* biru muda */
-      color: white; /* teks jadi putih */
-      border: none; /* hapus garis tepi default */
-      cursor: pointer; /* ganti kursor saat hover */ 
-    }
-    .button-group button:hover {
-    background-color: #3399ff; /* warna saat hover */
-    }
     .label-row {
     display: flex;
     justify-content: flex-start;
@@ -91,11 +69,6 @@
   text-align: left;
     }
     @media print {
-      #signature-pad, .button-group {
-    display: none !important;
-    height: 0 !important;
-    visibility: hidden;
-      }
       th {
     background-color: black !important;
     -webkit-print-color-adjust: exact; /* untuk Chrome & Safari */
@@ -294,75 +267,6 @@ Object.keys(groupedEquipment).forEach(category => {
       });
       guardTableBody.appendChild(tr);
     });
-
-    // Signature pad
-    const canvas = document.getElementById("signature-pad");
-    const ctx = canvas.getContext("2d");
-    let drawing = false;
-    
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    ctx.lineWidth = 2;
-    ctx.lineJoin = "round";
-    ctx.lineCap = "round";
-    canvas.addEventListener("mousedown", startDraw);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", endDraw);
-    canvas.addEventListener("touchstart", startDraw);
-    canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", endDraw);
-
-    function startDraw(e) {
-      drawing = true;
-      ctx.beginPath();
-      ctx.moveTo(getX(e), getY(e));
-      e.preventDefault();
-    }
-
-    function draw(e) {
-      if (!drawing) return;
-      ctx.lineTo(getX(e), getY(e));
-      ctx.stroke();
-      e.preventDefault();
-    }
-
-    function endDraw(e) {
-      drawing = false;
-      e.preventDefault();
-    }
-
-   function getCanvasRelativePosition(e) {
-  const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-  return {
-    x: clientX - rect.left,
-    y: clientY - rect.top
-  };
-}
-
-function getX(e) {
-  return getCanvasRelativePosition(e).x;
-}
-
-function getY(e) {
-  return getCanvasRelativePosition(e).y;
-}
-
-    function clearSignature() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      document.getElementById("saved-signature").innerHTML = "";
-    }
-
-    function saveSignature() {
-      const dataURL = canvas.toDataURL();
-      const img = document.createElement("img");
-      img.src = dataURL;
-      img.style.maxWidth = "300px";
-      document.getElementById("saved-signature").innerHTML = "";
-      document.getElementById("saved-signature").appendChild(img);
-    }
   </script>
 </body>
 </html>
