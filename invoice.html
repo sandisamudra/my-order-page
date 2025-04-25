@@ -179,11 +179,9 @@
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";
-    const logoUrl = params.get("logo");
-  if (logoUrl) {
-    document.getElementById("logo-container").innerHTML = `<img src="${logoUrl}" width="120">`;
-  }
-
+    const logo = urlparams.get("logo") || "";
+  
+  
     function formatCurrency(value) {
       const num = parseFloat(value);
       return new Intl.NumberFormat("id-ID", {
@@ -250,6 +248,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("invoice-number").innerText = invoiceNumber;
+    document.getElementById("logo-container").innerHTML = `<img src="${logo}" width="120">`;
 
 
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
