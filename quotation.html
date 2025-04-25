@@ -84,6 +84,21 @@
   width: 250px;  /* Atur agar semua label panjangnya sama */
   text-align: left;
     }
+    .quotation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+    .project-info {
+  max-width: 70%;
+}
+
+.logo-header img {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+}
     @media print {
        .button-group {
       display: none !important;
@@ -107,20 +122,19 @@
 </head>
 <body>
 <div class="invoice-container">
-  <h1 id="project-name"></h1>
- 
-  <div class="label-row">
-  <span>Submitted To</span>
-  <span>: <span id="client-name"></span></span>
+
+<div class="quotation-header">
+  <div class="project-info">
+    <h2 id="project-name"></h2>
+    <p><strong>Submitted To</strong><br><span id="client-name"></span></p>
+    <p><strong>Production House/Company</strong><br><span id="production-house"></span></p>
+    <p><strong>Quotation Number</strong><br><span id="quote-number"></span></p>
   </div>
-  <div class="label-row">
-  <span>Production House/Company</span>
-  <span>: <span id="production-house"></span></span>
+  <div class="logo-header">
+    <img src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/S13sj8xtWBiEXkgUeQZc/pub/VPXK7SWcli5VwFmfG0wr.png" alt="wgs logo">
   </div>
-  <div class="label-row">
-  <span>Quotation Number</span>
-  <span>: <span id="quote-number"></span></span>
-  </div>
+</div>
+  
   <div class="header-line"></div>
   <p style="margin-bottom: 0px; margin-top: 20px; font-size: 20px; font-weight: bold;">Equipments</p>
   
