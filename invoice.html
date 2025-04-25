@@ -115,7 +115,6 @@
 </head>
 <body>
   <div class="invoice-container">
-    <div id="logo-container" style="text-align: left; margin-bottom: 20px;"></div>
     <h1>INVOICE</h1> 
   <div class="label-row">
   <span>Submitted To</span>
@@ -178,9 +177,7 @@
     const username = urlParams.get("username") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
-    const invoiceNumber = urlParams.get("invoiceNumber") || "";
-    const logo = urlparams.get("logo") || "";
-  
+    const invoiceNumber = urlParams.get("invoiceNumber") || "";  
   
     function formatCurrency(value) {
       const num = parseFloat(value);
@@ -248,8 +245,6 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("invoice-number").innerText = invoiceNumber;
-    document.getElementById("logo-container").innerHTML = logo;
-
 
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
