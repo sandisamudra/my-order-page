@@ -214,9 +214,10 @@
     const discount = urlParams.get("discount") || "";
     const afterDiscount = urlParams.get("afterDiscount") || "";
     const grandtotal = urlParams.get("grandtotal") || "";
+    const fileName = urlParams.get("fileName") || "";
 
-     if (quoteNumber) {
-    document.title = quoteNumber;
+     if (fileName) {
+    document.title = fileName;
   }    
     function formatCurrency(numberStr) {
     const number = parseFloat(numberStr.replace(/,/g, ""));
@@ -234,6 +235,7 @@
     document.getElementById("after-discount").innerText = formatCurrency(afterDiscount);
     document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
     document.getElementById("username").innerText = user;
+    document.getElementById("file-name").innerText = fileName;
 
     const equipmentSection = document.getElementById("equipment-section");
     const equipmentData = orders.split("||");
