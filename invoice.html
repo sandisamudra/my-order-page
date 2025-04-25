@@ -63,27 +63,38 @@
     height: 0 !important;
     visibility: hidden;
       }
-     .signature-pad {
-      border: 1px solid #000;
-      width: 50%;
-      height: 200px;
-      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
-    }
-    .button-group {
-      margin-top: 10px;
-    }
-    .button-group button {
-      margin-right: 10px;
-      padding: 15px 30px;
-      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
-      background-color: #4da6ff; /* biru muda */
-      color: white; /* teks jadi putih */
-      border: none; /* hapus garis tepi default */
-      cursor: pointer; /* ganti kursor saat hover */ 
-    }
-    .button-group button:hover {
-    background-color: #3399ff; /* warna saat hover */
-    }
+}
+   .signature-pad {
+  border: 2px dashed #ccc;
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  background-color: #fff;
+  margin-top: 10px;
+  touch-action: none;
+}
+
+.button-group {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #0056b3;
+}
   </style>
 </head>
 <body>
@@ -191,74 +202,81 @@
     document.getElementById("grand-total").innerText = `Grand Total = ${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note: ${textAmount} rupiahs`;
 
-     // Signature pad
-    const canvas = document.getElementById("signature-pad");
-    const ctx = canvas.getContext("2d");
-    let drawing = false;
-    
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+ <script>
+  const canvas = document.getElementById("signature-pad");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+
+  function resizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    ctx.scale(ratio, ratio);
     ctx.lineWidth = 2;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    canvas.addEventListener("mousedown", startDraw);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", endDraw);
-    canvas.addEventListener("touchstart", startDraw);
-    canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", endDraw);
+    ctx.strokeStyle = "#000";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
 
-    function startDraw(e) {
-      drawing = true;
-      ctx.beginPath();
-      ctx.moveTo(getX(e), getY(e));
-      e.preventDefault();
-    }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
 
-    function draw(e) {
-      if (!drawing) return;
-      ctx.lineTo(getX(e), getY(e));
-      ctx.stroke();
-      e.preventDefault();
-    }
+  function getXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  }
 
-    function endDraw(e) {
-      drawing = false;
-      e.preventDefault();
-    }
+  function startDraw(e) {
+    drawing = true;
+    const { x, y } = getXY(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    e.preventDefault();
+  }
 
-   function getCanvasRelativePosition(e) {
-  const rect = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  function draw(e) {
+    if (!drawing) return;
+    const { x, y } = getXY(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    e.preventDefault();
+  }
 
-  return {
-    x: clientX - rect.left,
-    y: clientY - rect.top
-  };
-}
+  function endDraw() {
+    drawing = false;
+  }
 
-function getX(e) {
-  return getCanvasRelativePosition(e).x;
-}
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", endDraw);
+  canvas.addEventListener("mouseleave", endDraw);
 
-function getY(e) {
-  return getCanvasRelativePosition(e).y;
-}
+  canvas.addEventListener("touchstart", startDraw);
+  canvas.addEventListener("touchmove", draw);
+  canvas.addEventListener("touchend", endDraw);
 
-    function clearSignature() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      document.getElementById("saved-signature").innerHTML = "";
-    }
+  function clearSignature() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("saved-signature").innerHTML = "";
+  }
 
-    function saveSignature() {
-      const dataURL = canvas.toDataURL();
-      const img = document.createElement("img");
-      img.src = dataURL;
-      img.style.maxWidth = "300px";
-      document.getElementById("saved-signature").innerHTML = "";
-      document.getElementById("saved-signature").appendChild(img);
-    }
+  function saveSignature() {
+    const dataURL = canvas.toDataURL("image/png");
+    const img = document.createElement("img");
+    img.src = dataURL;
+    img.style.maxWidth = "300px";
+    img.style.marginTop = "10px";
+    document.getElementById("saved-signature").innerHTML = "";
+    document.getElementById("saved-signature").appendChild(img);
+  }
+</script>
+
   </script>
 </body>
 </html>
