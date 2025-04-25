@@ -215,6 +215,9 @@
     const afterDiscount = urlParams.get("afterDiscount") || "";
     const grandtotal = urlParams.get("grandtotal") || "";
 
+     if (quoteNumber) {
+    document.title = quoteNumber;
+  }    
     function formatCurrency(numberStr) {
     const number = parseFloat(numberStr.replace(/,/g, ""));
     if (isNaN(number)) return numberStr;
