@@ -76,14 +76,16 @@
     }
     .label-row {
     display: flex;
+    flex-wrap: nowrap;
     justify-content: flex-start;
     font-size: 12px;
     margin: 8px 0;
-    gap: 1%;
+    gap: 4px;
 }
     .label-row span:first-child {
-  width: 150px;  /* Atur agar semua label panjangnya sama */
-  text-align: left;
+    width: 150px;  /* Atur agar semua label panjangnya sama */
+    text-align: left;
+    white-space: nowrap;
     }
     .quotation-header {
   display: flex;
