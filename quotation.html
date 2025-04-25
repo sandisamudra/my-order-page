@@ -57,6 +57,22 @@
       background-color: black;
       color: white;
     }
+
+    .button-group {
+      margin-top: 10px;
+    }
+    .button-group button {
+      margin-right: 10px;
+      padding: 15px 30px;
+      border-radius: 10px; /* ini bikin ujung tombol jadi membulat */
+      background-color: #4da6ff; /* biru muda */
+      color: white; /* teks jadi putih */
+      border: none; /* hapus garis tepi default */
+      cursor: pointer; /* ganti kursor saat hover */ 
+    }
+    .button-group button:hover {
+    background-color: #3399ff; /* warna saat hover */
+    }
     .label-row {
     display: flex;
     justify-content: flex-start;
@@ -69,6 +85,11 @@
   text-align: left;
     }
     @media print {
+      #signature-pad, .button-group {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden;
+      }
       th {
     background-color: black !important;
     -webkit-print-color-adjust: exact; /* untuk Chrome & Safari */
@@ -147,17 +168,11 @@
   <span>: <span id="grand-total"></span></span>
   </div>
 
-  <!-- Signature Pad -->
-  <p style="margin-top: 30px; font-weight: normal; font-size: 15px;">Regards,</p>
-  <canvas id="signature-pad" class="signature-pad"></canvas>
+  <!-- Print Button -->
   <div class="button-group">
-    <button onclick="clearSignature()">Clear</button>
-    <button onclick="saveSignature()">Save</button>
     <button onclick="window.print()">Print</button>
   </div>
-  <div id="saved-signature"></div>
-  <p id="username"></p>
-  <p style="margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
+
 </div>
   <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -267,6 +282,7 @@ Object.keys(groupedEquipment).forEach(category => {
       });
       guardTableBody.appendChild(tr);
     });
+
   </script>
 </body>
 </html>
