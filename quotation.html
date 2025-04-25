@@ -108,6 +108,10 @@
     flex-direction: column;
     align-items: flex-start;
     font-size: 9px;
+    flex-wrap: nowrap;         /* jangan dibungkus ke bawah */
+    white-space: nowrap;       /* jangan putus kalimat */
+    overflow: hidden;
+    text-overflow: ellipsis;   /* kasih "..." kalau kepanjangan */
   }
     .label-row span:first-child {
     width: 180px;  /* Atur agar semua label panjangnya sama */
