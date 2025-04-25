@@ -110,7 +110,18 @@
 <body>
   <div class="invoice-container">
     <h1>INVOICE</h1>
-
+  <div class="label-row">
+  <span>Submitted To</span>
+  <span>: <span id="client-name"></span></span>
+  </div>
+  <div class="label-row">
+  <span>Production House/Company</span>
+  <span>: <span id="production-house"></span></span>
+  </div>
+  <div class="label-row">
+  <span>Invoice Number</span>
+  <span>: <span id="invoice-number"></span></span>
+  </div>
     <table>
       <thead>
         <tr>
@@ -153,6 +164,9 @@
     const terminPercentage = urlParams.get("terminPercentage") || "";
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
     const username = urlParams.get("username") || "";
+    const clientName = urlParams.get("clientName") || "";
+    const productionHouse = urlParams.get("productionHouse") || "";
+    const invoiceNumber = urlParams.get("InvoiceNumber") || "";
 
     function formatCurrency(value) {
       const num = parseFloat(value);
@@ -208,6 +222,10 @@
     document.getElementById("username").innerText = username;
     document.getElementById("desc").innerText = desc;
     document.getElementById("amount").innerText = formattedAmount;
+    document.getElementById("client-name").innerText = clientName;
+    document.getElementById("production-house").innerText = productionHouse;
+    document.getElementById("invoice-number").innerText = invoiceNumber;
+
 
     document.getElementById("grand-total").innerText = `Grand Total = ${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note: ${textAmount} rupiahs`;
