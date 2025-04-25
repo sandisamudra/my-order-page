@@ -125,6 +125,10 @@
   <span>: <span id="production-house"></span></span>
   </div>
   <div class="label-row">
+  <span>Project Name</span>
+  <span>: <span id="project-name"></span></span>
+  </div>
+  <div class="label-row">
   <span>Invoice Number</span>
   <span>: <span id="invoice-number"></span></span>
   </div>
@@ -177,6 +181,7 @@
     const username = urlParams.get("username") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
+    const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
   
     function formatCurrency(value) {
@@ -244,6 +249,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("amount").innerText = formattedAmount;
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
+    document.getElementById("project-name").innerText = projectName;
     document.getElementById("invoice-number").innerText = invoiceNumber;
 
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
