@@ -72,7 +72,7 @@
       text-align: right;
     }
 
-    @media (max-width: 600px) {
+    @media screen (max-width: 600px) {
       body {
         padding: 10px;
       }
@@ -288,7 +288,6 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
 
-  <script>
   const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
   let drawing = false;
