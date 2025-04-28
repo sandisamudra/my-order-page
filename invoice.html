@@ -72,7 +72,7 @@
       text-align: right;
     }
     #signature-placeholder {
-    display: none; /* Sembunyi dulu */
+    display: block; /* Sembunyi dulu */
     width: 200px;
     height: 80px;
     margin-top: 20px;
@@ -369,7 +369,7 @@ const textAmount = toTitleCase(textAmountRaw);
     const dataURL = canvas.toDataURL("image/png");
     const img = document.createElement("img");
     img.src = dataURL;
-    img.style.maxWidth = "200px";
+    img.style.maxWidth = "150px";
     img.style.marginTop = "0px";
     document.getElementById("saved-signature").innerHTML = "";
     document.getElementById("saved-signature").appendChild(img);
