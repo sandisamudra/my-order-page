@@ -213,7 +213,19 @@
   
     <div style="font-size: 12px; font-style: italic;" class="note" id="grand-total-text"></div>
 
-
+  <div class="label-row">
+  <span>Bank Name</span>
+  <span>: <span id="bank-name"></span></span>
+  </div>
+  <div class="label-row">
+  <span>Bank Account Name</span>
+  <span>: <span id="bank-account-name"></span></span>
+  </div>
+  <div class="label-row">
+  <span>Bank Account Number</span>
+  <span>: <span id="bank-account-number"></span></span>
+  </div>
+    
   <p style="margin-top: 30px; font-weight: normal; font-size: 15px;">Regards,</p>
   <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="button-group">
@@ -240,6 +252,9 @@
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
     const fileName = urlParams.get("fileName") || "";
+    const bankName = urlParams.get("bankName") || "";
+    const bankAccountName = urlParams.get("bankAccountName") || "";
+    const bankAccountNumber = urlParams.get("bankAccountNumber") || "";
 
      if (fileName) {
     document.title = fileName;
@@ -312,6 +327,9 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("project-name").innerText = projectName;
     document.getElementById("invoice-number").innerText = invoiceNumber;
+    document.getElementById("bank-name").innerText = bankName;
+    document.getElementById("bank-account-name").innerText = bankAccountName;
+    document.getElementById("bank-account-number").innerText = bankAccountNumber;
 
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
