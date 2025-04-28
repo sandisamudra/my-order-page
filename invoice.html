@@ -83,6 +83,10 @@
       body {
         padding: 10px;
       }
+      h1 {
+        font-size: 15px;
+        font-family: Calibri;
+      }
     }
 @media print {
       #signature-pad, .button-group {
@@ -102,6 +106,10 @@
       max-width: 200px;
       margin-top: 20px;
     }
+  h1 {
+        font-size: 15px;
+        font-family: Calibri;
+      }
   .invoice-container {
       max-width: 900px;
       margin: auto;
@@ -205,15 +213,17 @@
 
 
   <p style="margin-top: 30px; font-weight: normal; font-size: 15px;">Regards,</p>
-  <canvas id="signature-pad" class="signature-pad"></canvas>
+  <canvas id="signature-pad" class="signature-pad">
+  <div id="signature-empty" style="height: 100px; border-bottom: 2px solid #000; margin-top: 20px;">
+    <!-- Ini garis kosong buat tanda tangan manual -->
+  </div>
+  </canvas>
   <div class="button-group">
     <button onclick="clearSignature()">Clear</button>
     <button onclick="saveSignature()">Save</button>
     <button onclick="window.print()">Print</button>
   </div>
-  <div id="saved-signature">
-  <div id="signature-placeholder" style="display:none;"></div>
-  </div>
+  <div id="saved-signature"></div>
   
   <p style="font-weight: normal; font-size: 20px;"id="username"></p>
   <p style="margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
@@ -377,8 +387,17 @@ const textAmount = toTitleCase(textAmountRaw);
     img.src = dataURL;
     img.style.maxWidth = "100px";
     img.style.marginTop = "0px";
-    document.getElementById("saved-signature").innerHTML = "";
-    document.getElementById("saved-signature").appendChild(img);
+
+    // Misal ada variabel isSigned = true kalau sudah tanda tangan
+if (isSigned) {
+  document.getElementById('saved-signature').innerHTML = "";
+  document.getElementById("saved-signature").appendChild(img);
+  document.getElementById('signature-empty').style.display = 'none'; // Hide garis kosong
+} else {
+  document.getElementById('saved-signature').innerHTML = "";
+  document.getElementById('signature-empty').style.display = 'block'; // Tampilkan garis kosong
+}
+
   }
 </script>
 
