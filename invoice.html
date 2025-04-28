@@ -230,6 +230,11 @@
     const productionHouse = urlParams.get("productionHouse") || "";
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
+    const fileName = urlParams.get("fileName") || "";
+
+     if (fileName) {
+    document.title = fileName;
+  }    
   
     function formatCurrency(value) {
       const num = parseFloat(value);
