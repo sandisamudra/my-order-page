@@ -83,6 +83,13 @@
     height: 0 !important;
     visibility: hidden;
       }
+   #signature-placeholder {
+      display: block;
+      height: 80px; /* Tinggi ruang kosong untuk tanda tangan manual */
+      border-bottom: 1px solid #000;
+      margin-top: 20px;
+      width: 200px; /* Bisa diatur sesuai kebutuhan */
+    }
   .invoice-container {
       max-width: 800px;
       margin: auto;
@@ -192,6 +199,7 @@
     <button onclick="window.print()">Print</button>
   </div>
   <div id="saved-signature"></div>
+  <div id="signature-placeholder" style="display:none;"></div>
   <p style="font-weight: normal, font-size: 20px;"id="username"></p>
   <p style="margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
   </div>
@@ -280,6 +288,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
 
+  <script>
   const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
   let drawing = false;
@@ -352,6 +361,8 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("saved-signature").innerHTML = "";
     document.getElementById("saved-signature").appendChild(img);
   }
+</script>
+
 </script>
 </body>
 </html>
