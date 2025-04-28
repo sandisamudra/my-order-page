@@ -388,8 +388,11 @@ const textAmount = toTitleCase(textAmountRaw);
     img.style.maxWidth = "100px";
     img.style.marginTop = "0px";
 
+    document.getElementById('saved-signature').innerHTML = "";
+    document.getElementById("saved-signature").appendChild(img);
     // Misal ada variabel isSigned = true kalau sudah tanda tangan
-if (isSigned) {
+  }
+    if (isSigned) {
   document.getElementById('saved-signature').innerHTML = "";
   document.getElementById("saved-signature").appendChild(img);
   document.getElementById('signature-empty').style.display = 'none'; // Hide garis kosong
@@ -397,8 +400,6 @@ if (isSigned) {
   document.getElementById('saved-signature').innerHTML = "";
   document.getElementById('signature-empty').style.display = 'block'; // Tampilkan garis kosong
 }
-
-  }
 </script>
 
 </script>
