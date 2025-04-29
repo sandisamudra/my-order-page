@@ -68,6 +68,8 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const projectName = urlParams.get("projectName") || "";
+
+    document.getElementById("projectName").innerText = projectName;
   </script>
 
 </body>
