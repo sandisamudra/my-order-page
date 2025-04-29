@@ -61,19 +61,21 @@
     <h2>CONTRACT AGREEMENT</h2>
     <h3>FILM PRODUCTION EQUIPMENT RENT</h3>
     <h3>WITH WORKING TITLE</h3>
-    <h2 style="font-style: italic;">“<span id="projectName">[Project Name]</span>”</h2>
+    <h2 style="font-style: italic;">“<span id="project-name">[Project Name]</span>”</h2>
   </div>
-  </div>
+  
 
   <p>
   Agreement with these terms and conditions constitute an agreement between parties which production in this thing represented by <strong>{productionHouse}</strong> (next called <strong>Tenant Party</strong>) with party <strong>PT. WARNA GLOBAL SURYA</strong> as rental of film production equipment (next called <strong>Rental Party</strong>) for a Film production with working title "<strong>{projectName}</strong>" Film.
-</p>
+  </p>
 
-<p>
+  <p>
   This agreement renting equipment for Film on <strong>{date}</strong> with Quotation Number <strong>{quoteNumber}</strong> and have obtained approval from Tenant Party with production cost <strong>{grandTotal}</strong> <em>{grandTotalText}</em> gross for <strong>{totalDays}</strong> shooting days, and if the use of those equipment exceeds <strong>{totalDays}</strong> days, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
-</p>
-
+  </p>
+  </div>
+  
   <!-- Konten selanjutnya akan ditambahkan di sini -->
+  
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const projectName = urlParams.get("projectName") || "";
@@ -129,13 +131,13 @@
 const textAmountRaw = numberToWords(parseInt(grandTotal));
 const textAmount = toTitleCase(textAmountRaw);
 
-    document.getElementById("projectName").innerText = projectName;
-    document.getElementById("productionHouse").innerText = productionHouse;
-    document.getElementById("date").innerText = date;
-    document.getElementById("quoteNumber").innerText = quoteNumber;
-    document.getElementById("grandTotal").innerText = grandTotal;
-    document.getElementById("totalDays").innerText = totalDays;
-    document.getElementById("grandTotalText").innerText = `${textAmount}`;
+    document.getElementById("project-name").innerText = projectName;
+    document.getElementById("production-house").innerText = productionHouse;
+    document.getElementById("shoot-date").innerText = date;
+    document.getElementById("quote-number").innerText = quoteNumber;
+    document.getElementById("grand-total").innerText = grandTotal;
+    document.getElementById("total-days").innerText = totalDays;
+    document.getElementById("grand-total-text").innerText = `${textAmount}`;
   </script>
 
 </body>
