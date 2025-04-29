@@ -83,12 +83,59 @@
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
 
+    function numberToWords(num) {
+      const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+      const belasan = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", 
+                       "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const puluhan = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+      const ribuan = ["", "Thousand", "Million", "Billion"];
+
+      if (isNaN(num)) return "";
+
+      let str = "";
+      let i = 0;
+      while (num > 0) {
+        let s = "";
+        let n = num % 1000;
+        if (n >= 100) {
+          s += angka[Math.floor(n / 100)] + " Hundred ";
+          n %= 100;
+        }
+        if (n >= 10 && n <= 19) {
+          s += belasan[n - 10] + " ";
+        } else {
+          if (n >= 20) {
+            s += puluhan[Math.floor(n / 10)] + " ";
+          }
+          if (n % 10 > 0) {
+            s += angka[n % 10] + " ";
+          }
+        }
+        if (s) {
+          str = s + ribuan[i] + " " + str;
+        }
+        num = Math.floor(num / 1000);
+        i++;
+      }
+      return str.trim();
+    };
+
+    function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+  });
+}
+
+const textAmountRaw = numberToWords(parseInt(grandTotal));
+const textAmount = toTitleCase(textAmountRaw);
+
     document.getElementById("projectName").innerText = projectName;
     document.getElementById("productionHouse").innerText = productionHouse;
     document.getElementById("date").innerText = date;
     document.getElementById("quoteNumber").innerText = quoteNumber;
     document.getElementById("grandTotal").innerText = grandTotal;
     document.getElementById("totalDays").innerText = totalDays;
+    document.getElementById("grandTotalText").innerText = `${textAmount}`;
   </script>
 
 </body>
