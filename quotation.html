@@ -263,6 +263,10 @@
   <span>Discount for Equipments</span>
   <span>: <span id="discount"></span></span>
   </div>
+  <div class="label-row">
+  <span>Additional Discount</span>
+  <span>: <span id="discount-cash"></span></span>
+  </div>
 
    <!-- After Discount -->
   <div class="label-row">
@@ -302,6 +306,7 @@
     const afterDiscount = urlParams.get("afterDiscount") || "";
     const grandtotal = urlParams.get("grandtotal") || "";
     const fileName = urlParams.get("fileName") || "";
+    const discountCash = urlParams.get("discountCash") || "";
 
      if (fileName) {
     document.title = fileName;
@@ -321,6 +326,7 @@
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
     document.getElementById("discount").innerText = discount + "%";
+    document.getElementById("discount-cash").innerText = discountCash + "IDR";
     document.getElementById("after-discount").innerText = formatCurrency(afterDiscount);
     document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
 
