@@ -326,7 +326,7 @@
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
     document.getElementById("discount").innerText = discount + "%";
-    document.getElementById("discount-cash").innerText = discountCash + "IDR";
+    document.getElementById("discount-cash").innerText = formatCurrency(discountCash);
     document.getElementById("after-discount").innerText = formatCurrency(afterDiscount);
     document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
 
