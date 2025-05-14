@@ -97,7 +97,7 @@
   Production cost are divided into <stong><span id="totalTermin">[Total Termin]</span></stong> termin, which include : 
   </p>
 
-   
+  <div id="terminContainer"></div>
   </div>
   
   <!-- Konten selanjutnya akan ditambahkan di sini -->
@@ -159,6 +159,7 @@
     function formatRupiah(angka) {
   return 'Rp' + parseInt(angka).toLocaleString('id-ID');
 }
+    const container = document.getElementById("terminContainer");
     for (let i = 1; i <= totalTermin; i++) {
       const percent = params.get(`termin${i}`) || "-";
       const amount = params.get(`total${i}`) || "-";
