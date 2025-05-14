@@ -51,6 +51,26 @@
     .section {
       margin-bottom: 30px;
     }
+    .termin {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+    }
+    .termin-title {
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .amount {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .due-date {
+      font-size: 14px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -72,6 +92,12 @@
   <p>
   This agreement renting equipment for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text</em>“ gross for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipment exceeds <strong class="total-days">[Shooting Days]</strong>, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
   </p>
+
+  <p>
+  Production cost are divided into <stong><span id="totalTermin">[Total Termin]</span></stong> termin, which include : 
+  </p>
+
+   
   </div>
   
   <!-- Konten selanjutnya akan ditambahkan di sini -->
@@ -84,6 +110,9 @@
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
+    const totalTermin = Math.min(parseInt(params.get("totalTermin") || "0"), 5);
+    const container = document.getElementById("container");
+    
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -130,6 +159,20 @@
     function formatRupiah(angka) {
   return 'Rp' + parseInt(angka).toLocaleString('id-ID');
 }
+    for (let i = 1; i <= totalTermin; i++) {
+      const percent = params.get(`termin${i}`) || "-";
+      const amount = params.get(`total${i}`) || "-";
+      const terminDate = params.get(`terminDate${i}`) || "-";
+
+      const terminDiv = document.createElement("div");
+      terminDiv.className = "termin";
+      terminDiv.innerHTML = `
+        <div class="termin-title">Termin ${i} (${percent})</div>
+        <div class="amount">${amount}</div>
+        <div class="due-date">Payment due date on ${terminDate}</div>
+      `;
+      container.appendChild(terminDiv);
+    }
 
 const textAmountRaw = numberToWords(parseInt(grandTotal));
 const textAmount = toTitleCase(textAmountRaw);
@@ -141,6 +184,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("grand-total").innerText = formatRupiah(grandTotal);
     document.querySelectorAll(".total-days").forEach(el => el.innerText = totalDays);
     document.getElementById("grand-total-text").innerText = `${textAmount}`;
+    document.getElementById("totalTerm").textContent = totalTerm;
   </script>
 
 </body>
