@@ -96,7 +96,16 @@
   <p>
   Production cost are divided into <strong><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
-
+  <p>
+  Termin 1 <strong><span id="termin-1">[Termin 1]</span></strong> = <strong><span id="total-1">[Total 1]</span></strong>
+  </p>
+  <p>
+  Termin 2 <strong><span id="termin-2">[Termin 2]</span></strong> = <strong><span id="total-2">[Total 2]</span></stron
+  </p>
+  <p>
+  Termin 3 <strong><span id="termin-3">[Termin 3]</span></strong> = <strong><span id="total-3">[Total 3]</span></stron
+  </p>
+    
   </div>
   
   <!-- Konten selanjutnya akan ditambahkan di sini -->
@@ -109,7 +118,13 @@
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
-    const totalTerm = Math.min(parseInt((urlParams.get("totalTerm") || "0").match(/\d+/)?.[0] || "0"), 5);
+    const totalTerm = urlParams.get("totalTerm") || "";
+    const termin1 = urlParams.get("termin1") || "";
+    const termin2 = urlParams.get("termin2") || "";
+    const termin3 = urlParams.get("termin3") || "";
+    const total1 = urlParams.get("total1") || "";
+    const total2 = urlParams.get("total2") || "";
+    const total3 = urlParams.get("total3") || "";
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -156,21 +171,7 @@
     function formatRupiah(angka) {
   return 'Rp' + parseInt(angka).toLocaleString('id-ID');
 }
-    for (let i = 1; i <= totalTerm; i++) {
-      const percent = urlparams.get(`termin${i}`) || "-";
-      const amount = urlparams.get(`total${i}`) || "-";
-      const terminDate = urlparams.get(`terminDate${i}`) || "-";
-
-      const terminDiv = document.createElement("div");
-      terminDiv.className = "termin";
-      terminDiv.innerHTML = `
-        <div class="termin-title">Termin ${i} (${percent})</div>
-        <div class="amount">${formatRupiah(amount)}</div>
-        <div class="due-date">Payment due date on ${terminDate}</div>
-      `;
-      container.appendChild(terminDiv);
-    }
-
+   
 const textAmountRaw = numberToWords(parseInt(grandTotal));
 const textAmount = toTitleCase(textAmountRaw);
 
@@ -182,6 +183,12 @@ const textAmount = toTitleCase(textAmountRaw);
     document.querySelectorAll(".total-days").forEach(el => el.innerText = totalDays);
     document.getElementById("grand-total-text").innerText = `${textAmount}`;
     document.getElementById("total-termin").textContent = totalTerm;
+    document.getElementById("termin-1").textContent = termin1;
+    document.getElementById("termin-2").textContent = termin2;
+    document.getElementById("termin-3").textContent = termin3;
+    document.getElementById("total-1").textContent = total1;
+    document.getElementById("total-2").textContent = total2;
+    document.getElementById("total-3").textContent = total3;
   </script>
 
 </body>
