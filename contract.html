@@ -97,7 +97,6 @@
   Production cost are divided into <strong><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
 
-  <div id="terminContainer"></div>
   </div>
   
   <!-- Konten selanjutnya akan ditambahkan di sini -->
@@ -111,7 +110,6 @@
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
     const totalTerm = Math.min(parseInt((urlParams.get("totalTerm") || "0").match(/\d+/)?.[0] || "0"), 5);
-    const container = document.getElementById("terminContainer");
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
