@@ -160,7 +160,7 @@
   return 'Rp' + parseInt(angka).toLocaleString('id-ID');
 }
     const container = document.getElementById("terminContainer");
-    for (let i = 1; i <= totalTermin; i++) {
+    for (let i = 1; i <= totalTerm; i++) {
       const percent = params.get(`termin${i}`) || "-";
       const amount = params.get(`total${i}`) || "-";
       const terminDate = params.get(`terminDate${i}`) || "-";
