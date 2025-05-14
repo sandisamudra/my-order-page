@@ -110,7 +110,8 @@
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
-    const totalTerm = Math.min(parseInt(params.get("totalTerm") || "0"), 5);   
+    const totalTerm = Math.min(parseInt(urlParams.get("totalTerm") || "0"), 5);
+    const container = document.getElementById("container");
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -157,7 +158,6 @@
     function formatRupiah(angka) {
   return 'Rp' + parseInt(angka).toLocaleString('id-ID');
 }
-    const container = document.getElementById("terminContainer");
     for (let i = 1; i <= totalTerm; i++) {
       const percent = params.get(`termin${i}`) || "-";
       const amount = params.get(`total${i}`) || "-";
