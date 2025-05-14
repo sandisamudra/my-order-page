@@ -110,9 +110,7 @@
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
-    const totalTerm = Math.min(parseInt(params.get("totalTerm") || "0"), 5);
-    const container = document.getElementById("container");
-    
+    const totalTerm = Math.min(parseInt(params.get("totalTerm") || "0"), 5);   
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
