@@ -90,11 +90,11 @@
   </p>
 
   <p>
-  This agreement renting equipment for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text</em>“ gross for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipment exceeds <strong class="total-days">[Shooting Days]</strong>, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
+  This agreement renting equipment for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ gross for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipment exceeds <strong class="total-days">[Shooting Days]</strong>, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
   </p>
 
   <p>
-  Production cost are divided into <stong><span id="total-termin">[Total Termin]</span></stong> termin, which include : 
+  Production cost are divided into <strong><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
 
   <div id="terminContainer"></div>
@@ -110,8 +110,8 @@
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const grandTotal = urlParams.get("grandTotal") || "0";
     const totalDays = urlParams.get("totalDays") || "";
-    const totalTerm = Math.min(parseInt(urlParams.get("totalTerm") || "0"), 5);
-    const container = document.getElementById("container");
+    const totalTerm = Math.min(parseInt((urlParams.get("totalTerm") || "0").match(/\d+/)?.[0] || "0"), 5);
+    const container = document.getElementById("terminContainer");
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -159,15 +159,15 @@
   return 'Rp' + parseInt(angka).toLocaleString('id-ID');
 }
     for (let i = 1; i <= totalTerm; i++) {
-      const percent = params.get(`termin${i}`) || "-";
-      const amount = params.get(`total${i}`) || "-";
-      const terminDate = params.get(`terminDate${i}`) || "-";
+      const percent = urlparams.get(`termin${i}`) || "-";
+      const amount = urlparams.get(`total${i}`) || "-";
+      const terminDate = urlparams.get(`terminDate${i}`) || "-";
 
       const terminDiv = document.createElement("div");
       terminDiv.className = "termin";
       terminDiv.innerHTML = `
         <div class="termin-title">Termin ${i} (${percent})</div>
-        <div class="amount">${amount}</div>
+        <div class="amount">${formatRupiah(amount)}</div>
         <div class="due-date">Payment due date on ${terminDate}</div>
       `;
       container.appendChild(terminDiv);
