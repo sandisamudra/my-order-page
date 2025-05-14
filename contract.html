@@ -194,16 +194,16 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("grand-total").innerText = formatRupiah(grandTotal);
     document.querySelectorAll(".total-days").forEach(el => el.innerText = totalDays);
     document.getElementById("grand-total-text").innerText = `${textAmount}`;
-    document.getElementById("total-termin").textContent = totalTerm;
-    document.getElementById("termin-1").textContent = termin1;
-    document.getElementById("termin-2").textContent = termin2;
-    document.getElementById("termin-3").textContent = termin3;
-    document.getElementById("total-1").textContent = total1;
-    document.getElementById("total-2").textContent = total2;
-    document.getElementById("total-3").textContent = total3;
-    document.getElementById("termin-date-1").textContent = terminDate1;
-    document.getElementById("termin-date-2").textContent = terminDate2;
-    document.getElementById("termin-date-3").textContent = terminDate3;
+    document.getElementById("total-termin").innerText = totalTerm;
+    document.getElementById("termin-1").innerText = termin1 + "%";
+    document.getElementById("termin-2").innerText = termin2 + "%";
+    document.getElementById("termin-3").innerText = termin3 + "%";
+    document.getElementById("total-1").innerText = formatRupiah(total1);
+    document.getElementById("total-2").innerText = formatRupiah(total2);
+    document.getElementById("total-3").innerText = formatRupiah(total3);
+    document.getElementById("termin-date-1").innerText = terminDate1;
+    document.getElementById("termin-date-2").innerText = terminDate2;
+    document.getElementById("termin-date-3").innerText = terminDate3;
   </script>
 
 </body>
