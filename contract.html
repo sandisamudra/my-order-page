@@ -100,10 +100,19 @@
   Termin 1 <strong><span id="termin-1">[Termin 1]</span></strong> = <strong><span id="total-1">[Total 1]</span></strong>
   </p>
   <p>
+  Payment due date on <strong style="margin-top: 0px;"><span id="termin-date-1">[Termin Date 1]</span></strong>
+  </p>
+  <p>
   Termin 2 <strong><span id="termin-2">[Termin 2]</span></strong> = <strong><span id="total-2">[Total 2]</span></stron
   </p>
   <p>
+  Payment due date on <strong style="margin-top: 0px;"><span id="termin-date-2">[Termin Date 2]</span></strong>
+  </p>
+  <p>
   Termin 3 <strong><span id="termin-3">[Termin 3]</span></strong> = <strong><span id="total-3">[Total 3]</span></stron
+  </p>
+  <p>
+  Payment due date on <strong style="margin-top: 0px;"><span id="termin-date-3">[Termin Date 3]</span></strong>
   </p>
     
   </div>
@@ -125,6 +134,9 @@
     const total1 = urlParams.get("total1") || "";
     const total2 = urlParams.get("total2") || "";
     const total3 = urlParams.get("total3") || "";
+    const terminDate1 = urlParams.get("terminDate1") || "";
+    const terminDate2 = urlParams.get("terminDate2") || "";
+    const terminDate3 = urlParams.get("terminDate3") || "";
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -189,6 +201,9 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("total-1").textContent = total1;
     document.getElementById("total-2").textContent = total2;
     document.getElementById("total-3").textContent = total3;
+    document.getElementById("termin-date-1").textContent = terminDate1;
+    document.getElementById("termin-date-2").textContent = terminDate2;
+    document.getElementById("termin-date-3").textContent = terminDate3;
   </script>
 
 </body>
