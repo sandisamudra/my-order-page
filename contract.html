@@ -90,7 +90,7 @@
   </p>
 
   <p>
-  This agreement renting equipment for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ gross for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipment exceeds <strong class="total-days">[Shooting Days]</strong>, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
+  This agreement renting equipment for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ gross for <strong id="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipment exceeds shooting day, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
   </p>
 
   <p>
@@ -192,7 +192,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("shoot-date").innerText = date;
     document.getElementById("quote-number").innerText = quoteNumber;
     document.getElementById("grand-total").innerText = formatRupiah(grandTotal);
-    document.querySelectorAll(".total-days").forEach(el => el.innerText = totalDays);
+    document.getElementById("total-days").innerText = totalDays;
     document.getElementById("grand-total-text").innerText = `${textAmount}`;
     document.getElementById("total-termin").innerText = totalTerm;
     document.getElementById("termin-1").innerText = termin1 + "%";
