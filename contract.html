@@ -51,6 +51,18 @@
     .section {
       margin-bottom: 30px;
     }
+     .label-row {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 14px;
+    margin: 8px 0;
+    gap: 1%;
+    }
+    .label-row span:first-child {
+    width: 200px;  /* Atur agar semua label panjangnya sama */
+    text-align: left;
+    }
+
   </style>
 </head>
 <body>
@@ -90,6 +102,26 @@
   Payment above transfer to : 
   </p>
 
+  <div class="label-row">
+  <span>Bank Name</span>
+  <span>: <span id="bank-name"></span></span>
+  </div> 
+
+  <div class="label-row">
+  <span>Account Name</span>
+  <span>: <span id="account-name"></span></span>
+  </div> 
+
+  <div class="label-row">
+  <span>Account Number</span>
+  <span>: <span id="account-number"></span></span>
+  </div> 
+
+  <div class="label-row">
+  <span>NPWP</span>
+  <span>: <span id="np-wp"></span></span>
+  </div> 
+    
   <p>
   Both parties agreed that everything which related tax costs government that arose from transaction rent of this equipment becomes both parties responsibility that appropriate with provision and legal regulations which happen in the Republic of Indonesia.
   </p>
@@ -114,23 +146,27 @@
 
   
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const projectName = urlParams.get("projectName") || "";
+    const urlParams       = new URLSearchParams(window.location.search);
+    const projectName     = urlParams.get("projectName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
-    const date = urlParams.get("date") || "";
-    const quoteNumber = urlParams.get("quoteNumber") || "";
-    const grandTotal = urlParams.get("grandTotal") || "0";
-    const totalDays = urlParams.get("totalDays") || "";
-    const totalTerm = urlParams.get("totalTerm") || "";
-    const termin1 = urlParams.get("termin1") || "";
-    const termin2 = urlParams.get("termin2") || "";
-    const termin3 = urlParams.get("termin3") || "";
-    const total1 = urlParams.get("total1") || "";
-    const total2 = urlParams.get("total2") || "";
-    const total3 = urlParams.get("total3") || "";
-    const terminDate1 = urlParams.get("terminDate1") || "";
-    const terminDate2 = urlParams.get("terminDate2") || "";
-    const terminDate3 = urlParams.get("terminDate3") || "";
+    const date            = urlParams.get("date") || "";
+    const quoteNumber     = urlParams.get("quoteNumber") || "";
+    const grandTotal      = urlParams.get("grandTotal") || "0";
+    const totalDays       = urlParams.get("totalDays") || "";
+    const totalTerm       = urlParams.get("totalTerm") || "";
+    const termin1         = urlParams.get("termin1") || "";
+    const termin2         = urlParams.get("termin2") || "";
+    const termin3         = urlParams.get("termin3") || "";
+    const total1          = urlParams.get("total1") || "";
+    const total2          = urlParams.get("total2") || "";
+    const total3          = urlParams.get("total3") || "";
+    const terminDate1     = urlParams.get("terminDate1") || "";
+    const terminDate2     = urlParams.get("terminDate2") || "";
+    const terminDate3     = urlParams.get("terminDate3") || "";
+    const bankName        = urlParams.get("bankName") || "";
+    const accountName     = urlParams.get("accountName") || "";
+    const accountNumber   = urlParams.get("accountNumber") || "";
+    const npwp            = urlParams.get("npwp") || "";
 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -182,22 +218,26 @@ const textAmountRaw = numberToWords(parseInt(grandTotal));
 const textAmount = toTitleCase(textAmountRaw);
 
     document.querySelectorAll(".project-name").forEach(el => el.innerText = projectName);
-    document.getElementById("production-house").innerText = productionHouse;
-    document.getElementById("shoot-date").innerText = date;
-    document.getElementById("quote-number").innerText = quoteNumber;
-    document.getElementById("grand-total").innerText = formatRupiah(grandTotal);
-    document.querySelectorAll(".total-days").forEach(el => el.innerText = totalDays);
-    document.getElementById("grand-total-text").innerText = `${textAmount}`;
-    document.getElementById("total-termin").innerText = totalTerm;
-    document.getElementById("termin-1").innerText = termin1 + "%";
-    document.getElementById("termin-2").innerText = termin2 + "%";
-    document.getElementById("termin-3").innerText = termin3 + "%";
-    document.getElementById("total-1").innerText = formatRupiah(total1);
-    document.getElementById("total-2").innerText = formatRupiah(total2);
-    document.getElementById("total-3").innerText = formatRupiah(total3);
-    document.getElementById("termin-date-1").innerText = terminDate1;
-    document.getElementById("termin-date-2").innerText = terminDate2;
-    document.getElementById("termin-date-3").innerText = terminDate3;
+    document.getElementById("production-house").innerText                 = productionHouse;
+    document.getElementById("shoot-date").innerText                       = date;
+    document.getElementById("quote-number").innerText                     = quoteNumber;
+    document.getElementById("grand-total").innerText                      = formatRupiah(grandTotal);
+    document.querySelectorAll(".total-days").forEach(el => el.innerText   = totalDays);
+    document.getElementById("grand-total-text").innerText                 = `${textAmount}`;
+    document.getElementById("total-termin").innerText                     = totalTerm;
+    document.getElementById("termin-1").innerText                         = termin1 + "%";
+    document.getElementById("termin-2").innerText                         = termin2 + "%";
+    document.getElementById("termin-3").innerText                         = termin3 + "%";
+    document.getElementById("total-1").innerText                          = formatRupiah(total1);
+    document.getElementById("total-2").innerText                          = formatRupiah(total2);
+    document.getElementById("total-3").innerText                          = formatRupiah(total3);
+    document.getElementById("termin-date-1").innerText                    = terminDate1;
+    document.getElementById("termin-date-2").innerText                    = terminDate2;
+    document.getElementById("termin-date-3").innerText                    = terminDate3;
+    document.getElementById("bank-name").innerText                        = bankName;
+    document.getElementById("account-name").innerText                     = accountName;
+    document.getElementById("account-number").innerText                   = accountNumber;
+    document.getElementById("np-wp").innerText                            = npwp;
   </script>
 
 </body>
