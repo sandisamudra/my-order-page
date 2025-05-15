@@ -186,7 +186,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("shoot-date").innerText = date;
     document.getElementById("quote-number").innerText = quoteNumber;
     document.getElementById("grand-total").innerText = formatRupiah(grandTotal);
-    document.getElementById("total-days").innerText = totalDays;
+    document.querySelectorAll(".total-days").forEach(el => el.innerText = totalDays);
     document.getElementById("grand-total-text").innerText = `${textAmount}`;
     document.getElementById("total-termin").innerText = totalTerm;
     document.getElementById("termin-1").innerText = termin1 + "%";
