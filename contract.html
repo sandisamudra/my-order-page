@@ -63,6 +63,18 @@
     width: 150px;  /* Atur agar semua label panjangnya sama */
     text-align: left;
     }
+     .label-termin {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 8px 0;
+    gap: 1%;
+    }
+    .label-termin span:first-child {
+    width: 150px;  /* Atur agar semua label panjangnya sama */
+    text-align: left;
+    }
     .label-paragraf1 {
     display: flex;
     justify-content: flex-start;
@@ -113,17 +125,18 @@
   <p>
   Production cost are divided into <strong style="font-weight: normal;"><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
-  
-  <p>
-  Termin 2 (<strong style="font-weight: normal;"><span id="termin-2">[Termin 2]</span></strong>) = <strong><span id="total-2">[Total 2]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-2">[Termin Date 2]</span></strong> )
-  </p>
-  <p>
-  Termin 3 (<strong style="font-weight: normal;"><span id="termin-3">[Termin 3]</span></strong>) = <strong><span id="total-3">[Total 3]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-3">[Termin Date 3]</span></strong> )
-  </p>
 
-  <div class="label-row">
+  <div class="label-termin">
   <span>Termin 1 (<strong style="font-weight: normal;"><span id="termin-1">[Termin 1]</span></strong>)</span>
   <span>: <span><strong><span id="total-1">[Total 1]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-1">[Termin Date 1]</span></strong> )</span></span>
+  </div> 
+  <div class="label-termin">
+  <span>Termin 2 (<strong style="font-weight: normal;"><span id="termin-2">[Termin 2]</span></strong>)</span>
+  <span>: <span><strong><span id="total-2">[Total 2]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-2">[Termin Date 2]</span></strong> )</span></span>
+  </div> 
+  <div class="label-termin">
+  <span>Termin 3 (<strong style="font-weight: normal;"><span id="termin-3">[Termin 3]</span></strong>)</span>
+  <span>: <span><strong><span id="total-3">[Total 3]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-3">[Termin Date 3]</span></strong> )</span></span>
   </div> 
 
   <p>
