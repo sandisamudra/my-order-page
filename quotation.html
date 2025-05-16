@@ -91,6 +91,21 @@
     text-align: left;
     white-space: nowrap;
     }
+    .label-rowsub {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0;
+    gap: 4px;
+    font-family: Nunito, sans-serif;
+}
+    .label-rowsub span:first-child {
+    width: 250px;  /* Atur agar semua label panjangnya sama */
+    text-align: left;
+    white-space: nowrap;
+    }
     .quotation-header {
   display: flex;
   justify-content: space-between;
@@ -135,6 +150,21 @@
     text-align: left;
     white-space: nowrap;
     }
+    .label-rowsub {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0;
+    gap: 4px;
+    font-family: Nunito, sans-serif;
+}
+    .label-rowsub span:first-child {
+    width: 250px;  /* Atur agar semua label panjangnya sama */
+    text-align: left;
+    white-space: nowrap;
+    }
     .logo-header img {
        max-width: 80px;
     margin-top: 10px;
@@ -176,6 +206,21 @@
 }
     .label-row span:first-child {
     width: 150px;  /* Atur agar semua label panjangnya sama */
+    text-align: left;
+    white-space: nowrap;
+    }
+      .label-rowsub {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 8px 0;
+    gap: 4px;
+    font-family: Nunito, sans-serif;
+}
+    .label-rowsub span:first-child {
+    width: 250px;  /* Atur agar semua label panjangnya sama */
     text-align: left;
     white-space: nowrap;
     }
@@ -235,7 +280,7 @@
   <div id="equipment-section"></div>
 
   <!-- Total Cost Equipments -->
-  <div class="label-row">
+  <div class="label-rowsub">
   <span style="margin-bottom: 20px;">Subtotal Equipments</span>
   <span>: <span id="total-cost-orders"></span></span>
 </div>
@@ -257,29 +302,29 @@
   </table>
 
   <!-- Total Cost Guard and Others -->
-  <div class="label-row">
+  <div class="label-rowsub">
   <span>Subtotal Guard and Others</span>
   <span>: <span id="total-cost-go"></span></span>
   </div>
 
   <!-- Discount -->
-  <div class="label-row">
+  <div class="label-rowsub">
   <span>Discount for Equipments</span>
   <span>: <span id="discount"></span></span>
   </div>
-  <div class="label-row">
+  <div class="label-rowsub">
   <span>Additional Discount</span>
   <span>: <span id="discount-cash"></span></span>
   </div>
 
    <!-- After Discount -->
-  <div class="label-row">
+  <div class="label-rowsub">
   <span>Equipments after Discount</span>
   <span>: <span id="after-discount"></span></span>
   </div>
 
   <!-- Grand Total -->
-  <div class="label-row">
+  <div class="label-rowsub">
   <span>Grand Total</span>
   <span>: <span id="grand-total"></span></span>
   </div>
