@@ -235,6 +235,9 @@
   <div class="button-group">
     <button onclick="clearSignature()">Clear</button>
     <button onclick="saveSignature()">Save</button>
+    <input type="file" id="upload-signature" accept="image/*" style="display: none;" onchange="handleUpload(event)">
+    <button onclick="document.getElementById('upload-signature').click()">Upload Signature</button>
+
     <button onclick="window.print()">Print</button>
   </div>
   <div id="saved-signature"></div>
@@ -411,6 +414,22 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById('saved-signature').innerHTML = "";
     document.getElementById("saved-signature").appendChild(img);
     // Misal ada variabel isSigned = true kalau sudah tanda tangan
+  }
+    function handleUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.style.maxWidth = "100px";
+      img.style.marginTop = "0px";
+
+      document.getElementById('saved-signature').innerHTML = "";
+      document.getElementById("saved-signature").appendChild(img);
+    };
+    reader.readAsDataURL(file);
   }
 </script>
 
