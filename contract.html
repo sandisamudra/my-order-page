@@ -297,6 +297,19 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("account-name").innerText                     = accountName;
     document.getElementById("account-number").innerText                   = accountNumber;
     document.getElementById("np-wp").innerText                            = npwp;
+
+    if (!termin2 && !total2 && !terminDate2) {
+  const terminBlock = document.querySelector(".label-termin");
+  if (terminBlock) {
+    terminBlock.style.display = "none";
+  }
+}
+    if (!termin3 && !total3 && !terminDate3) {
+  const terminBlock = document.querySelector(".label-termin");
+  if (terminBlock) {
+    terminBlock.style.display = "none";
+  }
+}
   </script>
 
 </body>
