@@ -298,16 +298,43 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("account-number").innerText                   = accountNumber;
     document.getElementById("np-wp").innerText                            = npwp;
 
-    if (!termin2 && !total2 && !terminDate2) {
+if (!termin2 && !total2 && !terminDate2) {
   const terminBlock = document.querySelector(".label-termin");
   if (terminBlock) {
     terminBlock.style.display = "none";
   }
+} else {
+  // Hanya isi nilai jika parameter ada
+  if (termin2) {
+    document.getElementById("termin-2").innerText = termin2 + "%";
+  }
+
+  if (total2) {
+    document.getElementById("total-2").innerText = formatRupiah(total2);
+  }
+
+  if (terminDate2) {
+    document.getElementById("termin-date-2").innerText = terminDate2;
+  }
 }
+    
     if (!termin3 && !total3 && !terminDate3) {
   const terminBlock = document.querySelector(".label-termin");
   if (terminBlock) {
     terminBlock.style.display = "none";
+  }
+} else {
+  // Hanya isi nilai jika parameter ada
+  if (termin3) {
+    document.getElementById("termin-3").innerText = termin3 + "%";
+  }
+
+  if (total3) {
+    document.getElementById("total-3").innerText = formatRupiah(total3);
+  }
+
+  if (terminDate3) {
+    document.getElementById("termin-date-3").innerText = terminDate3;
   }
 }
   </script>
