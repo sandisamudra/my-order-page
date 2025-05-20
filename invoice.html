@@ -190,6 +190,10 @@
   <span>Invoice Number</span>
   <span>: <span id="invoice-number"></span></span>
   </div>
+  <div class="label-row">
+  <span>Invoice Date</span>
+  <span>: <span id="invoice-date"></span></span>
+  </div>
     <div class="header-line"></div>
     <table>
       <thead>
@@ -262,6 +266,7 @@
     const bankName = urlParams.get("bankName") || "";
     const bankAccountName = urlParams.get("bankAccountName") || "";
     const bankAccountNumber = urlParams.get("bankAccountNumber") || "";
+    const date = urlParams.get("date") || "";
 
      if (fileName) {
     document.title = fileName;
@@ -337,6 +342,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("bank-name").innerText = bankName;
     document.getElementById("bank-account-name").innerText = bankAccountName;
     document.getElementById("bank-account-number").innerText = bankAccountNumber;
+    document.getElementById("invoice-date").innerText = date;
 
     document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
