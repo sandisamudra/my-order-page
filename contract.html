@@ -256,37 +256,33 @@
     const accountName     = urlParams.get("accountName") || "";
     const accountNumber   = urlParams.get("accountNumber") || "";
     const npwp            = urlParams.get("npwp") || "";
+    
+window.onload = function() {
+    function hideIfEmpty(terminNumber) {
+      const terminId = `termin-${terminNumber}`;
+      const totalId = `total-${terminNumber}`;
+      const dateId = `termin-date-${terminNumber}`;
 
-     function hideIfEmpty(idList, parentSelector) {
-    let isEmpty = idList.every(id => {
-      const el = document.getElementById(id);
-      const value = el?.textContent?.trim();
-      return !value || value === "NaN" || value.includes("[") || value === "RpNaN";
-    });
+      const termin = document.getElementById(terminId)?.textContent.trim();
+      const total = document.getElementById(totalId)?.textContent.trim();
+      const date = document.getElementById(dateId)?.textContent.trim();
 
-    if (isEmpty) {
-      const parentDiv = document.querySelector(parentSelector);
-      if (parentDiv) parentDiv.style.display = "none";
+      const isTerminEmpty = !termin || termin.includes("[");
+      const isTotalEmpty = !total || total === "RpNaN" || total.includes("[");
+      const isDateEmpty = !date || date.includes("[") || date === "";
+
+      if (isTerminEmpty && isTotalEmpty && isDateEmpty) {
+        const allTerminDivs = document.querySelectorAll('.label-termin');
+        const index = terminNumber - 1; // karena index dimulai dari 0
+        if (allTerminDivs[index]) {
+          allTerminDivs[index].style.display = "none";
+        }
+      }
     }
-  }
 
-  // Hide Termin 3 if data is empty
-  hideIfEmpty(
-    ["termin-3", "total-3", "termin-date-3"],
-    ".label-termin:nth-of-type(3)"
-  );
-
-  // Opsional: jika kamu ingin juga menyembunyikan Termin 2 jika kosong
-  hideIfEmpty(
-    ["termin-2", "total-2", "termin-date-2"],
-    ".label-termin:nth-of-type(2)"
-  );
-
-  // dan untuk Termin 1 juga
-  hideIfEmpty(
-    ["termin-1", "total-1", "termin-date-1"],
-    ".label-termin:nth-of-type(1)"
-  );
+    // Hanya hide Termin 3 (biarkan Termin 1 dan 2 muncul selama datanya valid)
+    hideIfEmpty(3);
+  };
     
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
