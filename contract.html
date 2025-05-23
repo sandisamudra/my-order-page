@@ -257,6 +257,37 @@
     const accountNumber   = urlParams.get("accountNumber") || "";
     const npwp            = urlParams.get("npwp") || "";
 
+     function hideIfEmpty(idList, parentSelector) {
+    let isEmpty = idList.every(id => {
+      const el = document.getElementById(id);
+      const value = el?.textContent?.trim();
+      return !value || value === "NaN" || value.includes("[") || value === "RpNaN";
+    });
+
+    if (isEmpty) {
+      const parentDiv = document.querySelector(parentSelector);
+      if (parentDiv) parentDiv.style.display = "none";
+    }
+  }
+
+  // Hide Termin 3 if data is empty
+  hideIfEmpty(
+    ["termin-3", "total-3", "termin-date-3"],
+    ".label-termin:nth-of-type(3)"
+  );
+
+  // Opsional: jika kamu ingin juga menyembunyikan Termin 2 jika kosong
+  hideIfEmpty(
+    ["termin-2", "total-2", "termin-date-2"],
+    ".label-termin:nth-of-type(2)"
+  );
+
+  // dan untuk Termin 1 juga
+  hideIfEmpty(
+    ["termin-1", "total-1", "termin-date-1"],
+    ".label-termin:nth-of-type(1)"
+  );
+    
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
       const belasan = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", 
