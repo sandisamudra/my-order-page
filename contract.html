@@ -261,7 +261,7 @@
     let isEmpty = idList.every(id => {
       const el = document.getElementById(id);
       const value = el?.textContent?.trim();
-      return !value || value === "" || value.includes("") || value === "";
+      return !value;
     });
 
     if (isEmpty) {
