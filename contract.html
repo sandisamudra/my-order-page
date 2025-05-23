@@ -266,7 +266,7 @@ function hideIfValid(idList, parentSelector) {
       // - Tidak kosong
       // - Tidak mengandung [
       // - Tidak mengandung NaN
-      return value && !value.includes("[") && value !== "NaN" && value !== "RpNaN";
+      return value && !value.includes("[") && value !== "NaN";
     });
 
     if (isAllValid) {
