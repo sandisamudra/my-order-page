@@ -119,6 +119,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end; /* Semua konten signature ke kanan */
+    justify-content: space-between;
   }
     #signature-pad {
     width: 300px;
@@ -235,6 +236,7 @@
   </p>
   <p style="text-align: right;">Regards,</p>
   <div id="signature-container">
+  <canvas id="signature-pad" class="signature-pad"></canvas>
   <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="button-group">
     <button onclick="clearSignature()">Clear</button>
