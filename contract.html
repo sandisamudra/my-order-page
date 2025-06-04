@@ -248,6 +248,19 @@
   </div>
   <p style="text-align: right;">Sandi Samudra</p>
 
+  <div id="left-signature-container" style="display: flex; flex-direction: column; align-items: flex-start; margin-top: 30px;">
+  <canvas id="left-signature-pad" class="signature-pad" style="width: 300px; height: 150px; border: 1px solid #000; margin-bottom: 10px;"></canvas>
+  <div class="button-group">
+    <button onclick="clearLeftSignature()">Clear</button>
+    <button onclick="saveLeftSignature()">Save</button>
+    <input type="file" id="upload-left-signature" accept="image/*" style="display: none;" onchange="handleLeftUpload(event)">
+    <button onclick="document.getElementById('upload-left-signature').click()">Upload Signature</button>
+  </div>
+  <div id="saved-left-signature"></div>
+  <p style="text-align: left;" id="client-name">Pihak Kedua</p>
+</div>
+
+
   
   <script>
     const urlParams       = new URLSearchParams(window.location.search);
@@ -268,6 +281,7 @@
     const accountName     = urlParams.get("accountName") || "";
     const accountNumber   = urlParams.get("accountNumber") || "";
     const npwp            = urlParams.get("npwp") || "";
+    const clientName      = urlParams.get("clientName") || "";
     
  function hideIfEmpty(idList, parentSelector) {
     let isEmpty = idList.every(id => {
@@ -363,8 +377,9 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("account-name").innerText                     = accountName;
     document.getElementById("account-number").innerText                   = accountNumber;
     document.getElementById("np-wp").innerText                            = npwp;
+    document.getElementById("client-name").innerText                            = clientName;
 
-    const canvas = document.getElementById("signature-pad");
+  const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
   let drawing = false;
 
