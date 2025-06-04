@@ -135,6 +135,10 @@
   #saved-signature {
     flex: 1;
   }
+
+    #signature-place {
+    justify-content: space-between;
+    }
   
     
   </style>
@@ -234,7 +238,9 @@
   <p>
   These Contract Agreement is formed from the agreed quotation from Tenant Party and Rental Party. By signing every page Tenant Party is deemed to have read and agreed with everything which written therein.
   </p>
+  <div id="signature-place">  
   <strong style="align-items: flex-start;"><span>Tenant Party</span></strong> <strong style="align-items: flex-end;"><span>Regards,</span></strong>
+  </div>
   <div id="signature-container">
   <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="button-group">
@@ -246,8 +252,9 @@
   </div>
   <div id="saved-signature"></div>
   </div>
+  <div id="signature-place">
   <strong style="align-items: flex-start;" id="client-name"><span>Pihak Kedua</span></strong> <strong style="align-items: flex-end;"><span>Sandi Samudra</span></strong>
-
+  </div>
   <script>
     const urlParams       = new URLSearchParams(window.location.search);
     const projectName     = urlParams.get("projectName") || "";
