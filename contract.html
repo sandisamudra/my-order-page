@@ -254,11 +254,11 @@
   <div style="display: flex; justify-content: space-between; margin-top: 10px;">
   <div style="text-align: center;">
     <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 5px;"></div>
-    <p style="text-align: left; margin-top: 2px;" id="client-name">Pihak Pertama</p>
+    <p style="text-align: left; margin-top: 2px;" id="client-name">Tenant Party</p>
   </div>
   <div style="text-align: center;">
     <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 5px;"></div>
-    <p style="text-align: right; margin-top: 2px;">Sandi Samudra</p>
+    <p style="text-align: right; margin-top: 2px;" id="rental-name">Rental Party</p>
   </div>
 </div>
 
@@ -283,6 +283,7 @@
     const accountNumber   = urlParams.get("accountNumber") || "";
     const npwp            = urlParams.get("npwp") || "";
     const clientName      = urlParams.get("clientName") || "";
+    const rentalName      = urlParams.get("rentalName") || "";
     
  function hideIfEmpty(idList, parentSelector) {
     let isEmpty = idList.every(id => {
@@ -378,7 +379,8 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("account-name").innerText                     = accountName;
     document.getElementById("account-number").innerText                   = accountNumber;
     document.getElementById("np-wp").innerText                            = npwp;
-    document.getElementById("client-name").innerText                            = clientName;
+    document.getElementById("client-name").innerText                      = clientName;
+    document.getElementById("rental-name").innerText                      = rentalName;
 
   const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
