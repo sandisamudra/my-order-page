@@ -266,6 +266,8 @@
 
   <script>
 
+  const urlParams       = new URLSearchParams(window.location.search);  
+
   const termins = [];
 
   if (params.get("t1")) termins.push({ label: "Termin 1", value: params.get("t1") });
@@ -283,7 +285,7 @@
     container.appendChild(div);
   });
     
-    const urlParams       = new URLSearchParams(window.location.search);
+    
     const projectName     = urlParams.get("projectName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const date            = urlParams.get("date") || "";
@@ -291,8 +293,6 @@
     const grandTotal      = urlParams.get("grandTotal") || "0";
     const totalDays       = urlParams.get("totalDays") || "";
     const totalTerm       = urlParams.get("totalTerm") || "";
-    const termin1         = urlParams.get("termin1") || "";
-    const termin2         = urlParams.get("termin2") || "";
     const total1          = urlParams.get("total1") || "";
     const total2          = urlParams.get("total2") || "";
     const terminDate1     = urlParams.get("terminDate1") || "";
@@ -304,33 +304,7 @@
     const clientName      = urlParams.get("clientName") || "";
     const rentalName      = urlParams.get("rentalName") || "";
     
- function hideIfEmpty(idList, parentSelector) {
-    let isEmpty = idList.every(id => {
-      const el = document.getElementById(id);
-      const value = el?.textContent?.trim();
-      return !value;
-    });
-
-    if (isEmpty) {
-      const parentDiv = document.querySelector(parentSelector);
-      if (parentDiv) parentDiv.style.display = "none";
-    }
-  }
-
-
-
-  // Opsional: jika kamu ingin juga menyembunyikan Termin 2 jika kosong
-  hideIfEmpty(
-    ["termin-2", "total-2", "termin-date-2"],
-    ".label-termin:nth-of-type(2)"
-  );
-
-  // dan untuk Termin 1 juga
-  hideIfEmpty(
-    ["termin-1", "total-1", "termin-date-1"],
-    ".label-termin:nth-of-type(1)"
-  );
-    
+ 
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
       const belasan = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", 
@@ -388,8 +362,6 @@ const textAmount = toTitleCase(textAmountRaw);
     document.querySelectorAll(".total-days").forEach(el => el.innerText   = totalDays);
     document.getElementById("grand-total-text").innerText                 = `${textAmount}`;
     document.getElementById("total-termin").innerText                     = totalTerm;
-    document.getElementById("termin-1").innerText                         = termin1 + "%";
-    document.getElementById("termin-2").innerText                         = termin2 + "%";
     document.getElementById("total-1").innerText                          = formatRupiah(total1);
     document.getElementById("total-2").innerText                          = formatRupiah(total2);
     document.getElementById("termin-date-1").innerText                    = terminDate1;
