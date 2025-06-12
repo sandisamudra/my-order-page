@@ -171,13 +171,6 @@
   <span>Termin 2 (<strong style="font-weight: normal;"><span id="t2">[Termin 2]</span></strong>)</span>
   <span>: <span><strong><span id="total-2">[Total 2]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-2">[Termin Date 2]</span></strong> )</span></span>
   </div> 
-    <div class="label-termin">
-  <span>Termin 3 (<strong style="font-weight: normal;"><span id="t3">[Termin 2]</span></strong>)</span>
-  <span>: <span><strong><span id="total-3">[Total 3]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-2">[Termin Date 3]</span></strong> )</span></span>
-  </div> 
-    
-
-  <div id="payment-terms"></div>
 
   <p>
   Payment above transfer to : 
@@ -271,26 +264,7 @@
 
   <script>
 
-  const urlParams       = new URLSearchParams(window.location.search);  
-
-  const termins = [];
-
-  if (params.get("t1")) termins.push({ label: "Termin 1", value: params.get("t1") });
-  if (params.get("t2")) termins.push({ label: "Termin 2", value: params.get("t2") });
-  if (params.get("t3")) termins.push({ label: "Termin 3", value: params.get("t3") });
-
-  // Jika hanya full payment
-  if (params.get("full")) termins.push({ label: "Full Payment", value: params.get("full") });
-
-  // Render
-  const container = document.getElementById("payment-terms");
-  termins.forEach(t => {
-    const div = document.createElement("div");
-    div.innerText = `${t.label} : ${t.value}%`;
-    container.appendChild(div);
-  });
-    
-    
+    const urlParams       = new URLSearchParams(window.location.search);      
     const projectName     = urlParams.get("projectName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const date            = urlParams.get("date") || "";
@@ -308,6 +282,9 @@
     const npwp            = urlParams.get("npwp") || "";
     const clientName      = urlParams.get("clientName") || "";
     const rentalName      = urlParams.get("rentalName") || "";
+    const termin1         = urlParams.get("termin1") || "";
+    const termin2         = urlParams.get("termin2") || "";
+    const termin3         = urlParams.get("termin3") || "";
     
  
     function numberToWords(num) {
@@ -377,6 +354,9 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("np-wp").innerText                            = npwp;
     document.getElementById("client-name").innerText                      = clientName;
     document.getElementById("rental-name").innerText                      = rentalName;
+    document.getElementById("termin1").innerText                          = termin1 + %;
+    document.getElementById("termin2").innerText                          = termin2 + %;
+    document.getElementById("termin3").innerText                          = termin3 + %;
 
   const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
