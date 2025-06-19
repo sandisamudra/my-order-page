@@ -433,7 +433,9 @@ Object.keys(groupedEquipment).forEach(category => {
   table.appendChild(tbody);
   equipmentSection.appendChild(table);
 });
-
+window.addEventListener("DOMContentLoaded", function () {
+    const guardOrders = decodeURIComponent(decodeURIComponent(urlParams.get("guardorders") || ""));
+    console.log("Decoded guardOrders:", guardOrders);
     // Guard and Others Table
     const guardData = guardOrders.split("||");
     const guardTableBody = document.querySelector("#guard-table tbody");
