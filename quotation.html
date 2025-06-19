@@ -439,19 +439,23 @@ Object.keys(groupedEquipment).forEach(category => {
     const guardTableBody = document.querySelector("#guard-table tbody");
 
     guardData.forEach(row => {
-      const [subject, cost, qty, day, amount] = row.split("|");
-      const tr = document.createElement("tr");
-      [subject, cost, qty, day, amount].forEach((text, index) => {
-  const td = document.createElement("td");
-  if (index === 0) {
-    // Kolom pertama: render HTML (agar <br> jadi line break)
-    td.innerHTML = text;
-  } else {
-    td.textContent = text;
-  }
-  tr.appendChild(td);
-      });
-      guardTableBody.appendChild(tr);
+      const columns = row.split("|");
+  if (columns.length !== 5) return; // Lewati baris tidak valid
+
+  const [subject, cost, qty, day, amount] = columns;
+  const tr = document.createElement("tr");
+
+  [subject, cost, qty, day, amount].forEach((text, index) => {
+    const td = document.createElement("td");
+    if (index === 0) {
+      td.innerHTML = text;
+    } else {
+      td.textContent = text;
+    }
+    tr.appendChild(td);
+  });
+
+  guardTableBody.appendChild(tr);
     });
 
   
