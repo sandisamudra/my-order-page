@@ -346,7 +346,6 @@
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
-    const guardOrders = decodeURIComponent(decodeURIComponent(urlParams.get("guardorders") || ""));
     const categoryList = urlParams.get("category")?.split("||") || [];
     const totalcostorders = urlParams.get("totalcostorders") || "";
     const totalcostGO = urlParams.get("totalcostGO") || "";
@@ -436,29 +435,30 @@ Object.keys(groupedEquipment).forEach(category => {
 window.addEventListener("DOMContentLoaded", function () {
     const guardOrders = decodeURIComponent(decodeURIComponent(urlParams.get("guardorders") || ""));
     console.log("Decoded guardOrders:", guardOrders);
-    // Guard and Others Table
+
     const guardData = guardOrders.split("||");
     const guardTableBody = document.querySelector("#guard-table tbody");
 
     guardData.forEach(row => {
       const columns = row.split("|");
-  if (columns.length !== 5) return; // Lewati baris tidak valid
+      if (columns.length !== 5) return;
 
-  const [subject, cost, qty, day, amount] = columns;
-  const tr = document.createElement("tr");
+      const [subject, cost, qty, day, amount] = columns;
+      const tr = document.createElement("tr");
 
-  [subject, cost, qty, day, amount].forEach((text, index) => {
-    const td = document.createElement("td");
-    if (index === 0) {
-      td.innerHTML = text;
-    } else {
-      td.textContent = text;
-    }
-    tr.appendChild(td);
-  });
+      [subject, cost, qty, day, amount].forEach((text, index) => {
+        const td = document.createElement("td");
+        if (index === 0) {
+          td.innerHTML = text;
+        } else {
+          td.textContent = text;
+        }
+        tr.appendChild(td);
+      });
 
-  guardTableBody.appendChild(tr);
+      guardTableBody.appendChild(tr);
     });
+  });
 
   
   </script>
