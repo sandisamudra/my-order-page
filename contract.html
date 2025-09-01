@@ -78,7 +78,6 @@
     font-weight: normal;
     margin: 8px 0;
     gap: 1%;
-    margin-bottom: 0px !important;
     }
     .label-row span:first-child {
     width: 150px;  /* Atur agar semua label panjangnya sama */
@@ -91,7 +90,6 @@
     font-weight: normal;
     margin: 8px 0;
     gap: 1%;
-    margin-bottom: 0px !important;
     }
     .label-termin span:first-child {
     width: 150px;  /* Atur agar semua label panjangnya sama */
@@ -139,10 +137,13 @@
   }
 
   #saved-signature {
+    flex: 1;
+  }
+#saved-signature img {
     display: block; 
     max-width: 200px; 
     margin-top: 20px;
-  }
+}
     
   </style>
 </head>
@@ -170,17 +171,17 @@
   Production cost are divided into <strong style="font-weight: normal;"><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
 
-  <div class="label-termin" id="termin-row-1">
+  <div class="label-termin" id="termin-row-1" style="margin-bottom: 1px;">
   <span>Termin 1 (<strong style="font-weight: normal;"><span id="termin-1">[Termin 1]</span></strong>)</span>
   <span>: <span><strong><span id="total-1">[Total 1]</span></strong> (Payment due date on <strong style="font-weight: normal;"><span id="termin-date-1">[Termin Date 1]</span></strong>)</span></span>
 </div> 
 
-<div class="label-termin" id="termin-row-2">
+<div class="label-termin" id="termin-row-2" style="margin-bottom: 1px;">
   <span>Termin 2 (<strong style="font-weight: normal;"><span id="termin-2">[Termin 2]</span></strong>)</span>
   <span>: <span><strong><span id="total-2">[Total 2]</span></strong> (Payment due date on <strong style="font-weight: normal;"><span id="termin-date-2">[Termin Date 2]</span></strong>)</span></span>
 </div> 
 
-<div class="label-termin" id="termin-row-3" style="display: none;">
+<div class="label-termin" id="termin-row-3" style="display: none; margin-bottom: 1px;">
   <span>Termin 3 (<strong style="font-weight: normal;"><span id="termin-3">[Termin 3]</span></strong>)</span>
   <span>: <span><strong><span id="total-3">[Total 3]</span></strong> (Payment due date on <strong style="font-weight: normal;"><span id="termin-date-3">[Termin Date 3]</span></strong>)</span></span>
 </div>
@@ -266,11 +267,11 @@
   </div>
   <div style="display: flex; justify-content: space-between; margin-top: 1px !important;">
   <div style="text-align: center;">
-    <div style="border-top: 1px solid #000; width: 100px; margin-bottom: 1px !important;"></div>
+    <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
     <p style="text-align: left; margin-top: 2px !important;" id="client-name">Tenant Party</p>
   </div>
   <div style="text-align: center;">
-    <div style="border-top: 1px solid #000; width: 100px; margin-bottom: 1px !important;"></div>
+    <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
     <p style="text-align: right; margin-top: 1px !important;" id="rental-name">Rental Party</p>
   </div>
 </div>
