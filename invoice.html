@@ -212,10 +212,17 @@
       </tbody>
     </table>
 
+   <div class="info-line"></div>
+    <!-- Tax Row (disembunyikan default) -->
+    <div class="label-row" id="tax-row" style="display: none;">
+      <span id="tax-label">Tax</span>
+      <span>: <span id="tax-amount"></span></span>
+    </div>
+
     <div class="info-line"></div>
     <div class="label-row">
-    <span>Grand Total</span>
-    <span>: <span id="grand-total"></span></span>
+      <span>Grand Total</span>
+      <span>: <span id="grand-total"></span></span>
     </div>
   
     <div style="font-size: 12px; font-style: italic; margin-top: 0px; margin-bottom: 10px;" class="note" id="grand-total-text"></div>
@@ -255,6 +262,7 @@
     const termin = urlParams.get("termin") || "";
     const desc = urlParams.get("desc") || "";
     const amount = urlParams.get("amount") || "0";
+    const taxAmount = urlParams.get("taxAmount") || "0";
     const terminPercentage = urlParams.get("terminPercentage") || "";
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
     const username = urlParams.get("username") || "";
@@ -344,8 +352,29 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("bank-account-number").innerText = bankAccountNumber;
     document.getElementById("invoice-date").innerText = date;
 
-    document.getElementById("grand-total").innerText = `${formattedSubtotal}`;
-    document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
+    // Hitung subtotal (sebelum pajak)
+  let grandTotal = parseFloat(subtotalAmount);
+
+  // Cek apakah ada tax
+  if (!isNaN(parseFloat(taxAmount)) && parseFloat(taxAmount) > 0) {
+    const taxValue = (parseFloat(subtotalAmount) * parseFloat(taxAmount)) / 100;
+
+    // Tampilkan baris tax
+    document.getElementById("tax-row").style.display = "flex";
+    document.getElementById("tax-label").innerText = `Tax (${taxAmount}%)`;
+    document.getElementById("tax-amount").innerText = formatCurrency(taxValue);
+
+    // Tambahkan ke Grand Total
+    grandTotal += taxValue;
+  }
+
+  // Tampilkan Grand Total final
+  document.getElementById("grand-total").innerText = formatCurrency(grandTotal);
+
+  // Tampilkan versi terbilang
+  const textAmountRaw = numberToWords(parseInt(grandTotal));
+  const textAmount = toTitleCase(textAmountRaw);
+  document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
 
   const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
