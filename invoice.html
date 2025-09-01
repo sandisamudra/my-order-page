@@ -112,6 +112,7 @@
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const companyName = urlParams.get("companyName") || "";
+    const invoiceNumber = urlParams.get("invoiceNumber") || "";
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
     const fileName = urlParams.get("fileName") || "";
@@ -167,10 +168,12 @@
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("project-name").innerText = projectName;
+    document.getElementById("invoice-number").innerText = invoiceNumber;
     document.getElementById("bank-name").innerText = bankName;
     document.getElementById("bank-account-name").innerText = bankAccountName;
     document.getElementById("bank-account-number").innerText = bankAccountNumber;
     document.getElementById("invoice-date").innerText = date;
+    document.getElementById("company-name").innerText = companyName;
 
     // === HITUNG TAX & GRAND TOTAL ===
     let grandTotal = parseFloat(subtotalAmount);
