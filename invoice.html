@@ -211,6 +211,20 @@
     function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById("saved-signature").innerHTML = ""; }
     function saveSignature() { const dataURL = canvas.toDataURL("image/png"); const img = document.createElement("img"); img.src = dataURL; img.style.maxWidth = "100px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }
     function handleUpload(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = document.createElement("img"); img.src = e.target.result; img.style.maxWidth = "150px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }; reader.readAsDataURL(file); }
+ 
+  
+  // Sembunyikan logo & label perusahaan jika rekening tertentu
+if (bankAccountNumber === "2910822929") {
+  document.getElementById("logo-container").style.display = "none";
+  
+  const companyLabel = document.querySelector(
+    'p[style*="PT Warna Global Surya"]'
+  );
+  if (companyLabel) {
+    companyLabel.style.display = "none";
+  }
+}
+  
   </script>
 </body>
 </html>
