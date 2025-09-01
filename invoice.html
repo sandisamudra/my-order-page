@@ -98,7 +98,7 @@
     <div id="saved-signature"></div>
   
     <p style="font-weight: normal; margin-bottom: 0px; font-size: 15px;" id="username"></p>
-    <p style="margin-bottom: 0px; margin-top: 0px; font-weight: bold; font-size: 15px;" id="company-name"></p>
+    <p style="margin-bottom: 0px; margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
   </div>
 
   <script>
@@ -111,8 +111,6 @@
     const username = urlParams.get("username") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
-    const companyName = urlParams.get("companyName") || "";
-    const invoiceNumber = urlParams.get("invoiceNumber") || "";
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
     const fileName = urlParams.get("fileName") || "";
@@ -173,7 +171,6 @@
     document.getElementById("bank-account-name").innerText = bankAccountName;
     document.getElementById("bank-account-number").innerText = bankAccountNumber;
     document.getElementById("invoice-date").innerText = date;
-    document.getElementById("company-name").innerText = companyName;
 
     // === HITUNG TAX & GRAND TOTAL ===
     let grandTotal = parseFloat(subtotalAmount);
@@ -214,14 +211,6 @@
     function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById("saved-signature").innerHTML = ""; }
     function saveSignature() { const dataURL = canvas.toDataURL("image/png"); const img = document.createElement("img"); img.src = dataURL; img.style.maxWidth = "100px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }
     function handleUpload(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = document.createElement("img"); img.src = e.target.result; img.style.maxWidth = "150px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }; reader.readAsDataURL(file); }
- 
-  
-  // Sembunyikan logo & label perusahaan jika rekening tertentu
-if (bankAccountNumber === "2910822929") {
-  document.getElementById("logo-container").style.display = "none";
-  
-}
-  
   </script>
 </body>
 </html>
