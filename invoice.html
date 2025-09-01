@@ -98,7 +98,7 @@
     <div id="saved-signature"></div>
   
     <p style="font-weight: normal; margin-bottom: 0px; font-size: 15px;" id="username"></p>
-    <p style="margin-bottom: 0px; margin-top: 0px; font-weight: bold; font-size: 15px;">PT Warna Global Surya</p>
+    <div style="margin-bottom: 0px; margin-top: 0px; font-weight: bold; font-size: 15px;" id="company-name"></div>
   </div>
 
   <script>
@@ -111,6 +111,7 @@
     const username = urlParams.get("username") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
+    const companyName = urlParams.get("companyName") || "";
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
     const fileName = urlParams.get("fileName") || "";
@@ -166,7 +167,6 @@
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("project-name").innerText = projectName;
-    document.getElementById("invoice-number").innerText = invoiceNumber;
     document.getElementById("bank-name").innerText = bankName;
     document.getElementById("bank-account-name").innerText = bankAccountName;
     document.getElementById("bank-account-number").innerText = bankAccountNumber;
@@ -216,13 +216,10 @@
   // Sembunyikan logo & label perusahaan jika rekening tertentu
 if (bankAccountNumber === "2910822929") {
   document.getElementById("logo-container").style.display = "none";
+  document.getElementById("company-name").style.display = "none";
+  document.getElementById("invoice-number").style.display = "none";
   
-  const companyLabel = document.querySelector(
-    'p[style*="PT Warna Global Surya"]'
-  );
-  if (companyLabel) {
-    companyLabel.style.display = "none";
-  }
+    
 }
   
   </script>
