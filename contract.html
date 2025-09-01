@@ -163,14 +163,21 @@
   Production cost are divided into <strong style="font-weight: normal;"><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
 
-  <div class="label-termin">
+  <div class="label-termin" id="termin-row-1">
   <span>Termin 1 (<strong style="font-weight: normal;"><span id="termin-1">[Termin 1]</span></strong>)</span>
   <span>: <span><strong><span id="total-1">[Total 1]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-1">[Termin Date 1]</span></strong> )</span></span>
-  </div> 
-  <div class="label-termin">
+</div> 
+
+<div class="label-termin" id="termin-row-2">
   <span>Termin 2 (<strong style="font-weight: normal;"><span id="termin-2">[Termin 2]</span></strong>)</span>
   <span>: <span><strong><span id="total-2">[Total 2]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-2">[Termin Date 2]</span></strong> )</span></span>
-  </div> 
+</div> 
+
+<div class="label-termin" id="termin-row-3" style="display: none;">
+  <span>Termin 3 (<strong style="font-weight: normal;"><span id="termin-3">[Termin 3]</span></strong>)</span>
+  <span>: <span><strong><span id="total-3">[Total 3]</span></strong> ( Payment due date on <strong style="font-weight: normal;"><span id="termin-date-3">[Termin Date 3]</span></strong> )</span></span>
+</div>
+
 
   <p>
   Payment above transfer to : 
@@ -284,7 +291,10 @@
     const rentalName      = urlParams.get("rentalName") || "";
     const termin1         = urlParams.get("termin1") || "";
     const termin2         = urlParams.get("termin2") || "";
-    
+    const total3          = urlParams.get("total3") || "";
+    const termin3         = urlParams.get("termin3") || "";
+    const terminDate3     = urlParams.get("terminDate3") || "";
+
     
  
     function numberToWords(num) {
@@ -356,7 +366,37 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("rental-name").innerText                      = rentalName;
     document.getElementById("termin-1").innerText                         = termin1 + "%";
     document.getElementById("termin-2").innerText                         = termin2 + "%";
-   
+
+
+// Handle termin dinamis
+if (totalTerm === "1") {
+  // Full Payment
+  document.getElementById("total-termin").innerText = "Full Payment";
+  document.getElementById("termin-row-1").style.display = "none";
+  document.getElementById("termin-row-2").style.display = "none";
+  document.getElementById("termin-row-3").style.display = "none";
+
+} else if (totalTerm === "2") {
+  // Dua termin
+  document.getElementById("total-termin").innerText = "2";
+  document.getElementById("termin-row-1").style.display = "flex";
+  document.getElementById("termin-row-2").style.display = "flex";
+  document.getElementById("termin-row-3").style.display = "none";
+
+} else if (totalTerm === "3") {
+  // Tiga termin
+  document.getElementById("total-termin").innerText = "3";
+  document.getElementById("termin-row-1").style.display = "flex";
+  document.getElementById("termin-row-2").style.display = "flex";
+  document.getElementById("termin-row-3").style.display = "flex";
+
+  // Isi nilai termin 3
+  document.getElementById("total-3").innerText      = formatRupiah(total3);
+  document.getElementById("termin-3").innerText     = termin3 + "%";
+  document.getElementById("termin-date-3").innerText= terminDate3;
+}
+
+    
 
   const canvas = document.getElementById("signature-pad");
   const ctx = canvas.getContext("2d");
