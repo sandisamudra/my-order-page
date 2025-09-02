@@ -328,8 +328,9 @@
     const total3          = urlParams.get("total3") || "";
     const termin3         = urlParams.get("termin3") || "";
     const terminDate3     = urlParams.get("terminDate3") || "";
+    const fileName        = urlParams.get("fileName") || "";
 
-    
+    if (fileName) document.title = fileName;    
  
     function numberToWords(num) {
       const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
