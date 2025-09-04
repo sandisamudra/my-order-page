@@ -309,18 +309,18 @@
   </div>
 
   <!-- Discount -->
-  <div class="label-rowsub">
+  <div class="label-rowsub" id="discount-equipments">
   <span>Discount for Equipments</span>
   <span>: <span id="discount"></span></span>
   </div>
-  <div class="label-rowsub">
+  <div class="label-rowsub" id="add-discount">
   <span>Additional Discount</span>
   <span>: <span id="discount-cash"></span></span>
   </div>
 
    <!-- After Discount -->
   <div class="label-rowsub">
-  <span>Equipments after Discount</span>
+  <span>Total for Equipments</span>
   <span>: <span id="after-discount"></span></span>
   </div>
 
@@ -353,7 +353,7 @@
     const afterDiscount = urlParams.get("afterDiscount") || "";
     const grandtotal = urlParams.get("grandtotal") || "";
     const fileName = urlParams.get("fileName") || "";
-    const discountCash = urlParams.get("discountCash") || "";
+    const additionalDiscount = urlParams.get("additionalDiscount") || "";
 
      if (fileName) {
     document.title = fileName;
@@ -373,7 +373,7 @@
     document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
     document.getElementById("discount").innerText = discount + "%";
-    document.getElementById("discount-cash").innerText = formatCurrency(discountCash);
+    document.getElementById("additional-discount").innerText = formatCurrency(additional-discount);
     document.getElementById("after-discount").innerText = formatCurrency(afterDiscount);
     document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
 
@@ -459,6 +459,13 @@ window.addEventListener("DOMContentLoaded", function () {
       guardTableBody.appendChild(tr);
     });
   });
+
+    if (discount === "%") {
+      document.getElementById("discount-equipments").style.display = "none";
+    }
+    if (additionalDiscount === "") {
+      document.getElementByid("add-discount").style.display = "none";
+    }
 
   
   </script>
