@@ -16,6 +16,7 @@
     }
     #logo-container { width: 100%; height: 80px; margin-bottom: -40px; }
     #wgs-logo { height: 100px; width: 150px; margin-top: 15px; }
+    #cmk-logo { height: 100px; width: 150px; margin-top: 15px; }
     .invoice-container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     .header-line { border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 20px; }
     h1 { margin-top: 90px; font-size: 20px; }
@@ -35,6 +36,7 @@
       body { padding: 10px; font-size: 12px; }
       h1 { font-size: 15px; }
       #wgs-logo { height: 80px; width: 120px; margin-top: 15px; }
+      #cmk-logo { height: 80px; width: 120px; margin-top: 15px; }
     }
     @media print {
       #signature-pad, .button-group { display: none !important; }
@@ -47,6 +49,7 @@
   <div class="invoice-container">
     <div id="logo-container">
       <img id="wgs-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/S13sj8xtWBiEXkgUeQZc/pub/ex3AkCwO66H8VBGPNJ8A.png" alt="WGS Logo">
+      <img id="cmk-logo" src="https://storage.googleapis.com/glide-prod.appspot.com/uploads-v2/S13sj8xtWBiEXkgUeQZc/pub/7Epj1GKGFMNBv57gkdlP/CMK%20Logo.jpeg" alt="CMK Logo">
     </div>
     <h1>INVOICE</h1> 
 
@@ -212,17 +215,17 @@
     function handleUpload(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = document.createElement("img"); img.src = e.target.result; img.style.maxWidth = "150px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }; reader.readAsDataURL(file); }
  
   // Sembunyikan logo & label perusahaan jika rekening tertentu
-if (bankAccountNumber === "2910822929") {
-  document.getElementById("logo-container").style.display = "none";
+    if (bankAccountNumber === "2910822929") {
+      document.getElementById("logo-container").style.display = "none";
+    }
+    if (bankAccountNumber === "4508787781") {
+      document.getElementById("wgs-logo").style.display = "none";
+    }
+    if (bankAccountNumber === "2918524369") {
+      document.getElementById("cmk-logo").style.display = "none";
+    }
   
-}
-  
-  
-  
-  
-  
-  
-  
+    
   
   </script>
 </body>
