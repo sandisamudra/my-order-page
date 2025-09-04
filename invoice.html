@@ -56,7 +56,7 @@
     <div class="label-row"><span>Submitted To</span><span>: <span id="client-name"></span></span></div>
     <div class="label-row"><span>Production House/Company</span><span>: <span id="production-house"></span></span></div>
     <div class="label-row"><span>Project Name</span><span>: <span id="project-name"></span></span></div>
-    <div class="label-row"><span>Invoice Number</span><span>: <span id="invoice-number"></span></span></div>
+    <div class="label-row" id="invoice-number-row"><span>Invoice Number</span><span>: <span id="invoice-number"></span></span></div>
     <div class="label-row"><span>Invoice Date</span><span>: <span id="invoice-date"></span></span></div>
 
     <div class="header-line"></div>
@@ -217,12 +217,14 @@
   // Sembunyikan logo & label perusahaan jika rekening tertentu
     if (bankAccountNumber === "2910822929") {
       document.getElementById("logo-container").style.display = "none";
+      document.getElementById("invoice-number-row").style.display = "none";
     }
     if (bankAccountNumber === "4508787781") {
       document.getElementById("wgs-logo").style.display = "none";
     }
     if (bankAccountNumber === "2918524369") {
       document.getElementById("cmk-logo").style.display = "none";
+      document.getElementById("invoice-number-row").style.display = "none";
     }
   
     
