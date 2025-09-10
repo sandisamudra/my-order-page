@@ -199,6 +199,8 @@
     
   <p id="full-payment">
     Production cost will be payment in full
+    <br>
+    (Payment due date on <strong style="font-weight: normal;"><span id="full-payment-date">[Full Payment Date]</span></strong>)
   </p>
 
 
@@ -320,6 +322,7 @@
     const totalTerm       = urlParams.get("totalTerm") || "";
     const total1          = urlParams.get("total1") || "";
     const total2          = urlParams.get("total2") || "";
+    const fullPaymentDate = urlParams.get("fullPaymentDate") || "";
     const terminDate1     = urlParams.get("terminDate1") || "";
     const terminDate2     = urlParams.get("terminDate2") || "";
     const bankName        = urlParams.get("bankName") || "";
@@ -396,6 +399,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("total-termin").innerText                     = totalTerm;
     document.getElementById("total-1").innerText                          = formatRupiah(total1);
     document.getElementById("total-2").innerText                          = formatRupiah(total2);
+    document.getElementById("full-payment-date").innerText                = fullPaymentDate;
     document.getElementById("termin-date-1").innerText                    = terminDate1;
     document.getElementById("termin-date-2").innerText                    = terminDate2;
     document.getElementById("bank-name").innerText                        = bankName;
