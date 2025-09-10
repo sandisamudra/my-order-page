@@ -186,16 +186,21 @@
   
 
   <p>
-  Agreement with these terms and conditions constitute an agreement between parties which production in this thing represented by <strong id="production-house">[Production House]</strong> (next called <strong>Tenant Party</strong>) with party <strong>PT. WARNA GLOBAL SURYA</strong> as rental of film production equipment (next called <strong>Rental Party</strong>) for a Film production with working title "<strong class="project-name">[Project Name]</strong>" Film.
+    Agreement with these terms and conditions constitute an agreement between parties which production in this thing represented by <strong id="production-house">[Production House]</strong> (next called <strong>Tenant Party</strong>) with party <strong>PT. WARNA GLOBAL SURYA</strong> as rental of film production equipment (next called <strong>Rental Party</strong>) for a Film production with working title "<strong class="project-name">[Project Name]</strong>" Film.
   </p>
 
   <p>
-  This agreement renting equipments for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ gross for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipments exceeds shooting day, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
+    This agreement renting equipments for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ gross for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipments exceeds shooting day, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
   </p>
 
-  <p>
-  Production cost are divided into <strong style="font-weight: normal;"><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
+  <p id="termin-payment">
+    Production cost are divided into <strong style="font-weight: normal;"><span id="total-termin">[Total Termin]</span></strong> termin, which include : 
   </p>
+    
+  <p id="full-payment">
+    Production cost will be payment in full
+  </p>
+
 
   <div class="label-termin" id="termin-row-1" style="margin-bottom: 1px;">
   <span>Termin 1 (<strong style="font-weight: normal;"><span id="termin-1">[Termin 1]</span></strong>)</span>
@@ -404,9 +409,9 @@ const textAmount = toTitleCase(textAmountRaw);
 
 
 // Handle termin dinamis
-if (totalTerm === "1") {
+if (totalTerm === "Full Payment") {
   // Full Payment
-  document.getElementById("total-termin").innerText = "Full Payment";
+  document.getElementById("termin-payment").style.display = "none";
   document.getElementById("termin-row-1").style.display = "none";
   document.getElementById("termin-row-2").style.display = "none";
   document.getElementById("termin-row-3").style.display = "none";
@@ -414,6 +419,7 @@ if (totalTerm === "1") {
 } else if (totalTerm === "2") {
   // Dua termin
   document.getElementById("total-termin").innerText = "2";
+  document.getElementById("full-payment").style.display = "none";
   document.getElementById("termin-row-1").style.display = "flex";
   document.getElementById("termin-row-2").style.display = "flex";
   document.getElementById("termin-row-3").style.display = "none";
@@ -421,6 +427,7 @@ if (totalTerm === "1") {
 } else if (totalTerm === "3") {
   // Tiga termin
   document.getElementById("total-termin").innerText = "3";
+  document.getElementById("full-payment").style.display = "none";
   document.getElementById("termin-row-1").style.display = "flex";
   document.getElementById("termin-row-2").style.display = "flex";
   document.getElementById("termin-row-3").style.display = "flex";
