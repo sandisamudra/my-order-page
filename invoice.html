@@ -53,8 +53,9 @@
     </div>
     <h1>INVOICE</h1> 
 
-    <div class="label-row"><span>Submitted To</span><span>: <span id="client-name"></span></span></div>
-    <div class="label-row"><span>Production House/Company</span><span>: <span id="production-house"></span></span></div>
+    <div class="label-row" id="submit-to"><span>Submitted To</span><span>: <span id="client-name"></span></span></div>
+    <div class="label-row" id="prod-house"><span>Production House/Company</span><span>: <span id="production-house"></span></span></div>
+    <div class="label-row" id="comp-name"><span>Company</span><span>: <span id="company-name"></span></span></div>
     <div class="label-row"><span>Project Name</span><span>: <span id="project-name"></span></span></div>
     <div class="label-row" id="invoice-number-row"><span>Invoice Number</span><span>: <span id="invoice-number"></span></span></div>
     <div class="label-row"><span>Invoice Date</span><span>: <span id="invoice-date"></span></span></div>
@@ -113,6 +114,7 @@
     const username = urlParams.get("username") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
+    const companyName = urlParams.get("companyName") || "";
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
     const fileName = urlParams.get("fileName") || "";
@@ -167,6 +169,7 @@
     document.getElementById("amount").innerText = formatCurrency(amount);
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
+    document.getElementById("company-name").innerText = companyName;
     document.getElementById("project-name").innerText = projectName;
     document.getElementById("invoice-number").innerText = invoiceNumber;
     document.getElementById("bank-name").innerText = bankName;
@@ -226,6 +229,16 @@
     if (bankAccountNumber === "2918524369") {
       document.getElementById("cmk-logo").style.display = "none";
     }
+    if (clientName === "") {
+      document.getElementById("submit-to").style.display = "none";
+    }
+    if (productionHouse === "") {
+      document.getElementById("prod-house").style.display = "none";
+    }
+    if (companyName === "") {
+      document.getElementById("comp-name").style.display = "none";
+    }
+    
   
     
   
