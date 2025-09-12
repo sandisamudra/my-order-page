@@ -122,6 +122,33 @@
   height: auto;
   object-fit: contain;
 }
+
+ #signature-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Semua konten signature ke kanan */
+    justify-content: space-between;
+  }
+    #signature-pad {
+    width: 300px;
+    height: 150px;
+    border: 1px solid #000;
+    margin-bottom: 10px;
+  }
+
+  .button-group button {
+    margin: 5px;
+  }
+
+  #saved-signature {
+    flex: 1;
+  }
+#saved-signature img {
+    display: block; 
+    max-width: 100px; 
+    margin-top: 20px;
+}
+    
     @media screen and (max-width: 600px) {
       body {
         font-family: 'Nunito', sans-serif;
@@ -178,6 +205,9 @@
     th {
       font-size: 9px;
     }
+
+
+      
 }
     @media print {
       body {
@@ -265,7 +295,7 @@
   </div>  
     
   <p style="margin-bottom: 0px; font-size: 12px;" id="comp-address">Company Address</p>  
-  <p style="margin-top: 0px; font-size: 12px;" id="company-address";></p>
+  <p style="margin-top: 0px; font-size: 12px;" id="company-address"></p>
     
   <div class="label-row">
   <span>Quotation Number</span>
@@ -341,11 +371,35 @@
   <span>Grand Total</span>
   <span>: <span id="grand-total"></span></span>
   </div>
+  “<em id="grand-total-text">[Grand Total Text]</em>“
 
+  <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+  <p style="text-align: left;">Tenant Party</p>
+  <p style="text-align: right;">Rental Party</p>
+  </div>
+    
+  <div id="signature-container">
+  <canvas id="signature-pad" class="signature-pad"></canvas>
   <div class="button-group">
+    <button onclick="clearSignature()">Clear</button>
+    <button onclick="saveSignature()">Save</button>
+    <input type="file" id="upload-signature" accept="image/*" style="display: none;" onchange="handleUpload(event)">
+    <button onclick="document.getElementById('upload-signature').click()">Upload Signature</button>
     <button onclick="window.print()">Print</button>
   </div>
-  
+  <div id="saved-signature"></div>
+  </div>
+  <div style="display: flex; justify-content: space-between; margin-top: 1px !important;">
+  <div style="text-align: center;">
+    <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
+    <p style="text-align: left; margin-top: 2px !important;" id="client-name">Tenant Party</p>
+  </div>
+  <div style="text-align: center;">
+    <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
+    <p style="text-align: right; margin-top: 1px !important;" id="rental-name">Rental Party</p>
+  </div>
+
+ 
  
   
   <script>
@@ -377,6 +431,56 @@
     return number.toLocaleString("id-ID") + " IDR";
   }
 
+ function numberToWords(num) {
+      const angka = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+      const belasan = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", 
+                       "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const puluhan = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+      const ribuan = ["", "Thousand", "Million", "Billion"];
+
+      if (isNaN(num)) return "";
+
+      let str = "";
+      let i = 0;
+      while (num > 0) {
+        let s = "";
+        let n = num % 1000;
+        if (n >= 100) {
+          s += angka[Math.floor(n / 100)] + " Hundred ";
+          n %= 100;
+        }
+        if (n >= 10 && n <= 19) {
+          s += belasan[n - 10] + " ";
+        } else {
+          if (n >= 20) {
+            s += puluhan[Math.floor(n / 10)] + " ";
+          }
+          if (n % 10 > 0) {
+            s += angka[n % 10] + " ";
+          }
+        }
+        if (s) {
+          str = s + ribuan[i] + " " + str;
+        }
+        num = Math.floor(num / 1000);
+        i++;
+      }
+      return str.trim();
+    };
+
+    function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function(txt) {
+    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
+  });
+}
+    function formatRupiah(angka) {
+  return 'Rp' + parseInt(angka).toLocaleString('id-ID');
+}
+   
+const textAmountRaw = numberToWords(parseInt(grandtotal));
+const textAmount = toTitleCase(textAmountRaw);
+
+    
     document.getElementById("project-name").innerText = project;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("production-date").innerText = productionDate;
@@ -473,6 +577,98 @@ window.addEventListener("DOMContentLoaded", function () {
       guardTableBody.appendChild(tr);
     });
   });
+
+const canvas = document.getElementById("signature-pad");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+
+  function resizeCanvas() {
+    const ratio = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#000";
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  function getXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  }
+
+  function startDraw(e) {
+    drawing = true;
+    const { x, y } = getXY(e);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    e.preventDefault();
+  }
+
+  function draw(e) {
+    if (!drawing) return;
+    const { x, y } = getXY(e);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    e.preventDefault();
+  }
+
+  function endDraw() {
+    drawing = false;
+  }
+
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", endDraw);
+  canvas.addEventListener("mouseleave", endDraw);
+
+  canvas.addEventListener("touchstart", startDraw);
+  canvas.addEventListener("touchmove", draw);
+  canvas.addEventListener("touchend", endDraw);
+
+  function clearSignature() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById("saved-signature").innerHTML = "";
+  }
+
+  function saveSignature() {
+    const dataURL = canvas.toDataURL("image/png");
+    const img = document.createElement("img");
+    img.src = dataURL;
+    img.style.maxWidth = "150px";
+    img.style.marginTop = "0px";
+
+    document.getElementById('saved-signature').innerHTML = "";
+    document.getElementById("saved-signature").appendChild(img);
+    // Misal ada variabel isSigned = true kalau sudah tanda tangan
+  }
+    function handleUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.style.maxWidth = "160px";
+      img.style.marginTop = "0px";
+
+      document.getElementById('saved-signature').innerHTML = "";
+      document.getElementById("saved-signature").appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  }
+    
 
     if (clientName === "") {
       document.getElementById("cl-name").style.display = "none";
