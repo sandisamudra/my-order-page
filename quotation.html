@@ -481,19 +481,20 @@ const textAmountRaw = numberToWords(parseInt(grandtotal));
 const textAmount = toTitleCase(textAmountRaw);
 
     
-    document.getElementById("project-name").innerText = project;
-    document.getElementById("production-house").innerText = productionHouse;
-    document.getElementById("production-date").innerText = productionDate;
-    document.getElementById("company-name").innerText = companyName;
-    document.getElementById("company-address").innerText = companyAddress;
-    document.getElementById("client-name").innerText = clientName;
-    document.getElementById("quote-number").innerText = quoteNumber;
-    document.getElementById("total-cost-orders").innerText = formatCurrency(totalcostorders);
-    document.getElementById("total-cost-go").innerText = formatCurrency(totalcostGO);
-    document.getElementById("discount-for-equipments").innerText = discount + "%";
-    document.getElementById("additional-discount").innerText = formatCurrency(additionalDiscount);
-    document.getElementById("after-discount").innerText = formatCurrency(afterDiscount);
-    document.getElementById("grand-total").innerText = formatCurrency(grandtotal);
+    document.getElementById("project-name").innerText                     = project;
+    document.getElementById("production-house").innerText                 = productionHouse;
+    document.getElementById("production-date").innerText                  = productionDate;
+    document.getElementById("company-name").innerText                     = companyName;
+    document.getElementById("company-address").innerText                  = companyAddress;
+    document.getElementById("client-name").innerText                      = clientName;
+    document.getElementById("quote-number").innerText                     = quoteNumber;
+    document.getElementById("total-cost-orders").innerText                = formatCurrency(totalcostorders);
+    document.getElementById("total-cost-go").innerText                    = formatCurrency(totalcostGO);
+    document.getElementById("discount-for-equipments").innerText          = discount + "%";
+    document.getElementById("additional-discount").innerText              = formatCurrency(additionalDiscount);
+    document.getElementById("after-discount").innerText                   = formatCurrency(afterDiscount);
+    document.getElementById("grand-total").innerText                      = formatCurrency(grandtotal);
+    document.getElementById("grand-total-text").innerText                 = `${textAmount}`;
 
     const equipmentSection = document.getElementById("equipment-section");
     const equipmentData = orders.split("||");
