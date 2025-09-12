@@ -389,8 +389,8 @@
     const terminDate3     = urlParams.get("terminDate3") || "";
     const fileName        = urlParams.get("fileName") || "";
     const taxTerm         = urlParams.get("taxTerm") || "";
-    const ktpPhoto        = urlParams.get("ktpPhoto") || "";
-    const compNPWP        = urlParams.get("compNPWP") || "";
+    const ktpPhoto        = urlParams.get("ktp-photo") || "";
+    const compNPWP        = urlParams.get("comp-npwp") || "";
 
     if (fileName) document.title = fileName;    
  
@@ -463,8 +463,6 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("np-wp").innerText                            = npwp;
     document.getElementById("client-name").innerText                      = clientName;
     document.getElementById("rental-name").innerText                      = rentalName;
-    document.getElementById("ktp-photo").innerText                        = ktpPhoto;
-    document.getElementById("comp-npwp").innerText                        = compNPWP;
     document.getElementById("termin-1").innerText                         = termin1 + "%";
     document.getElementById("termin-2").innerText                         = termin2 + "%";
 
