@@ -307,6 +307,16 @@
     <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
     <p style="text-align: right; margin-top: 1px !important;" id="rental-name">Rental Party</p>
   </div>
+
+      <h2>Rental Party Documents</h2>
+
+  <!-- Bagian KTP -->
+  <h3>KTP</h3>
+  <div id="ktp-photo" class="foto-box"></div>
+
+  <!-- Bagian NPWP -->
+  <h3>NPWP</h3>
+  <div id="npwp-container"></div>
 </div>
 
 
@@ -338,6 +348,8 @@
     const terminDate3     = urlParams.get("terminDate3") || "";
     const fileName        = urlParams.get("fileName") || "";
     const taxTerm         = urlParams.get("taxTerm") || "";
+    const ktpPhoto        = urlParams.get("ktpPhoto") || "";
+    const compNPWP        = urlParams.get("compNPWP") || "";
 
     if (fileName) document.title = fileName;    
  
@@ -410,10 +422,31 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("np-wp").innerText                            = npwp;
     document.getElementById("client-name").innerText                      = clientName;
     document.getElementById("rental-name").innerText                      = rentalName;
+    document.getElementById("ktp-photo").innerText                        = ktpPhoto;
+    document.getElementById("comp-npwp").innerText                        = compNPWP;
     document.getElementById("termin-1").innerText                         = termin1 + "%";
     document.getElementById("termin-2").innerText                         = termin2 + "%";
 
 
+// KTP
+    if (ktpPhoto !== "") {
+      document.getElementById("ktp-photo").style.backgroundImage = `url('${ktpPhoto}')`;
+    } else {
+      document.getElementById("ktp-photo").innerText = "Belum ada foto KTP";
+    }
+
+     // NPWP PDF
+    const npwpContainer = document.getElementById("npwp-container");
+    if (compNPWP !== "") {
+      if (compNPWP.endsWith(".pdf")) {
+        npwpContainer.innerHTML = `<embed src="${compNPWP}" type="application/pdf" class="pdf-box">`;
+      } else {
+        npwpContainer.innerText = "File NPWP bukan PDF";
+      }
+    } else {
+      npwpContainer.innerText = "Belum ada file NPWP";
+    }
+    
 // Handle termin dinamis
 if (totalTerm === "Full Payment") {
   // Full Payment
