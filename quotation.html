@@ -375,7 +375,7 @@
 
   <div style="display: flex; justify-content: space-between; margin-top: 5px;">
   <p style="text-align: left;">Tenant Party</p>
-  <p style="text-align: right;">Rental Party</p>
+  <p style="text-align: right;">Jakarta, September 13 2025</p>
   </div>
     
   <div id="signature-container">
@@ -396,7 +396,7 @@
   </div>
   <div style="text-align: center;">
     <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
-    <p style="text-align: right; margin-top: 1px !important;" id="rental-name">Rental Party</p>
+    <p style="text-align: right; margin-top: 1px !important;" id="user-name">Rental Party</p>
   </div>
 
  
@@ -421,6 +421,7 @@
     const grandtotal = urlParams.get("grandtotal") || "";
     const fileName = urlParams.get("fileName") || "";
     const additionalDiscount = urlParams.get("additionalDiscount") || "";
+    const userName = urlParams.get("userName") || "";
 
      if (fileName) {
     document.title = fileName;
@@ -480,7 +481,7 @@
 const textAmountRaw = numberToWords(parseInt(grandtotal));
 const textAmount = toTitleCase(textAmountRaw);
 
-    
+    document.getElementById("user-name").innerText                     = userName;
     document.getElementById("project-name").innerText                     = project;
     document.getElementById("production-house").innerText                 = productionHouse;
     document.getElementById("production-date").innerText                  = productionDate;
