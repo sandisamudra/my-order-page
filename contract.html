@@ -190,7 +190,7 @@
   </p>
 
   <p>
-    This agreement renting equipments for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ Nett for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipments exceeds shooting day, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
+    This agreement renting equipments for Film on <strong id="shoot-date">[Date of Shoot]</strong> with Quotation Number <strong id="quote-number">[Quotation Number]</strong> and have obtained approval from Tenant Party with production cost <strong id="grand-total">[Grand Total]</strong> “<em id="grand-total-text">[Grand Total Text]</em>“ <strong id="tax-term">Tax Term</strong> for <strong class="total-days">[Shooting Days]</strong> shooting days, and if the use of those equipments exceeds shooting day, additional fees will be charged to Tenant Party with Rp5.000.000,-/day.
   </p>
 
   <p id="termin-payment">
@@ -337,6 +337,7 @@
     const termin3         = urlParams.get("termin3") || "";
     const terminDate3     = urlParams.get("terminDate3") || "";
     const fileName        = urlParams.get("fileName") || "";
+    const taxTerm         = urlParams.get("taxTerm") || "";
 
     if (fileName) document.title = fileName;    
  
@@ -397,6 +398,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.querySelectorAll(".total-days").forEach(el => el.innerText   = totalDays);
     document.getElementById("grand-total-text").innerText                 = `${textAmount}`;
     document.getElementById("total-termin").innerText                     = totalTerm;
+    document.getElementById("tax-term").innerText                         = taxTerm;
     document.getElementById("total-1").innerText                          = formatRupiah(total1);
     document.getElementById("total-2").innerText                          = formatRupiah(total2);
     document.getElementById("full-payment-date").innerText                = fullPaymentDate;
