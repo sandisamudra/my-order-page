@@ -30,25 +30,27 @@
       text-align: justify;
     }
 
-     .foto-box {
-      width: 300px;
-      height: 200px;
+     .preview-box {
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
       border: 2px dashed #999;
-      margin: 10px 0;
-      background-size: cover;
-      background-position: center;
+      margin: 15px 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #555;
       font-family: sans-serif;
+      color: #555;
+    }
+    .preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
     .pdf-box {
       width: 100%;
       height: 600px;
-      margin-top: 30px;
       border: 2px solid #666;
-    }
 
     @media (max-width: 932px) {
       
@@ -76,25 +78,27 @@
     }
 }
 
-      .foto-box {
-      width: 300px;
-      height: 200px;
+     .preview-box {
+      width: 100%;
+      max-width: 600px;
+      height: 400px;
       border: 2px dashed #999;
-      margin: 10px 0;
-      background-size: cover;
-      background-position: center;
+      margin: 15px 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #555;
       font-family: sans-serif;
+      color: #555;
+    }
+    .preview-box img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
     .pdf-box {
       width: 100%;
       height: 600px;
-      margin-top: 30px;
       border: 2px solid #666;
-    }
 
     @media print {
       body {
@@ -350,15 +354,12 @@
 
       <h2>Rental Party Documents</h2>
 
-  <!-- Bagian KTP -->
-  <h3>KTP</h3>
-  <div id="ktp-photo" class="foto-box"></div>
+ <h3>KTP</h3>
+  <div id="ktp-photo" class="preview-box"></div>
 
-  <!-- Bagian NPWP -->
+  <!-- NPWP -->
   <h3>NPWP</h3>
-  <div id="npwp-container"></div>
-</div>
-
+  <div id="comp-npwp" class="preview-box"></div>
 
   <script>
 
@@ -468,24 +469,29 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("termin-2").innerText                         = termin2 + "%";
 
 
-// KTP
-    if (ktpPhoto !== "") {
-      document.getElementById("ktp-photo").style.backgroundImage = `url('${ktpPhoto}')`;
-    } else {
-      document.getElementById("ktp-photo").innerText = "Belum ada foto KTP";
+
+    // Fungsi untuk render file
+    function renderFile(containerId, fileUrl, label) {
+      const container = document.getElementById(containerId);
+
+      if (!fileUrl) {
+        container.innerText = `Belum ada file ${label}`;
+        return;
+      }
+
+      // Cek tipe file berdasarkan ekstensi
+      if (fileUrl.match(/\.(jpg|jpeg|png|gif)$/i)) {
+        container.innerHTML = `<img src="${fileUrl}" alt="${label}">`;
+      } else if (fileUrl.match(/\.pdf$/i)) {
+        container.innerHTML = `<embed src="${fileUrl}" type="application/pdf" class="pdf-box">`;
+      } else {
+        container.innerText = `Format file ${label} tidak didukung`;
+      }
     }
 
-     // NPWP PDF
-    const npwpContainer = document.getElementById("npwp-container");
-    if (compNPWP !== "") {
-      if (compNPWP.endsWith(".pdf")) {
-        npwpContainer.innerHTML = `<embed src="${compNPWP}" type="application/pdf" class="pdf-box">`;
-      } else {
-        npwpContainer.innerText = "File NPWP bukan PDF";
-      }
-    } else {
-      npwpContainer.innerText = "Belum ada file NPWP";
-    }
+    // Render masing-masing file
+    renderFile("ktp-photo", ktpPhoto, "KTP");
+    renderFile("comp-npwp", compNPWP, "NPWP");
     
 // Handle termin dinamis
 if (totalTerm === "Full Payment") {
