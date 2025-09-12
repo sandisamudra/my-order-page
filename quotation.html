@@ -382,7 +382,7 @@
 
   <div style="display: flex; justify-content: space-between; margin-top: 5px;">
   <p style="text-align: left;">Tenant Party</p>
-  <p style="text-align: right;">Jakarta, September 13 2025</p>
+  <p style="text-align: right;">Jakarta, <strong id="quotation-date">September 13 2025</strong></p>
   </div>
     
   <div id="signature-container">
@@ -416,6 +416,7 @@
     const project = urlParams.get("project") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const productionDate = urlParams.get("productionDate") || "";
+    const quotationDate = urlParams.get("quotationDate") || "";
     const companyName = urlParams.get("companyName") || "";
     const companyAddress = urlParams.get("companyAddress") || "";
     const clientName = urlParams.get("clientName") || "";
@@ -495,6 +496,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("project-name").innerText                     = project;
     document.getElementById("production-house").innerText                 = productionHouse;
     document.getElementById("production-date").innerText                  = productionDate;
+    document.getElementById("quotation-date").innerText                  = quotationDate;
     document.getElementById("company-name").innerText                     = companyName;
     document.getElementById("company-address").innerText                  = companyAddress;
     document.getElementById("client-name").innerText                      = clientName;
