@@ -281,7 +281,7 @@
     
   <div class="label-row" id="cl-name">
   <span>Submitted To</span>
-  <span>: <span class="client-name"></span></span>
+  <span>: <span id="client-name"></span></span>
   </div>
     
   <div class="label-row" id="prod-house">
@@ -392,7 +392,7 @@
   <div style="display: flex; justify-content: space-between; margin-top: 1px !important;">
   <div style="text-align: center;">
     <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
-    <p style="text-align: left; margin-top: 2px !important;" class="client-name">Tenant Party</p>
+    <p style="text-align: left; margin-top: 2px !important;" id="name-client">Tenant Party</p>
   </div>
   <div style="text-align: center;">
     <div style="border-top: 1px solid #000; width: 200px; margin-bottom: 1px !important;"></div>
@@ -412,6 +412,7 @@
     const companyName = urlParams.get("companyName") || "";
     const companyAddress = urlParams.get("companyAddress") || "";
     const clientName = urlParams.get("clientName") || "";
+    const nameClient = urlParams.get("nameClient") || "";
     const quoteNumber = urlParams.get("quoteNumber") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
@@ -490,6 +491,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("company-name").innerText                     = companyName;
     document.getElementById("company-address").innerText                  = companyAddress;
     document.getElementById("client-name").innerText                      = clientName;
+    document.getElementById("name-client").innerText                      = nameClient;
     document.getElementById("quote-number").innerText                     = quoteNumber;
     document.getElementById("total-cost-orders").innerText                = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText                    = formatCurrency(totalcostGO);
