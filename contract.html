@@ -388,8 +388,7 @@
     const terminDate3     = urlParams.get("terminDate3") || "";
     const fileName        = urlParams.get("fileName") || "";
     const taxTerm         = urlParams.get("taxTerm") || "";
-    const ktpPhoto        = urlParams.get("ktp-photo") || "";
-    const compNPWP        = urlParams.get("comp-npwp") || "";
+   
 
     if (fileName) document.title = fileName;    
  
@@ -466,29 +465,6 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("termin-2").innerText                         = termin2 + "%";
 
 
-
-    // Fungsi untuk render file
-    function renderFile(containerId, fileUrl, label) {
-      const container = document.getElementById(containerId);
-
-      if (!fileUrl) {
-        container.innerText = `Belum ada file ${label}`;
-        return;
-      }
-
-      // Cek tipe file berdasarkan ekstensi
-      if (fileUrl.match(/\.(jpg|jpeg|png|gif)$/i)) {
-        container.innerHTML = `<img src="${fileUrl}" alt="${label}">`;
-      } else if (fileUrl.match(/\.pdf$/i)) {
-        container.innerHTML = `<embed src="${fileUrl}" type="application/pdf" class="pdf-box">`;
-      } else {
-        container.innerText = `Format file ${label} tidak didukung`;
-      }
-    }
-
-    // Render masing-masing file
-    renderFile("ktp-photo", ktpPhoto, "KTP");
-    renderFile("comp-npwp", compNPWP, "NPWP");
     
 // Handle termin dinamis
 if (totalTerm === "Full Payment") {
