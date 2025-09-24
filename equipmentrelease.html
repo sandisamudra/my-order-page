@@ -354,15 +354,6 @@
      if (fileName) {
     document.title = fileName;
   }    
-   
-
-    function toTitleCase(str) {
-  return str.replace(/\w\S*/g, function(txt) {
-    return txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase();
-  });
-}
-   
-   
 
 
    
@@ -377,14 +368,14 @@
    
 
     const equipmentSection = document.getElementById("equipment-section");
-    const equipmentData = orders.split("||");
+    const equipmentData = orders ? orders.split("||") : [];
     let categoryIndex = 0;
     let currentTable = null;
     let tbody = null;
     let rowCount = 0;
 
     const parsedEquipment = equipmentData.map(row => {
-  const [category, item, cost, qty, day, amount] = row.split("|");
+  const [category, item, qty] = row.split("|");
   return { category, item, qty };
 });
 
