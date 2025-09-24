@@ -346,7 +346,6 @@
     const companyName = urlParams.get("companyName") || "";
     const companyAddress = urlParams.get("companyAddress") || "";
     const clientName = urlParams.get("clientName") || "";
-    const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
     const categoryList = urlParams.get("category")?.split("||") || []; 
     const fileName = urlParams.get("fileName") || "";
@@ -370,7 +369,6 @@
     document.getElementById("project-name").innerText                     = project;
     document.getElementById("production-house").innerText                 = productionHouse;
     document.getElementById("production-date").innerText                  = productionDate;
-   
     document.getElementById("company-name").innerText                     = companyName;
     document.getElementById("company-address").innerText                  = companyAddress;
     document.getElementById("client-name").innerText                      = clientName;
