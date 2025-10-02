@@ -40,7 +40,7 @@
     }
     @media print {
       #signature-pad, .button-group { display: none !important; }
-      #saved-signature img { display: block; max-width: 170px; margin-top: 20px; }
+      #saved-signature img { display: block; max-width: 200px; margin-top: 20px; }
       .invoice-container { background: white; box-shadow: none !important; border: none !important; border-radius: 0 !important; margin: auto; padding: auto; }
     }
   </style>
@@ -214,8 +214,8 @@
     canvas.addEventListener("mousedown", startDraw); canvas.addEventListener("mousemove", draw); canvas.addEventListener("mouseup", endDraw); canvas.addEventListener("mouseleave", endDraw);
     canvas.addEventListener("touchstart", startDraw); canvas.addEventListener("touchmove", draw); canvas.addEventListener("touchend", endDraw);
     function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById("saved-signature").innerHTML = ""; }
-    function saveSignature() { const dataURL = canvas.toDataURL("image/png"); const img = document.createElement("img"); img.src = dataURL; img.style.maxWidth = "100px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }
-    function handleUpload(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = document.createElement("img"); img.src = e.target.result; img.style.maxWidth = "220px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }; reader.readAsDataURL(file); }
+    function saveSignature() { const dataURL = canvas.toDataURL("image/png"); const img = document.createElement("img"); img.src = dataURL; img.style.maxWidth = "150px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }
+    function handleUpload(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = function(e) { const img = document.createElement("img"); img.src = e.target.result; img.style.maxWidth = "180px"; document.getElementById('saved-signature').innerHTML = ""; document.getElementById("saved-signature").appendChild(img); }; reader.readAsDataURL(file); }
  
   // Sembunyikan logo & label perusahaan jika rekening tertentu
     if (bankAccountNumber === "2910822929") {
