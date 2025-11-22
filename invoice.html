@@ -215,9 +215,9 @@
 
     document.getElementById("show-disc").innerText = formatCurrency(showDisc);
 
-    const textAmountRaw = numberToWords(parseInt(showDisc));
-    const textAmount = toTitleCase(textAmountRaw);
-    document.getElementById("show-disc-text").innerText = `Note : ${textAmount} Rupiahs`;
+    const textAmountRawDisc = numberToWords(parseInt(showDisc));
+    const textAmountDisc = toTitleCase(textAmountRawDisc);
+    document.getElementById("show-disc-text").innerText = `Note : ${textAmountDisc} Rupiahs`;
 
     // === SIGNATURE PAD ===
     const canvas = document.getElementById("signature-pad");
