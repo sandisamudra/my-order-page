@@ -79,6 +79,14 @@
 
     <div class="info-line"></div>
     <div class="label-row">
+      <span>Total Discount</span>
+      <span>: <span id="show-disc"></span></span>
+    </div>
+    
+    <div style="font-size: 12px; font-style: italic; margin-top: 0px; margin-bottom: 10px;" class="note" id="show-disc-text"></div>
+
+    <div class="info-line"></div>
+    <div class="label-row">
       <span>Grand Total</span>
       <span>: <span id="grand-total"></span></span>
     </div>
@@ -111,6 +119,7 @@
     const amount = urlParams.get("amount") || "0";
     const taxAmount = urlParams.get("taxAmount") || "0"; // <-- tetap dipakai
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
+    const showDiscount = urlParams.get("showDiscount") || "0";
     const username = urlParams.get("username") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
@@ -193,6 +202,14 @@
     const textAmountRaw = numberToWords(parseInt(grandTotal));
     const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
+
+    let showDisc = parseFloat(showDiscount);
+
+    document.getElementById("show-disc").innerText = formatCurrency(showDisc);
+
+    const textAmountRaw = numberToWords(parseInt(showDisc));
+    const textAmount = toTitleCase(textAmountRaw);
+    document.getElementById("show-disc-text").innerText = `Note : ${textAmount} Rupiahs`;
 
     // === SIGNATURE PAD ===
     const canvas = document.getElementById("signature-pad");
