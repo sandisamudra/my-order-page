@@ -204,6 +204,14 @@
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
 
     let showDisc = parseFloat(showDiscount);
+    
+    if (!isNaN(parseFloat(showDiscount)) && parseFloat(showDiscount) > 0) {
+      const discValue = (parseFloat(subtotalAmount) - parseFloat(showDiscount));
+      document.getElementById("disc-row").style.display = "flex";
+      document.getElementById("disc-label").innerText = `Total Discount`;
+      document.getElementById("disc-amount").innerText = formatCurrency(discValue);
+      showDiscount += discValue;
+    }
 
     document.getElementById("show-disc").innerText = formatCurrency(showDisc);
 
