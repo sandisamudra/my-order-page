@@ -706,10 +706,45 @@ const canvas = document.getElementById("signature-pad");
     if (additionalDiscount === "") {
       document.getElementById("add-discount").style.display = "none";
     }
-    if (totalcostGO === "0 IDR") {
-    document.getElementById("guard-table").style.display = "none"; // hilangkan tabel
-    document.getElementById("sub-go").style.display = "none";       // hilangkan label subtotal
+   // --- tempatkan ini di bawah semua assignment variabel (di script kamu) ---
+  function isZeroCost(val) {
+    if (val === null || val === undefined) return true;
+    // bersihkan dan normalisasi (buang spasi, huruf kapital, dan simbol umum)
+    const cleaned = String(val).trim().replace(/Rp|IDR|\s|,/gi, "").replace(/\./g,""); 
+    // cleaned sekarang mis. "0" atau "0000" atau ""
+    const num = parseFloat(cleaned);
+    if (!isNaN(num)) return num === 0;
+    // fallback: jika string persis "0" setelah trim
+    return cleaned === "" || cleaned === "0";
+  }
+
+  // tunggu DOM siap (aman)
+  window.addEventListener("DOMContentLoaded", () => {
+    // gunakan nama variabel yang benar: totalcostGO (per deklarasimu)
+    const guardTable = document.getElementById("guard-table");
+    const subGo = document.getElementById("sub-go");
+    const guardTbody = document.querySelector("#guard-table tbody");
+
+    // 1) Hide bila totalcostGO numerik = 0
+    if (isZeroCost(totalcostGO)) {
+      // jika tbody ada baris, kamu mungkin tetap ingin hide. Jika tidak, cek juga tbody kosong.
+      const hasRows = guardTbody && guardTbody.children.length > 0;
+      // Jika ada baris namun cost 0 masih ingin hide -> tetap hide
+      // Jika ingin hide hanya ketika tidak ada baris, ganti kondisi di bawah sesuai kebutuhan.
+      if (guardTable) guardTable.style.display = "none";
+      if (subGo) subGo.style.display = "none";
+    } else {
+      // kalau bukan zero, pastikan tampil
+      if (guardTable) guardTable.style.display = "";
+      if (subGo) subGo.style.display = "";
     }
+
+    // 2) tambahan: jika tbody benar-benar kosong, hide juga
+    if (guardTbody && guardTbody.children.length === 0) {
+      if (guardTable) guardTable.style.display = "none";
+      if (subGo) subGo.style.display = "none";
+    }
+  });
 
 
   
