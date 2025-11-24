@@ -337,7 +337,7 @@
 
 
   <!-- Tabel Guard and Others -->
-  <p style="margin-bottom: 0px; margin-top: 0px; font-size: 16px; font-weight: bold; font-family: 'Nunito', sans-serif;">Guard and Others</p>
+  <p style="margin-bottom: 0px; margin-top: 0px; font-size: 16px; font-weight: bold; font-family: 'Nunito', sans-serif;" id="guard-n-others">Guard and Others</p>
   <table style="margin-top: 5px;" id="guard-table">
     <thead>
       <tr>
@@ -368,7 +368,7 @@
   </div>
 
    <!-- After Discount -->
-  <div class="label-rowsub">
+  <div class="label-rowsub" id="total-for-equipments">
   <span>Total for Equipments</span>
   <span>: <span id="after-discount"></span></span>
   </div>
@@ -724,6 +724,8 @@ const canvas = document.getElementById("signature-pad");
     const guardTable = document.getElementById("guard-table");
     const subGo = document.getElementById("sub-go");
     const guardTbody = document.querySelector("#guard-table tbody");
+    const totalforEquipments = document.getElementById("total-for-equipments");
+    const guardandOthers = document.getElementById("guard-n-others");
 
     // 1) Hide bila totalcostGO numerik = 0
     if (isZeroCost(totalcostGO)) {
@@ -733,16 +735,23 @@ const canvas = document.getElementById("signature-pad");
       // Jika ingin hide hanya ketika tidak ada baris, ganti kondisi di bawah sesuai kebutuhan.
       if (guardTable) guardTable.style.display = "none";
       if (subGo) subGo.style.display = "none";
+      if (totalforEquipments) totalforEquipments.style.display = "none";
+      if (guardandOthers) guardandOthers.style.display = "none";
+      
     } else {
       // kalau bukan zero, pastikan tampil
       if (guardTable) guardTable.style.display = "";
       if (subGo) subGo.style.display = "";
+      if (totalforEquipments) totalforEquipments.style.display = "";
+      if (guardandOthers) guardandOthers.style.display = "";
     }
 
     // 2) tambahan: jika tbody benar-benar kosong, hide juga
     if (guardTbody && guardTbody.children.length === 0) {
       if (guardTable) guardTable.style.display = "none";
       if (subGo) subGo.style.display = "none";
+      if (totalforEquipments) totalforEquipments.style.display = "none";
+      if (guardandOthers) guardandOthers.style.display = "none";
     }
   });
 
