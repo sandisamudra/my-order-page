@@ -352,7 +352,7 @@
   </table>
 
   <!-- Total Cost Guard and Others -->
-  <div class="label-rowsub">
+  <div class="label-rowsub" id="sub-go">
   <span>Subtotal Guard and Others</span>
   <span>: <span id="total-cost-go"></span></span>
   </div>
@@ -706,8 +706,8 @@ const canvas = document.getElementById("signature-pad");
     if (additionalDiscount === "") {
       document.getElementById("add-discount").style.display = "none";
     }
-    if (totalcostGo === "0 IDR") {
-      document.getElementById("guard-table").style.display = "none";
+    if (totalcostGo === "") {
+      document.getElementById("sub-go").style.display = "none";
     }
 
   
