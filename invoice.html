@@ -115,7 +115,7 @@
     const taxAmount = urlParams.get("taxAmount") || "0"; // <-- tetap dipakai
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
     const username = urlParams.get("username") || "";
-    const showDisc = urlParams.get("showDisc") || "";
+    const showDisc = urlParams.get("showDisc") || "0";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const companyName = urlParams.get("companyName") || "";
@@ -174,7 +174,7 @@
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("company-name").innerText = companyName;
-    document.getElementById("show-discount").innerText = showDisc;
+    document.getElementById("show-discount").innerText = formatCurrency(showDisc);
     document.getElementById("project-name").innerText = projectName;
     document.getElementById("invoice-number").innerText = invoiceNumber;
     document.getElementById("bank-name").innerText = bankName;
