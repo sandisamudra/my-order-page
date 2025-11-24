@@ -337,6 +337,7 @@
 
 
   <!-- Tabel Guard and Others -->
+  <div id="table-guard">
   <p style="margin-bottom: 0px; margin-top: 0px; font-size: 16px; font-weight: bold; font-family: 'Nunito', sans-serif;">Guard and Others</p>
   <table style="margin-top: 5px;" id="guard-table">
     <thead>
@@ -350,6 +351,7 @@
     </thead>
     <tbody></tbody>
   </table>
+  </div>
 
   <!-- Total Cost Guard and Others -->
   <div class="label-rowsub" id="sub-go">
@@ -707,7 +709,7 @@ const canvas = document.getElementById("signature-pad");
       document.getElementById("add-discount").style.display = "none";
     }
     if (totalcostGo === "0 IDR") {
-      document.getElementById("sub-go").style.display = "none";
+      document.getElementById("table-guard").style.display = "none";
     }
 
   
