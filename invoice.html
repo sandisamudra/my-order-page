@@ -77,13 +77,8 @@
       <span>: <span id="tax-amount"></span></span>
     </div>
 
-    <div class="info-line"></div>
-    <div class="label-row">
-      <span>Total Discount</span>
-      <span>: <span id="show-disc"></span></span>
-    </div>
+   <div class="label-row" id="show-disc"><span>Total Discount</span><span>: <span id="show-discount"></span></span></div>
     
-    <div style="font-size: 12px; font-style: italic; margin-top: 0px; margin-bottom: 10px;" class="note" id="show-disc-text"></div>
 
     <div class="info-line"></div>
     <div class="label-row">
@@ -121,6 +116,7 @@
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
     const showDiscount = urlParams.get("showDiscount") || "0";
     const username = urlParams.get("username") || "";
+    const showDisc = urlParams.get("showDisc") || "";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const companyName = urlParams.get("companyName") || "";
@@ -179,6 +175,7 @@
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("company-name").innerText = companyName;
+    document.getElementById("show-discount").innerText = showDisc;
     document.getElementById("project-name").innerText = projectName;
     document.getElementById("invoice-number").innerText = invoiceNumber;
     document.getElementById("bank-name").innerText = bankName;
@@ -203,22 +200,7 @@
     const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("grand-total-text").innerText = `Note : ${textAmount} Rupiahs`;
 
-    let showDisc = parseFloat(subtotalAmount);
-    
-    if (!isNaN(parseFloat(showDiscount)) && parseFloat(showDiscount) > 0) {
-      const discValue = (parseFloat(subtotalAmount) - parseFloat(showDiscount));
-      document.getElementById("disc-row").style.display = "flex";
-      document.getElementById("disc-label").innerText = `Total Discount`;
-      document.getElementById("disc-amount").innerText = formatCurrency(discValue);
-      showDisc += discValue;
-    }
-
-    document.getElementById("show-disc").innerText = formatCurrency(showDisc);
-
-    const textAmountRawDisc = numberToWords(parseInt(showDisc));
-    const textAmountDisc = toTitleCase(textAmountRawDisc);
-    document.getElementById("show-disc-text").innerText = `Note : ${textAmountDisc} Rupiahs`;
-
+  
     // === SIGNATURE PAD ===
     const canvas = document.getElementById("signature-pad");
     const ctx = canvas.getContext("2d");
@@ -262,6 +244,9 @@
     }
     if (companyName === "") {
       document.getElementById("comp-name").style.display = "none";
+    }
+     if (showDisc === "Hide") {
+      document.getElementById("show-disc").style.display = "none";
     }
     
   
