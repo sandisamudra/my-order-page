@@ -115,7 +115,7 @@
     const taxAmount = urlParams.get("taxAmount") || "0"; // <-- tetap dipakai
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
     const username = urlParams.get("username") || "";
-    const showDisc = urlParams.get("showDisc") || "";
+    const showDisc = urlParams.get("showDisc") || "0";
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const companyName = urlParams.get("companyName") || "";
@@ -244,7 +244,7 @@
     if (companyName === "") {
       document.getElementById("comp-name").style.display = "none";
     }
-     if (showDisc === "Hide") {
+     if (showDisc === "") {
       document.getElementById("show-disc").style.display = "none";
     }
     
