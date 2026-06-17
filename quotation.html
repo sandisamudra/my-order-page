@@ -332,10 +332,16 @@
   <span>: <span id="quote-number"></span></span>
   </div>
 
-   <div class="label-row" id="shooting-date">
+  <div class="label-row" id="shooting-date">
   <span>Production Date</span>
   <span>: <span id="production-date"></span></span>
   </div>
+
+  <div class="label-row" id="cont-numb">
+  <span>Contact</span>
+  <span>: <span id="contact-number"></span></span>
+  </div>
+    
     
   </div>
   
@@ -508,6 +514,7 @@
     const clientName = urlParams.get("clientName") || "";
     const nameClient = urlParams.get("nameClient") || "";
     const quoteNumber = urlParams.get("quoteNumber") || "";
+    const contactNumber = urlParams.get("contactNumber") || "";
     const user = urlParams.get("user") || "";
     const orders = urlParams.get("orders") || "";
     const categoryList = urlParams.get("category")?.split("||") || [];
@@ -588,6 +595,7 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("client-name").innerText                      = clientName;
     document.getElementById("name-client").innerText                      = nameClient;
     document.getElementById("quote-number").innerText                     = quoteNumber;
+    document.getElementById("contact-number").innerText                   = contactNumber;
     document.getElementById("total-cost-orders").innerText                = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText                    = formatCurrency(totalcostGO);
     document.getElementById("discount-for-equipments").innerText          = discount + "%";
@@ -785,6 +793,9 @@ const canvas = document.getElementById("signature-pad");
     }
     if (companyAddress === "") {
       document.getElementById("comp-address").style.display = "none";
+    }
+    if (contactNumber === "") {
+      document.getElementById("cont-numb").style.display = "none";
     }
     if (discount === "") {
       document.getElementById("discount-equipments").style.display = "none";
