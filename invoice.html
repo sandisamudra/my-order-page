@@ -186,7 +186,7 @@
     let grandTotal = parseFloat(subtotalAmount);
 
     if (!isNaN(parseFloat(taxAmount)) && parseFloat(taxAmount) > 0) {
-      const taxValue = (parseFloat(subtotalAmount) * parseFloat(taxAmount)) / 100;
+      const taxValue = Math.round((parseFloat(subtotalAmount) * parseFloat(taxAmount)) / 100 );
       document.getElementById("tax-row").style.display = "flex";
       document.getElementById("tax-label").innerText = `Tax (${taxAmount}%)`;
       document.getElementById("tax-amount").innerText = formatCurrency(taxValue);
