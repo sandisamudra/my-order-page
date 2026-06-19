@@ -190,7 +190,7 @@
       document.getElementById("tax-row").style.display = "flex";
       document.getElementById("tax-label").innerText = `Tax (${taxAmount}%)`;
       document.getElementById("tax-amount").innerText = formatCurrency(taxValue);
-      grandTotal -= taxValue;
+      grandTotal = Math.round(grandTotal - taxValue);
     }
 
     document.getElementById("grand-total").innerText = formatCurrency(grandTotal);
