@@ -602,7 +602,12 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("contact-number").innerText                   = contactNumber;
     document.getElementById("total-cost-orders").innerText                = formatCurrency(totalcostorders);
     document.getElementById("total-cost-go").innerText                    = formatCurrency(totalcostGO);
-    document.getElementById("discount-for-equipments").innerText          = discount + "%";
+    const subtotalEquipments = parseFloat(totalcostorders.replace(/,/g, "")) || 0;
+    const discountPercent = parseFloat(discount) || 0;
+    const discountAmount = subtotalEquipments * (discountPercent / 100);
+    
+    document.getElementById("discount-for-equipments").innerText =
+  `${discountPercent}% (${formatRupiah(discountAmount)})`;
     document.getElementById("additional-discount").innerText              = formatCurrency(additionalDiscount);
     document.getElementById("after-discount").innerText                   = formatCurrency(afterDiscount);
     document.getElementById("grand-total").innerText                      = formatCurrency(grandtotal);
