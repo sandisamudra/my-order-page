@@ -225,6 +225,11 @@
   <span>: <span><strong><span id="total-3">[Total 3]</span></strong> (Payment due date on <strong style="font-weight: normal;"><span id="termin-date-3">[Termin Date 3]</span></strong>)</span></span>
 </div>
 
+    <div class="label-termin" id="termin-row-4" style="display: none; margin-bottom: 1px;">
+  <span>Termin 4 (<strong style="font-weight: normal;"><span id="termin-4">[Termin 4]</span></strong>)</span>
+  <span>: <span><strong><span id="total-4">[Total 4]</span></strong> (Payment due date on <strong style="font-weight: normal;"><span id="termin-date-4">[Termin Date 4]</span></strong>)</span></span>
+</div>
+
 
   <p>
   Payment above transfer to : 
@@ -341,8 +346,11 @@
     const termin1         = urlParams.get("termin1") || "";
     const termin2         = urlParams.get("termin2") || "";
     const total3          = urlParams.get("total3") || "";
+    const total4          = urlParams.get("total4") || "";
     const termin3         = urlParams.get("termin3") || "";
+    const termin4         = urlParams.get("termin4") || "";
     const terminDate3     = urlParams.get("terminDate3") || "";
+    const terminDate4     = urlParams.get("terminDate4") || "";
     const fileName        = urlParams.get("fileName") || "";
     const taxTerm         = urlParams.get("taxTerm") || "";
    
@@ -409,9 +417,13 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("tax-term").innerText                         = taxTerm;
     document.getElementById("total-1").innerText                          = formatRupiah(total1);
     document.getElementById("total-2").innerText                          = formatRupiah(total2);
+    document.getElementById("total-3").innerText                          = formatRupiah(total3);
+    document.getElementById("total-4").innerText                          = formatRupiah(total4);
     document.getElementById("full-payment-date").innerText                = fullPaymentDate;
     document.getElementById("termin-date-1").innerText                    = terminDate1;
     document.getElementById("termin-date-2").innerText                    = terminDate2;
+    document.getElementById("termin-date-3").innerText                    = terminDate3;
+    document.getElementById("termin-date-4").innerText                    = terminDate4;
     document.getElementById("bank-name").innerText                        = bankName;
     document.getElementById("account-name").innerText                     = accountName;
     document.getElementById("account-number").innerText                   = accountNumber;
@@ -420,6 +432,8 @@ const textAmount = toTitleCase(textAmountRaw);
     document.getElementById("rental-name").innerText                      = rentalName;
     document.getElementById("termin-1").innerText                         = termin1 + "%";
     document.getElementById("termin-2").innerText                         = termin2 + "%";
+    document.getElementById("termin-3").innerText                         = termin3 + "%";
+    document.getElementById("termin-4").innerText                         = termin4 + "%";
 
 
     
@@ -430,6 +444,7 @@ if (totalTerm === "Full Payment") {
   document.getElementById("termin-row-1").style.display = "none";
   document.getElementById("termin-row-2").style.display = "none";
   document.getElementById("termin-row-3").style.display = "none";
+  document.getElementById("termin-row-4").style.display = "none";
 
 } else if (totalTerm === "2") {
   // Dua termin
@@ -438,6 +453,7 @@ if (totalTerm === "Full Payment") {
   document.getElementById("termin-row-1").style.display = "flex";
   document.getElementById("termin-row-2").style.display = "flex";
   document.getElementById("termin-row-3").style.display = "none";
+  document.getElementById("termin-row-4").style.display = "none";
 
 } else if (totalTerm === "3") {
   // Tiga termin
@@ -446,11 +462,16 @@ if (totalTerm === "Full Payment") {
   document.getElementById("termin-row-1").style.display = "flex";
   document.getElementById("termin-row-2").style.display = "flex";
   document.getElementById("termin-row-3").style.display = "flex";
+  document.getElementById("termin-row-4").style.display = "none";
 
-  // Isi nilai termin 3
-  document.getElementById("total-3").innerText      = formatRupiah(total3);
-  document.getElementById("termin-3").innerText     = termin3 + "%";
-  document.getElementById("termin-date-3").innerText= terminDate3;
+  } else if (totalTerm === "4") {
+  // Empat termin
+  document.getElementById("total-termin").innerText = "4";
+  document.getElementById("full-payment").style.display = "none";
+  document.getElementById("termin-row-1").style.display = "flex";
+  document.getElementById("termin-row-2").style.display = "flex";
+  document.getElementById("termin-row-3").style.display = "flex";
+  document.getElementById("termin-row-4").style.display = "flex";
 }
 
     
