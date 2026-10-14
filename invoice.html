@@ -82,7 +82,8 @@
 
     <div class="info-line"></div>
     <div class="label-row">
-      <span>Grand Total</span>
+      <span id="g-total-nett">Grand Total</span>
+      <span id="gtotal-nett"></span>
       <span>: <span id="grand-total"></span></span>
     </div>
   
@@ -111,6 +112,7 @@
     const urlParams = new URLSearchParams(window.location.search);
     const termin = urlParams.get("termin") || "";
     const desc = urlParams.get("desc") || "";
+    const gtotalNett = urlParams.get("gtotalNett") || "";
     const amount = urlParams.get("amount") || "0";
     const taxAmount = urlParams.get("taxAmount") || "0"; // <-- tetap dipakai
     const subtotalAmount = urlParams.get("subtotalAmount") || "0";
@@ -170,6 +172,7 @@
     document.getElementById("termin").innerText = termin;
     document.getElementById("username").innerText = username;
     document.getElementById("desc").innerText = desc;
+    document.getElementById("gtotal-nett").innerText = gtotalNett;
     document.getElementById("amount").innerText = formatCurrency(amount);
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
@@ -247,6 +250,9 @@
     }
      if (showDisc === "") {
       document.getElementById("show-disc").style.display = "none";
+    }
+    if (gtotalNett === "Grand Total Nett") {
+      document.getElementById("g-total-nett").style.display = "none";
     }
     
   
