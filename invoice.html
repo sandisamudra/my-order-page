@@ -122,7 +122,7 @@
     const clientName = urlParams.get("clientName") || "";
     const productionHouse = urlParams.get("productionHouse") || "";
     const companyName = urlParams.get("companyName") || "";
-    const address = urlParams.get("address") || "";
+    const compAddress = urlParams.get("compAddress") || "";
     const projectName = urlParams.get("projectName") || "";
     const invoiceNumber = urlParams.get("invoiceNumber") || "";  
     const fileName = urlParams.get("fileName") || "";
@@ -179,7 +179,7 @@
     document.getElementById("client-name").innerText = clientName;
     document.getElementById("production-house").innerText = productionHouse;
     document.getElementById("company-name").innerText = companyName;
-    document.getElementById("company-address").innerText = address;
+    document.getElementById("company-address").innerText = compAddress;
     document.getElementById("show-discount").innerText = formatCurrency(showDisc);
     document.getElementById("project-name").innerText = projectName;
     document.getElementById("invoice-number").innerText = invoiceNumber;
@@ -254,7 +254,7 @@
     if (companyName === "") {
       document.getElementById("comp-name").style.display = "none";
       
-    if (address === "") {
+    if (compAddress === "") {
       document.getElementById("comp-address").style.display = "none";
     }
      if (showDisc === "") {
